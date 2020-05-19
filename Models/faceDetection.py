@@ -46,17 +46,18 @@ class FaceDetection(threading.Thread):
         frame_gray = cv2.equalizeHist(frame_gray)
         #-- Detect faces
         faces = self.face_cascade.detectMultiScale(frame_gray)
+        i = 0
         for (x,y,w,h) in faces:
+            i += 1
             cv2.rectangle(frame, (x, y), (x + w, y + h),(0,255,0),thickness=4)
             faceROI = frame_gray[y:y+h,x:x+w]
             if sys.platform == 'win32':
-                file_name = 'data\image.jpg'
+                file_name = f'data\detection\image{i}.jpg'
             else:
-                file_name = 'data/image.jpg'
+                file_name = f'data/detection/image{i}.jpg'
                 
             faceROI = cv2.resize(faceROI,(160,160))    
             cv2.imwrite(file_name, faceROI)
+        i = 0
         cv2.imshow('Capture - Face detection', frame)
 
-detection = FaceDetection()
-detection.start()
