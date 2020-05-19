@@ -1,19 +1,22 @@
 import cv2
 import sys
 
+windows = False
+
 """
 Finding the path to haarcascades on local system
 """
 if sys.platform == 'win32':
     print('windows')
+    windows = True
     cv_file = cv2.__file__ # Get the path to opencv executable
     cv_file = str(cv_file)
-    cv_file = result = cv_file.rsplit('\\', 1)[0] # Leaves us at root of opencv directory
+    cv_file = cv_file.rsplit('\\', 1)[0] # Leaves us at root of opencv directory
     cv_file_face = cv_file + "\data\haarcascade_frontalface_alt.xml" 
 else:
     cv_file = cv2.__file__ # Get the path to opencv executable
     cv_file = str(cv_file)
-    cv_file = result = cv_file.rsplit('/', 1)[0] # Leaves us at root of opencv directory
+    cv_file = cv_file.rsplit('/', 1)[0] # Leaves us at root of opencv directory
     cv_file_face = cv_file + "/data/haarcascade_frontalface_alt.xml" 
 
 
@@ -34,10 +37,23 @@ def detectAndDisplay(frame):
     faces = face_cascade.detectMultiScale(frame_gray)
     for (x,y,w,h) in faces:
         center = (x + w//2, y + h//2)
-        frame = cv2.ellipse(frame, center, (w//2, h//2), 0, 0, 360, (255, 0, 255), 4)
+        cv2.rectangle(frame, (x, y), (x + w, y + h),(0,255,0),thickness=4)
+        # frame = cv2.ellipse(frame, center, (w//2, h//2), 0, 0, 360, (255, 0, 255), 4)
         faceROI = frame_gray[y:y+h,x:x+w]
+        if windows:
+            file_name = 'data\image.jpg'
+        else:
+            file_name = 'data/image.jpg'
+            
+        faceROI = cv2.resize(faceROI,(160,160))    
+        cv2.imwrite(file_name, faceROI)
     cv2.imshow('Capture - Face detection', frame)
 
+
+"""
+Function that handles the saving of detected faces
+"""
+# def saveDetection(img)
 
 """
 Main program, reads from webcam and calls detect and display function to find faces in the frame
