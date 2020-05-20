@@ -1,0 +1,10 @@
+C:\Users\jens\source\repos\MirrorOfErised\MirrorOfErised.models\bin\Debug\netcoreapp3.1\MirrorOfErised.models.deps.json
+C:\Users\jens\source\repos\MirrorOfErised\MirrorOfErised.models\bin\Debug\netcoreapp3.1\MirrorOfErised.models.runtimeconfig.json
+C:\Users\jens\source\repos\MirrorOfErised\MirrorOfErised.models\bin\Debug\netcoreapp3.1\MirrorOfErised.models.runtimeconfig.dev.json
+C:\Users\jens\source\repos\MirrorOfErised\MirrorOfErised.models\bin\Debug\netcoreapp3.1\MirrorOfErised.models.dll
+C:\Users\jens\source\repos\MirrorOfErised\MirrorOfErised.models\obj\Debug\netcoreapp3.1\MirrorOfErised.models.csprojAssemblyReference.cache
+C:\Users\jens\source\repos\MirrorOfErised\MirrorOfErised.models\obj\Debug\netcoreapp3.1\MirrorOfErised.models.AssemblyInfoInputs.cache
+C:\Users\jens\source\repos\MirrorOfErised\MirrorOfErised.models\obj\Debug\netcoreapp3.1\MirrorOfErised.models.AssemblyInfo.cs
+C:\Users\jens\source\repos\MirrorOfErised\MirrorOfErised.models\bin\Debug\netcoreapp3.1\MirrorOfErised.models.pdb
+C:\Users\jens\source\repos\MirrorOfErised\MirrorOfErised.models\obj\Debug\netcoreapp3.1\MirrorOfErised.models.dll
+C:\Users\jens\source\repos\MirrorOfErised\MirrorOfErised.models\obj\Debug\netcoreapp3.1\MirrorOfErised.models.pdb

@@ -1,0 +1,9 @@
+C:\Users\jens\source\repos\MirrorOfErised\MirrorOfErised.api\bin\Debug\netcoreapp3.1\appsettings.Development.json
+C:\Users\jens\source\repos\MirrorOfErised\MirrorOfErised.api\bin\Debug\netcoreapp3.1\appsettings.json
+C:\Users\jens\source\repos\MirrorOfErised\MirrorOfErised.api\bin\Debug\netcoreapp3.1\Properties\launchSettings.json
+C:\Users\jens\source\repos\MirrorOfErised\MirrorOfErised.api\obj\Debug\netcoreapp3.1\MirrorOfErised.api.csprojAssemblyReference.cache
+C:\Users\jens\source\repos\MirrorOfErised\MirrorOfErised.api\obj\Debug\netcoreapp3.1\staticwebassets\MirrorOfErised.api.StaticWebAssets.Manifest.cache
+C:\Users\jens\source\repos\MirrorOfErised\MirrorOfErised.api\obj\Debug\netcoreapp3.1\staticwebassets\MirrorOfErised.api.StaticWebAssets.xml
+C:\Users\jens\source\repos\MirrorOfErised\MirrorOfErised.api\obj\Debug\netcoreapp3.1\MirrorOfErised.api.AssemblyInfoInputs.cache
+C:\Users\jens\source\repos\MirrorOfErised\MirrorOfErised.api\obj\Debug\netcoreapp3.1\MirrorOfErised.api.AssemblyInfo.cs
+C:\Users\jens\source\repos\MirrorOfErised\MirrorOfErised.api\obj\Debug\netcoreapp3.1\MirrorOfErised.api.RazorTargetAssemblyInfo.cache
