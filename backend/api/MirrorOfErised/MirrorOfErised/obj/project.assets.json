@@ -1265,6 +1265,18 @@
           }
         }
       },
+      "SendGrid/9.15.1": {
+        "type": "package",
+        "dependencies": {
+          "Newtonsoft.Json": "9.0.1"
+        },
+        "compile": {
+          "lib/netstandard2.0/SendGrid.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/SendGrid.dll": {}
+        }
+      },
       "System.AppContext/4.3.0": {
         "type": "package",
         "dependencies": {
@@ -4813,6 +4825,26 @@
         "runtimes/win-x86/native/sni.dll",
         "useSharedDesignerContext.txt",
         "version.txt"
+      ]
+    },
+    "SendGrid/9.15.1": {
+      "sha512": "w5zilPGYpo+QG+Mk2XRD/pBd7LgaRHU6KKE67yFOWkAoNTyTijUs4QUooDWOSENRsL0PaMIPQyz4rV2tBrPirA==",
+      "type": "package",
+      "path": "sendgrid/9.15.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net452/SendGrid.dll",
+        "lib/net452/SendGrid.pdb",
+        "lib/net452/SendGrid.xml",
+        "lib/netstandard1.3/SendGrid.dll",
+        "lib/netstandard1.3/SendGrid.pdb",
+        "lib/netstandard1.3/SendGrid.xml",
+        "lib/netstandard2.0/SendGrid.dll",
+        "lib/netstandard2.0/SendGrid.pdb",
+        "lib/netstandard2.0/SendGrid.xml",
+        "sendgrid.9.15.1.nupkg.sha512",
+        "sendgrid.nuspec"
       ]
     },
     "System.AppContext/4.3.0": {
@@ -8940,7 +8972,8 @@
       "Microsoft.EntityFrameworkCore.Tools >= 3.1.1",
       "Microsoft.VisualStudio.Azure.Containers.Tools.Targets >= 1.9.10",
       "Microsoft.VisualStudio.Web.CodeGeneration.Design >= 3.1.2",
-      "MirrorOfErised.models >= 1.0.0"
+      "MirrorOfErised.models >= 1.0.0",
+      "SendGrid >= 9.15.1"
     ]
   },
   "packageFolders": {
@@ -8950,11 +8983,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\jens\\source\\repos\\MirrorOfErised\\MirrorOfErised\\MirrorOfErised.csproj",
+      "projectUniqueName": "F:\\School\\magic-mirror\\backend\\api\\MirrorOfErised\\MirrorOfErised\\MirrorOfErised.csproj",
       "projectName": "MirrorOfErised",
-      "projectPath": "C:\\Users\\jens\\source\\repos\\MirrorOfErised\\MirrorOfErised\\MirrorOfErised.csproj",
+      "projectPath": "F:\\School\\magic-mirror\\backend\\api\\MirrorOfErised\\MirrorOfErised\\MirrorOfErised.csproj",
       "packagesPath": "C:\\Users\\jens\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\jens\\source\\repos\\MirrorOfErised\\MirrorOfErised\\obj\\",
+      "outputPath": "F:\\School\\magic-mirror\\backend\\api\\MirrorOfErised\\MirrorOfErised\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Microsoft\\Xamarin\\NuGet\\"
@@ -8974,8 +9007,8 @@
       "frameworks": {
         "netcoreapp3.1": {
           "projectReferences": {
-            "C:\\Users\\jens\\source\\repos\\MirrorOfErised\\MirrorOfErised.models\\MirrorOfErised.models.csproj": {
-              "projectPath": "C:\\Users\\jens\\source\\repos\\MirrorOfErised\\MirrorOfErised.models\\MirrorOfErised.models.csproj"
+            "F:\\School\\magic-mirror\\backend\\api\\MirrorOfErised\\MirrorOfErised.models\\MirrorOfErised.models.csproj": {
+              "projectPath": "F:\\School\\magic-mirror\\backend\\api\\MirrorOfErised\\MirrorOfErised.models\\MirrorOfErised.models.csproj"
             }
           }
         }
@@ -9024,6 +9057,10 @@
           "Microsoft.VisualStudio.Web.CodeGeneration.Design": {
             "target": "Package",
             "version": "[3.1.2, )"
+          },
+          "SendGrid": {
+            "target": "Package",
+            "version": "[9.15.1, )"
           }
         },
         "imports": [

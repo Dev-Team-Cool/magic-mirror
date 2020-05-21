@@ -18,6 +18,8 @@ using MirrorOfErised.models.Repos;
 using MirrorOfErised.Models;
 using MirrorOfErised.models.Data;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using MirrorOfErised.Services;
 
 namespace MirrorOfErised
 {
@@ -38,7 +40,10 @@ namespace MirrorOfErised
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
-            services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+            services.AddDefaultIdentity<IdentityUser>(options => {
+                options.SignIn.RequireConfirmedAccount = false;
+                options.SignIn.RequireConfirmedEmail = true;
+            })
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             //google toevoegen
 
@@ -102,6 +107,9 @@ namespace MirrorOfErised
 
             services.AddControllersWithViews();
             services.AddRazorPages();
+
+            services.AddTransient<IEmailSender, EmailSender>();
+            services.Configure<AuthMessageSenderOptions>(Configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
