@@ -326,3 +326,7 @@ F:\School\magic-mirror\backend\api\MirrorOfErised\MirrorOfErised\bin\Debug\netco
 F:\School\magic-mirror\backend\api\MirrorOfErised\MirrorOfErised\obj\Debug\netcoreapp3.1\MirrorOfErised.MvcApplicationPartsAssemblyInfo.cs
 F:\School\magic-mirror\backend\api\MirrorOfErised\MirrorOfErised\obj\Debug\netcoreapp3.1\MirrorOfErised.MvcApplicationPartsAssemblyInfo.cache
 F:\School\magic-mirror\backend\api\MirrorOfErised\MirrorOfErised\obj\Debug\netcoreapp3.1\Razor\Views\Error\ErrorPage.cshtml.g.cs
+F:\School\magic-mirror\backend\api\MirrorOfErised\MirrorOfErised\obj\Debug\netcoreapp3.1\Razor\Areas\Identity\Pages\Account\ConfirmEmail.cshtml.g.cs
+F:\School\magic-mirror\backend\api\MirrorOfErised\MirrorOfErised\obj\Debug\netcoreapp3.1\Razor\Areas\Identity\Pages\Account\_ViewImports.cshtml.g.cs
+F:\School\magic-mirror\backend\api\MirrorOfErised\MirrorOfErised\obj\Debug\netcoreapp3.1\Razor\Areas\Identity\Pages\_ValidationScriptsPartial.cshtml.g.cs
+F:\School\magic-mirror\backend\api\MirrorOfErised\MirrorOfErised\obj\Debug\netcoreapp3.1\Razor\Areas\Identity\Pages\_ViewImports.cshtml.g.cs
