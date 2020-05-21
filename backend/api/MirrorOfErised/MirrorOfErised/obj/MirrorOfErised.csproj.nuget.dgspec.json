@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\jens\\source\\repos\\MirrorOfErised\\MirrorOfErised\\MirrorOfErised.csproj": {}
+    "F:\\School\\magic-mirror\\backend\\api\\MirrorOfErised\\MirrorOfErised\\MirrorOfErised.csproj": {}
   },
   "projects": {
-    "C:\\Users\\jens\\source\\repos\\MirrorOfErised\\MirrorOfErised.models\\MirrorOfErised.models.csproj": {
+    "F:\\School\\magic-mirror\\backend\\api\\MirrorOfErised\\MirrorOfErised.models\\MirrorOfErised.models.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\jens\\source\\repos\\MirrorOfErised\\MirrorOfErised.models\\MirrorOfErised.models.csproj",
+        "projectUniqueName": "F:\\School\\magic-mirror\\backend\\api\\MirrorOfErised\\MirrorOfErised.models\\MirrorOfErised.models.csproj",
         "projectName": "MirrorOfErised.models",
-        "projectPath": "C:\\Users\\jens\\source\\repos\\MirrorOfErised\\MirrorOfErised.models\\MirrorOfErised.models.csproj",
+        "projectPath": "F:\\School\\magic-mirror\\backend\\api\\MirrorOfErised\\MirrorOfErised.models\\MirrorOfErised.models.csproj",
         "packagesPath": "C:\\Users\\jens\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\jens\\source\\repos\\MirrorOfErised\\MirrorOfErised.models\\obj\\",
+        "outputPath": "F:\\School\\magic-mirror\\backend\\api\\MirrorOfErised\\MirrorOfErised.models\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Microsoft\\Xamarin\\NuGet\\"
@@ -84,14 +84,14 @@
         }
       }
     },
-    "C:\\Users\\jens\\source\\repos\\MirrorOfErised\\MirrorOfErised\\MirrorOfErised.csproj": {
+    "F:\\School\\magic-mirror\\backend\\api\\MirrorOfErised\\MirrorOfErised\\MirrorOfErised.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\jens\\source\\repos\\MirrorOfErised\\MirrorOfErised\\MirrorOfErised.csproj",
+        "projectUniqueName": "F:\\School\\magic-mirror\\backend\\api\\MirrorOfErised\\MirrorOfErised\\MirrorOfErised.csproj",
         "projectName": "MirrorOfErised",
-        "projectPath": "C:\\Users\\jens\\source\\repos\\MirrorOfErised\\MirrorOfErised\\MirrorOfErised.csproj",
+        "projectPath": "F:\\School\\magic-mirror\\backend\\api\\MirrorOfErised\\MirrorOfErised\\MirrorOfErised.csproj",
         "packagesPath": "C:\\Users\\jens\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\jens\\source\\repos\\MirrorOfErised\\MirrorOfErised\\obj\\",
+        "outputPath": "F:\\School\\magic-mirror\\backend\\api\\MirrorOfErised\\MirrorOfErised\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Microsoft\\Xamarin\\NuGet\\"
@@ -111,8 +111,8 @@
         "frameworks": {
           "netcoreapp3.1": {
             "projectReferences": {
-              "C:\\Users\\jens\\source\\repos\\MirrorOfErised\\MirrorOfErised.models\\MirrorOfErised.models.csproj": {
-                "projectPath": "C:\\Users\\jens\\source\\repos\\MirrorOfErised\\MirrorOfErised.models\\MirrorOfErised.models.csproj"
+              "F:\\School\\magic-mirror\\backend\\api\\MirrorOfErised\\MirrorOfErised.models\\MirrorOfErised.models.csproj": {
+                "projectPath": "F:\\School\\magic-mirror\\backend\\api\\MirrorOfErised\\MirrorOfErised.models\\MirrorOfErised.models.csproj"
               }
             }
           }
@@ -161,6 +161,10 @@
             "Microsoft.VisualStudio.Web.CodeGeneration.Design": {
               "target": "Package",
               "version": "[3.1.2, )"
+            },
+            "SendGrid": {
+              "target": "Package",
+              "version": "[9.15.1, )"
             }
           },
           "imports": [

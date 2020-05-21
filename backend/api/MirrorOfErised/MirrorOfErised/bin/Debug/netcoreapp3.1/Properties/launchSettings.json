@@ -12,7 +12,8 @@
       "commandName": "IISExpress",
       "launchBrowser": true,
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "APIKEY_SENDGRID": "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"
       }
     },
     "MirrorOfErised": {

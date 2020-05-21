@@ -33,8 +33,8 @@ namespace MirrorOfErised
                 try
                 {
                     var context = services.GetRequiredService<ApplicationDbContext>();
-/*                    context.Database.EnsureDeleted();//verwijder (-> niet doen in productie)
-*/
+                    context.Database.EnsureDeleted();//verwijder (-> niet doen in productie)
+
                     context.Database.EnsureCreated(); //maakt db aan volgens modellen
                     context.Database.Migrate();//voert migraties uit
 
