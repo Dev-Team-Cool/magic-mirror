@@ -17,9 +17,19 @@ namespace MirrorOfErised.ViewModels
         public string Name { get; set; }
 
         [Required(ErrorMessage = "The image is obligatory")]
-        [Display(Name = "Image 1")]
+        [Display(Name = "Image")]
 
         public IFormFile Image1 { get; set; }
+
+        [Required(ErrorMessage = "The image is obligatory")]
+        [Display(Name = "Image")]
+
+        public IFormFile Image2 { get; set; }
+
+        [Required(ErrorMessage = "The image is obligatory")]
+        [Display(Name = "Image")]
+
+        public IFormFile Image3 { get; set; }
 
         [ScaffoldColumn(false)]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

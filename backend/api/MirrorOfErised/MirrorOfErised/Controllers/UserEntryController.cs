@@ -35,28 +35,45 @@ namespace MirrorOfErised.Controllers
         }
 
         // GET: UserEntry/Details/5
-        public ActionResult Details(int id)
+        public ActionResult Details(string id)
         {
+            if (id == null)
+            {
+                return Redirect("/Error/400");
+            }
+
             return View();
         }
 
         // GET: UserEntry/Create
-        public ActionResult Create()
+        public async Task<ActionResult> Create()
         {
+            IdentityUser identityUser = await _userManager.GetUserAsync(User);
+            if (identityUser.EmailConfirmed == false)
+            {
+                return Redirect("/Error/403");
+            }
             return View();
         }
 
         // POST: UserEntry/Create
+
         [HttpPost]
         [ValidateAntiForgeryToken]  
         public async Task<ActionResult> Create(UserEntryCreateViewModel model )
         {
+ 
             if (ModelState.IsValid)
             {
                 try
                 {
                     string uniqueFileName = null;
                     IdentityUser identityUser = await _userManager.GetUserAsync(User);
+                    if (identityUser.EmailConfirmed == false)
+                    {
+                        return Redirect("/Error/403");
+                    }
+
                     if (model.Image1 !=null)
                     {
                         string uploadsFolder = Path.Combine(hostingEnvironment.WebRootPath, "images");
