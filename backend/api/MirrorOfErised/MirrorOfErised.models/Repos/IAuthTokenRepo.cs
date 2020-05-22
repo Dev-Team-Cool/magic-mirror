@@ -12,5 +12,8 @@ namespace MirrorOfErised.models.Repos
     {
         Task<AuthToken> Addtokens(List<AuthenticationToken> Token, List<Claim> claims);
         Task<IEnumerable<AuthToken>> GetTokensAsync();
+        Task<AuthToken> GetTokensForNameAsync(string name);
+
+        
     }
 }
