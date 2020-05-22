@@ -40,10 +40,11 @@ namespace MirrorOfErised
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
+
             services.AddDefaultIdentity<IdentityUser>(options => {
                 options.SignIn.RequireConfirmedAccount = false;
                 options.SignIn.RequireConfirmedEmail = true;
-            })
+            }).AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             //google toevoegen
 
@@ -113,7 +114,7 @@ namespace MirrorOfErised
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, UserManager<IdentityUser> usermgr, RoleManager<IdentityRole> rolemgr)
         {
             if (env.IsDevelopment())
             {
@@ -141,6 +142,10 @@ namespace MirrorOfErised
                     pattern: "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
             });
+
+
+            ApplicationDbExtensions.SeedRoles(rolemgr).Wait();
+            ApplicationDbExtensions.SeedUsers(usermgr, rolemgr).Wait();
         }
     }
 }
