@@ -17,16 +17,20 @@ namespace MirrorOfErised.models.Data
         public async static Task SeedRoles(RoleManager<IdentityRole> roleManager)
         {
 
+            if (await roleManager.FindByNameAsync("Admin") != null)
+            {
+                await roleManager.CreateAsync(new IdentityRole("Admin"));  //Admin over alles
+
+            }
 
 
-            await roleManager.CreateAsync(new IdentityRole("Admin"));  //Admin over alles
 
         }
 
         public async static Task SeedUsers(UserManager<IdentityUser> userMgr, RoleManager<IdentityRole> roleManager)
         {
             //1. Admin aanmaken ---------------------------------------------------
-            if (await userMgr.FindByNameAsync("MirrorOfErised") == null)  //controleer de UserName
+            if (await userMgr.FindByNameAsync("mirror@mirror.ow") == null)  //controleer de UserName
             {
                 var user = new IdentityUser()
                 {

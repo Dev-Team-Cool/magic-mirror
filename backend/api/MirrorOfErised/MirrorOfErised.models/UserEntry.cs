@@ -9,7 +9,7 @@ using System.Text.Json.Serialization;
 
 namespace MirrorOfErised.models
 {
-   public class UserEntry
+    public class UserEntry
     {
         [Required(ErrorMessage = "Name is obligatory")]
         [Display(Name = "Display name")]
@@ -19,6 +19,16 @@ namespace MirrorOfErised.models
         [Display(Name = "Image")]
 
         public string Image1Path { get; set; }
+
+        [Required(ErrorMessage = "The image is obligatory")]
+        [Display(Name = "Image")]
+
+        public string Image2Path { get; set; }
+
+        [Required(ErrorMessage = "The image is obligatory")]
+        [Display(Name = "Image")]
+
+        public string Image3Path { get; set; }
 
         [ScaffoldColumn(false)]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using MirrorOfErised.models.Data;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
@@ -86,6 +88,14 @@ namespace MirrorOfErised.models.Repos
         public Task<IEnumerable<AuthToken>> GetTokensAsync()
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<AuthToken> GetTokensForNameAsync(string Username)
+        {
+
+            var User = context.Tokens.Where(e => e.UserName == Username).OrderByDescending(e => e.ExpireDate).Take(1);
+
+            return User.FirstOrDefault();
         }
     }
 }
