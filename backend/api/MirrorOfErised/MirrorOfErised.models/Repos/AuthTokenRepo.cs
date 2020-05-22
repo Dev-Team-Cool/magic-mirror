@@ -38,6 +38,11 @@ namespace MirrorOfErised.models.Repos
                         selected.Token = token.Value;
 
                     }
+                    if (token.Name == "expires_at")
+                    {
+                        selected.ExpireDate = DateTime.Parse(token.Value.ToString());
+
+                    }
 
                 }
                 foreach (var claim in claims)
@@ -54,9 +59,16 @@ namespace MirrorOfErised.models.Repos
                                 {
                                     SelectedWaardering.WaarderingId = Guid.NewGuid().ToString();
                                 }*/
-
-
-                var result = await context.Tokens.AddAsync(selected); //cahngeTraking => iets wat in geheugen wordt bijgehouden
+                try
+                {
+                    var result = await context.Tokens.AddAsync(selected);
+                }
+                catch (Exception)
+                {
+                    var result = context.Tokens.Update(selected);
+                }
+                 //cahngeTraking => iets wat in geheugen wordt bijgehouden
+                 //cahngeTraking => iets wat in geheugen wordt bijgehouden
                 await context.SaveChangesAsync();
 
                 

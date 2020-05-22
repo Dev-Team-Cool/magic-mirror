@@ -117,6 +117,7 @@ namespace MirrorOfErised.Controllers
         public ActionResult Edit(int id)
         {
             return View();
+
         }
 
         // POST: UserEntry/Edit/5
