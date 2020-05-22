@@ -20,6 +20,7 @@ class FacialRecognition:
             raise TypeError('No recognition model was loaded. Make sure one exists.')
 
         embedding = self.__calculate_embedding(img_tensor)
+        return self.__model.predict(embedding)
     
     def __calculate_embedding(self, img_tensor: Tensor):
         print(img_tensor.shape)
