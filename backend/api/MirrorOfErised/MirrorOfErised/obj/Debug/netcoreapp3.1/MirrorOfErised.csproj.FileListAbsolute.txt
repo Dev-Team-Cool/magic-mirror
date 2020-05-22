@@ -330,3 +330,7 @@ F:\School\magic-mirror\backend\api\MirrorOfErised\MirrorOfErised\obj\Debug\netco
 F:\School\magic-mirror\backend\api\MirrorOfErised\MirrorOfErised\obj\Debug\netcoreapp3.1\Razor\Areas\Identity\Pages\Account\_ViewImports.cshtml.g.cs
 F:\School\magic-mirror\backend\api\MirrorOfErised\MirrorOfErised\obj\Debug\netcoreapp3.1\Razor\Areas\Identity\Pages\_ValidationScriptsPartial.cshtml.g.cs
 F:\School\magic-mirror\backend\api\MirrorOfErised\MirrorOfErised\obj\Debug\netcoreapp3.1\Razor\Areas\Identity\Pages\_ViewImports.cshtml.g.cs
+F:\School\magic-mirror\backend\api\MirrorOfErised\MirrorOfErised\obj\Debug\netcoreapp3.1\Razor\Areas\Identity\Pages\Account\ExternalLogin.cshtml.g.cs
+F:\School\magic-mirror\backend\api\MirrorOfErised\MirrorOfErised\obj\Debug\netcoreapp3.1\Razor\Areas\Identity\Pages\Account\Manage\_ManageNav.cshtml.g.cs
+F:\School\magic-mirror\backend\api\MirrorOfErised\MirrorOfErised\obj\Debug\netcoreapp3.1\Razor\Areas\Identity\Pages\Account\Manage\_ViewImports.cshtml.g.cs
+F:\School\magic-mirror\backend\api\MirrorOfErised\MirrorOfErised\obj\Debug\netcoreapp3.1\Razor\Areas\Identity\Pages\Account\RegisterConfirmation.cshtml.g.cs
