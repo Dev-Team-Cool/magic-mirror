@@ -145,7 +145,7 @@ namespace MirrorOfErised
 
 
             ApplicationDbExtensions.SeedRoles(rolemgr).Wait();
-/*            ApplicationDbExtensions.SeedUsers(usermgr, rolemgr).Wait();
-*/        }
+            ApplicationDbExtensions.SeedUsers(usermgr, rolemgr).Wait();
+        }
     }
 }
