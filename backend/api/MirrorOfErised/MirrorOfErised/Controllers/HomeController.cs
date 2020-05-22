@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using MirrorOfErised.models.Repos;
@@ -15,16 +16,31 @@ namespace MirrorOfErised.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly IAuthTokenRepo authtokenrepo;
+        private readonly UserManager<IdentityUser> userManager;
 
-        public HomeController(ILogger<HomeController> logger ,IAuthTokenRepo authTokenRepo)
+        public HomeController(ILogger<HomeController> logger, IAuthTokenRepo authTokenRepo, UserManager<IdentityUser> userManager)
         {
             _logger = logger;
             this.authtokenrepo = authTokenRepo;
+            this.userManager = userManager;
         }
 
         public async Task<IActionResult> Index()
         {
-           ViewBag.accessToken = await HttpContext.GetTokenAsync("TicketCreated");
+            //
+            try
+            {
+                IdentityUser identityUser = await userManager.GetUserAsync(User);
+                if (identityUser.EmailConfirmed == false)
+                {
+                    ViewBag.verified = "NO";
+                }
+            }
+            catch (Exception)
+            {
+                return View();
+
+            }
 
             return View();
         }
