@@ -63,8 +63,8 @@ namespace Project.API.Controllers
         // GET: api/AuthToken/id
         [HttpGet("{UserName}")]
         /*        [Authorize(AuthenticationSchemes = AuthSchemes, Roles = "Admin")]*/
-/*        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-*/        public async Task<ActionResult<AuthToken>> GetEvent(string UserName)
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<ActionResult<AuthToken>> GetEvent(string UserName)
         {
             if (string.IsNullOrEmpty(UserName))
             {
