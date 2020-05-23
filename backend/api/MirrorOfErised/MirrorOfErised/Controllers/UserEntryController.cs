@@ -21,12 +21,17 @@ namespace MirrorOfErised.Controllers
         private readonly IHostingEnvironment hostingEnvironment;
         private readonly IUserEntryRepo userEntryrepo;
 
-        public UserEntryController(IUserEntryRepo userEntry, UserManager<IdentityUser> userManager, IHostingEnvironment hostingEnvironment )   /*IUserEventRepo userEventRepo,*/
+        public GoogleCalendarAPI GoogleCalendarAPI { get; }
+        public IAuthTokenRepo AuthTokenRepo { get; }
+
+        public UserEntryController(IUserEntryRepo userEntry, UserManager<IdentityUser> userManager, IHostingEnvironment hostingEnvironment , GoogleCalendarAPI googleCalendarAPI , IAuthTokenRepo authTokenRepo )   /*IUserEventRepo userEventRepo,*/
         {
             this.userEntryrepo = userEntry;
 
             _userManager = userManager;
             this.hostingEnvironment = hostingEnvironment;
+            GoogleCalendarAPI = googleCalendarAPI;
+            AuthTokenRepo = authTokenRepo;
         }
         // GET: UserEntry
         public ActionResult Index()
@@ -112,6 +117,54 @@ namespace MirrorOfErised.Controllers
 
 
         }
+
+
+        // settings page
+
+        public ActionResult Settings()
+        {
+            return View();
+        }
+
+
+
+        // POST: UserEntry/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+
+        public async Task<ActionResult> Settings(IFormCollection collection)
+        {
+            try
+            {
+                // Retrieve access token and refresh token from database
+                string accessToken = "...";
+                string refreshToken = "...";
+
+                IdentityUser user = await _userManager.GetUserAsync(User);
+
+                AuthToken authToken = await AuthTokenRepo.GetTokensForNameAsync(user.UserName);
+
+
+
+                // Get Key
+                var filesResponse = await GoogleCalendarAPI.ListFiles(authToken.Token, authToken.RefreshToken, async token =>
+                {
+             
+                    token.Contains("e");
+                });
+
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return View();
+            }
+        }
+
+
+
+
 
         // GET: UserEntry/Edit/5
         public ActionResult Edit(int id)

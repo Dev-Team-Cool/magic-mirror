@@ -8,14 +8,54 @@
     ".NETCoreApp,Version=v3.1": {
       "MirrorOfErised.models/1.0.0": {
         "dependencies": {
+          "Google.Apis.Auth": "1.45.0",
           "Microsoft.AspNetCore.Authentication.Abstractions": "2.2.0",
           "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "3.1.1",
           "Microsoft.EntityFrameworkCore": "3.1.1",
           "Microsoft.EntityFrameworkCore.SqlServer": "3.1.1",
-          "Microsoft.EntityFrameworkCore.Tools": "3.1.1"
+          "Microsoft.EntityFrameworkCore.Tools": "3.1.1",
+          "Polly": "7.2.1"
         },
         "runtime": {
           "MirrorOfErised.models.dll": {}
+        }
+      },
+      "Google.Apis/1.45.0": {
+        "dependencies": {
+          "Google.Apis.Core": "1.45.0"
+        },
+        "runtime": {
+          "lib/netstandard2.0/Google.Apis.dll": {
+            "assemblyVersion": "1.45.0.0",
+            "fileVersion": "1.45.0.0"
+          }
+        }
+      },
+      "Google.Apis.Auth/1.45.0": {
+        "dependencies": {
+          "Google.Apis": "1.45.0",
+          "Google.Apis.Core": "1.45.0"
+        },
+        "runtime": {
+          "lib/netstandard2.0/Google.Apis.Auth.PlatformServices.dll": {
+            "assemblyVersion": "1.45.0.0",
+            "fileVersion": "1.45.0.0"
+          },
+          "lib/netstandard2.0/Google.Apis.Auth.dll": {
+            "assemblyVersion": "1.45.0.0",
+            "fileVersion": "1.45.0.0"
+          }
+        }
+      },
+      "Google.Apis.Core/1.45.0": {
+        "dependencies": {
+          "Newtonsoft.Json": "12.0.3"
+        },
+        "runtime": {
+          "lib/netstandard2.0/Google.Apis.Core.dll": {
+            "assemblyVersion": "1.45.0.0",
+            "fileVersion": "1.45.0.0"
+          }
         }
       },
       "Microsoft.AspNetCore.Authentication.Abstractions/2.2.0": {
@@ -371,6 +411,22 @@
         "dependencies": {
           "System.Security.AccessControl": "4.5.0",
           "System.Security.Principal.Windows": "4.5.0"
+        }
+      },
+      "Newtonsoft.Json/12.0.3": {
+        "runtime": {
+          "lib/netstandard2.0/Newtonsoft.Json.dll": {
+            "assemblyVersion": "12.0.0.0",
+            "fileVersion": "12.0.3.23909"
+          }
+        }
+      },
+      "Polly/7.2.1": {
+        "runtime": {
+          "lib/netstandard2.0/Polly.dll": {
+            "assemblyVersion": "7.0.0.0",
+            "fileVersion": "7.2.1.0"
+          }
         }
       },
       "runtime.native.System/4.3.0": {
@@ -957,6 +1013,27 @@
       "serviceable": false,
       "sha512": ""
     },
+    "Google.Apis/1.45.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-V/huVWohIr8c2Zg9+W+8fBElPd8Smz03k8e+tq/X9JsRdvAPaCBNwvMVNoyPbH+x/2tEFyX+n1jvIGFNC4hLzw==",
+      "path": "google.apis/1.45.0",
+      "hashPath": "google.apis.1.45.0.nupkg.sha512"
+    },
+    "Google.Apis.Auth/1.45.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-dPAhjWofPoGzNjjgmz1zUfnzOsj2lKr/cUgC03NETYIbSZoyLeC9Sc+OCZH9wL0DdklLnvopoFx/v7aTqVjamw==",
+      "path": "google.apis.auth/1.45.0",
+      "hashPath": "google.apis.auth.1.45.0.nupkg.sha512"
+    },
+    "Google.Apis.Core/1.45.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-hYqI4v3kEIfWxiYierMo59XCAOFBoH30RqCzomSubK9JXGAv/o0Cp+gxEeAH9GspxQcZNZV50ouu/8Ypigd7fw==",
+      "path": "google.apis.core/1.45.0",
+      "hashPath": "google.apis.core.1.45.0.nupkg.sha512"
+    },
     "Microsoft.AspNetCore.Authentication.Abstractions/2.2.0": {
       "type": "package",
       "serviceable": true,
@@ -1194,6 +1271,20 @@
       "sha512": "sha512-+FWlwd//+Tt56316p00hVePBCouXyEzT86Jb3+AuRotTND0IYn0OO3obs1gnQEs/txEnt+rF2JBGLItTG+Be6A==",
       "path": "microsoft.win32.registry/4.5.0",
       "hashPath": "microsoft.win32.registry.4.5.0.nupkg.sha512"
+    },
+    "Newtonsoft.Json/12.0.3": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-6mgjfnRB4jKMlzHSl+VD+oUc1IebOZabkbyWj2RiTgWwYPPuaK1H97G1sHqGwPlS5npiF5Q0OrxN1wni2n5QWg==",
+      "path": "newtonsoft.json/12.0.3",
+      "hashPath": "newtonsoft.json.12.0.3.nupkg.sha512"
+    },
+    "Polly/7.2.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-Od8SnPlpQr+PuAS0YzY3jgtzaDNknlIuAaldN2VEIyTvm/wCg22C5nUkUV1BEG8rIsub5RFMoV/NEQ0tM/+7Uw==",
+      "path": "polly/7.2.1",
+      "hashPath": "polly.7.2.1.nupkg.sha512"
     },
     "runtime.native.System/4.3.0": {
       "type": "package",

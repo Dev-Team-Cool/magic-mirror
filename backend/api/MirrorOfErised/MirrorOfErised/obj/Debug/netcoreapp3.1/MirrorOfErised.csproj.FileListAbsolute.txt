@@ -334,3 +334,5 @@ F:\School\magic-mirror\backend\api\MirrorOfErised\MirrorOfErised\obj\Debug\netco
 F:\School\magic-mirror\backend\api\MirrorOfErised\MirrorOfErised\obj\Debug\netcoreapp3.1\Razor\Areas\Identity\Pages\Account\Manage\_ManageNav.cshtml.g.cs
 F:\School\magic-mirror\backend\api\MirrorOfErised\MirrorOfErised\obj\Debug\netcoreapp3.1\Razor\Areas\Identity\Pages\Account\Manage\_ViewImports.cshtml.g.cs
 F:\School\magic-mirror\backend\api\MirrorOfErised\MirrorOfErised\obj\Debug\netcoreapp3.1\Razor\Areas\Identity\Pages\Account\RegisterConfirmation.cshtml.g.cs
+F:\School\magic-mirror\backend\api\MirrorOfErised\MirrorOfErised\bin\Debug\netcoreapp3.1\Polly.dll
+F:\School\magic-mirror\backend\api\MirrorOfErised\MirrorOfErised\obj\Debug\netcoreapp3.1\Razor\Views\UserEntry\Settings.cshtml.g.cs
