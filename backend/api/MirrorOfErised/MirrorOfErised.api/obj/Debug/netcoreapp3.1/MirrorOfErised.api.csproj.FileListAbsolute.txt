@@ -79,3 +79,8 @@ F:\School\magic-mirror\backend\api\MirrorOfErised\MirrorOfErised.api\bin\Debug\n
 F:\School\magic-mirror\backend\api\MirrorOfErised\MirrorOfErised.api\bin\Debug\netcoreapp3.1\MirrorOfErised.api.pdb
 F:\School\magic-mirror\backend\api\MirrorOfErised\MirrorOfErised.api\obj\Debug\netcoreapp3.1\MirrorOfErised.api.dll
 F:\School\magic-mirror\backend\api\MirrorOfErised\MirrorOfErised.api\obj\Debug\netcoreapp3.1\MirrorOfErised.api.pdb
+F:\School\magic-mirror\backend\api\MirrorOfErised\MirrorOfErised.api\bin\Debug\netcoreapp3.1\Google.Apis.dll
+F:\School\magic-mirror\backend\api\MirrorOfErised\MirrorOfErised.api\bin\Debug\netcoreapp3.1\Google.Apis.Auth.PlatformServices.dll
+F:\School\magic-mirror\backend\api\MirrorOfErised\MirrorOfErised.api\bin\Debug\netcoreapp3.1\Google.Apis.Auth.dll
+F:\School\magic-mirror\backend\api\MirrorOfErised\MirrorOfErised.api\bin\Debug\netcoreapp3.1\Google.Apis.Core.dll
+F:\School\magic-mirror\backend\api\MirrorOfErised\MirrorOfErised.api\bin\Debug\netcoreapp3.1\Polly.dll

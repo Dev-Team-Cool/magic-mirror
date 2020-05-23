@@ -66,6 +66,7 @@ namespace MirrorOfErised
                 //scope for acces
                 options.Scope.Add("https://www.googleapis.com/auth/calendar.readonly");
                 options.Scope.Add("https://www.googleapis.com/auth/calendar.events.readonly");
+                options.Scope.Add("https://www.googleapis.com/auth/assistant-sdk-prototype");
                 
                 options.Events.OnCreatingTicket = ctx =>
                 {
@@ -101,10 +102,10 @@ namespace MirrorOfErised
                     //return Task.CompletedTask;
 
                 };
-            }); 
+            });
 
 
-
+            services.AddHttpClient<GoogleCalendarAPI>();
 
             services.AddControllersWithViews();
             services.AddRazorPages();
