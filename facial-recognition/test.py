@@ -4,7 +4,7 @@ from matplotlib.image import imread
 
 train_data = '/home/florian/Documents/school/magic-mirror/facial-recognition/data/train'
 
-facial_recognition = FacialRecognition()
+facial_recognition = FacialRecognition('facerecognition.model')
 
 # Train the classifier
 facial_recognition.train_classifier(train_data)
