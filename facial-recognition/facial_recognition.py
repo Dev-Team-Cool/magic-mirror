@@ -6,9 +6,9 @@ from utils import load_images
 
 
 class FacialRecognition:
-    def __init__(self):
+    def __init__(self, pretrained):
         self.__resnet = InceptionResnetV1('vggface2').eval()
-        self.__model = self.load_model()
+        self.__model = self.load_model(pretrained)
     
     
     def predict(self, img_tensor: Tensor):
