@@ -50,8 +50,8 @@ class FacialRecognition:
     def export_classifier(self, path):
         dump(self.__model, path)
 
-    def load_model(self):
+    def load_model(self, model_path):
         try:
-            return load('facerecognition.dev')
+            return load(model_path)
         except:
             return None
