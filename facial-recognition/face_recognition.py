@@ -31,9 +31,10 @@ class FacialRecognition:
 
     def __generate_tensor(self, image):
         from facenet_pytorch import MTCNN
-        return MTCNN(image)
+        from matplotlib.image import imread
 
-    def train(self):
+        img_file = imread(image)
+        return MTCNN().forward(img_file)
         from sklearn.neighbors import KNeighborsClassifier
         if self.__model: return
         
