@@ -1,6 +1,7 @@
 from facenet_pytorch import InceptionResnetV1
 from torch import Tensor
 from joblib import dump, load
+from utils import load_images
 
 
 class FacialRecognition:
@@ -27,6 +28,21 @@ class FacialRecognition:
         embedding = self.__resnet.forward(img_tensor.unsqueeze(0)).detach()
         print(embedding.shape)
         return embedding
+
+    def __generate_tensor(self, image):
+        from facenet_pytorch import MTCNN
+        return MTCNN(image)
+
+    def train(self):
+        from sklearn.neighbors import KNeighborsClassifier
+        if self.__model: return
+        
+        X_train, y_train = load_images('data/train')
+        X_train = [self.__calculate_embedding((self.__generate_tensor(image))) for image in X_train]
+        knn_classifier = KNeighborsClassifier(n_neighbors=2)
+        knn_classifier.fit(X_train, y_train)
+        print('Model trained')
+        self.__model = knn_classifier
 
     def load_model(self):
         try:
