@@ -8,7 +8,7 @@ facial_recognition = FacialRecognition()
 
 # Train the classifier
 facial_recognition.train_classifier(train_data)
-facial_recognition.export_classifier('facerecognition.dev')
+facial_recognition.export_classifier('facerecognition.model')
 
 # Read image and predict
 test_image_path = '/home/florian/Documents/school/magic-mirror/facial-recognition/data/val/elton_john/httpafilesbiographycomimageuploadcfillcssrgbdprgfacehqwMTEODAOTcxNjcMjczMjkzjpg.jpg'
