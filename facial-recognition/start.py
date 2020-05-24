@@ -1,6 +1,4 @@
-from Models.faceDetection import FaceDetection
-import cv2
-import numpy
+from face_detection import FaceDetection
 
 detection = FaceDetection()
 detection.start()
