@@ -4,6 +4,7 @@ import threading
 import time
 from facenet_pytorch import MTCNN
 
+
 class FaceDetection(threading.Thread):
     def __init__(self):
         threading.Thread.__init__(self)
@@ -33,6 +34,7 @@ class FaceDetection(threading.Thread):
             if time_elapsed > 1./frame_rate:
                 prev = time.time()
                 self.detectAndConvert(frame)
+                # cv2.imshow('Webcam', frame)
             if cv2.waitKey(10) == 27:
                 break
 
@@ -43,6 +45,7 @@ class FaceDetection(threading.Thread):
         """
         image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
         tensors = self.detector.forward(image)
+        # cv2.rectangle(frame, (tensors[0][0],tensors[0][1]), (tensors[0][2], tensors[0][3]), (255,0,0))
         self._detected_person = tensors
 
 
