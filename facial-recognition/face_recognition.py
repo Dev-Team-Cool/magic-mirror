@@ -1,4 +1,5 @@
 from facenet_pytorch import InceptionResnetV1
+import numpy as np
 from torch import Tensor
 from joblib import dump, load
 from utils import load_images
@@ -45,6 +46,9 @@ class FacialRecognition:
         knn_classifier.fit(X_train, y_train)
         print('Model trained')
         self.__model = knn_classifier
+    
+    def export_classifier(self, path):
+        dump(self.__model, path)
 
     def load_model(self):
         try:
