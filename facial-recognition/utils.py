@@ -10,6 +10,6 @@ def load_images(directory):
             for img_file in os.scandir(sub_dir.path):
                 if img_file.is_file():
                     images.append(img_file.path)
-                    labels.append(sub_dir)
+                    labels.append(sub_dir.name)
     
     return images, labels
