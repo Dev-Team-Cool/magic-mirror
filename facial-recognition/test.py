@@ -1,14 +1,14 @@
-from face_recognition import FacialRecognition
+from facial_recognition import FacialRecognition
 from facenet_pytorch import MTCNN
 from matplotlib.image import imread
 
-train_data = '/home/florian/Documents/school/magic-mirror/facial-recognition/data/train'
+train_data = '/home/florian/Documents/school/magic-mirror/facial-recognition/data/trainV2'
 
-facial_recognition = FacialRecognition('facerecognition.model')
+facial_recognition = FacialRecognition('')
 
 # Train the classifier
 facial_recognition.train_classifier(train_data)
-facial_recognition.export_classifier('facerecognition.model')
+facial_recognition.export_classifier('facial_recognition.model')
 
 # Read image and predict
 test_image_path = '/home/florian/Documents/school/magic-mirror/facial-recognition/data/val/elton_john/httpafilesbiographycomimageuploadcfillcssrgbdprgfacehqwMTEODAOTcxNjcMjczMjkzjpg.jpg'
