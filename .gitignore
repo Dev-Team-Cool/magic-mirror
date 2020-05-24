@@ -1,2 +1,16 @@
 # Python virtual environment
 project-env
+
+# Python compiled binaries
+*/__pycache__
+
+# Training data
+facial-recognition/data
+
+# Trained classifiers
+*.model
+
+# Editor specifics
+.vscode
+.ipynb_checkpoints
+
