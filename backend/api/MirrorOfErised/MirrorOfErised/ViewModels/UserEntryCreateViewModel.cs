@@ -31,6 +31,11 @@ namespace MirrorOfErised.ViewModels
 
         public IFormFile Image3 { get; set; }
 
+        [Display(Name = "Fill in your address if you want traffic info otherwise leave blank")]
+
+        public string Address { get; set; }
+
+
         [ScaffoldColumn(false)]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key]

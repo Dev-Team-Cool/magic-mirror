@@ -55,8 +55,8 @@ namespace MirrorOfErised
             {
                 IConfigurationSection googleAuthNSection = Configuration.GetSection("Authentication:Google");
 
-                options.ClientId = "791529771236-h4e8h0m994t4skqn5ifgi50ct4cadbcn.apps.googleusercontent.com";
-                options.ClientSecret = "E6fxpAJnvPuhk0ZFmDExJZ11";
+                options.ClientId = Environment.GetEnvironmentVariable("CLIENTID");
+                options.ClientSecret = Environment.GetEnvironmentVariable("CLIENTSECRET");
 
                 options.AccessType = "offline";
 
@@ -88,6 +88,7 @@ namespace MirrorOfErised
 
 
                     });
+                    
                     
                     
                     ctx.Properties.StoreTokens(tokens);

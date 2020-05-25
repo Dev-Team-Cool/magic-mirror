@@ -97,5 +97,22 @@ namespace MirrorOfErised.models.Repos
 
             return User.FirstOrDefault();
         }
+
+
+        public async Task UpdateTokenAsync(AuthToken authToken)
+        {
+            try
+            {
+                var result = context.Tokens.Update(authToken);
+                await context.SaveChangesAsync();
+
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+            
+        }
     }
 }

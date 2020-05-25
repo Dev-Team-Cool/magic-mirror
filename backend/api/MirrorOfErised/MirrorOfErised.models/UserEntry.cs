@@ -30,6 +30,9 @@ namespace MirrorOfErised.models
 
         public string Image3Path { get; set; }
 
+        [Display(Name = "Fill in your address if you want traffic info otherwise leave blank")]
+        public string Address { get; set; }
+
         [ScaffoldColumn(false)]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key]
