@@ -14,6 +14,9 @@ namespace MirrorOfErised.models.Repos
         Task<IEnumerable<AuthToken>> GetTokensAsync();
         Task<AuthToken> GetTokensForNameAsync(string name);
 
-        
+        Task UpdateTokenAsync(AuthToken authToken);
+
+
+
     }
 }

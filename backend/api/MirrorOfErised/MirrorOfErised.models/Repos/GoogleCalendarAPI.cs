@@ -1,6 +1,7 @@
 ﻿using Google.Apis.Auth.OAuth2.Responses;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 using Polly;
 using Polly.Retry;
 using System;
@@ -35,8 +36,18 @@ namespace MirrorOfErised.models.Repos
 
             var response = await policy.ExecuteAsync(context =>
             {
-                var requestMessage = new HttpRequestMessage(HttpMethod.Get, "calendar/v3/calendars/primary/events");
+                var requestMessage = new HttpRequestMessage(HttpMethod.Get, $"calendar/v3/calendars/primary/events?timeMin={DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ssZ")}");
                 requestMessage.Headers.Add("Authorization", $"Bearer {context["access_token"]}");  //context["access_token"]
+
+                
+/*                requestMessage.par.Add("timeMax", DateTime.Now.AddDays(1).ToString("yyyy-MM-ddTHH\\:mm\\:ss.ffzzz"));   
+                requestMessage.Properties.Add("timeMin", DateTime.Now.ToString("yyyy-MM-ddTHH\\:mm\\:ss.ffzzz"));*/
+/*
+                requestMessage.Content = new FormUrlEncodedContent(new Dictionary<string, string>
+                    {
+                        { "timeMax", DateTime.Now.AddDays(1).ToString("yyyy-MM-ddTHH\\:mm\\:ss.ffzzz") },
+                        { "timeMin", DateTime.Now.ToString("yyyy-MM-ddTHH\\:mm\\:ss.ffzzz")},
+                    });*/
 
                 return _client.SendAsync(requestMessage);
             }, new Dictionary<string, object>
@@ -62,8 +73,8 @@ namespace MirrorOfErised.models.Repos
                         if (newAccessToken != null)
                         {
                             await tokenRefreshed(newAccessToken);
-
-                            context["access_token"] = newAccessToken;
+                            dynamic Response = JsonConvert.DeserializeObject(newAccessToken);
+                            context["access_token"] = Response.access_token;
                         }
                     }
                 });

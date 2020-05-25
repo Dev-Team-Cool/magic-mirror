@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using MirrorOfErised.models;
 using MirrorOfErised.models.Repos;
 using MirrorOfErised.ViewModels;
+using Newtonsoft.Json;
 
 namespace MirrorOfErised.Controllers
 {
@@ -137,9 +138,6 @@ namespace MirrorOfErised.Controllers
             try
             {
                 // Retrieve access token and refresh token from database
-                string accessToken = "...";
-                string refreshToken = "...";
-
                 IdentityUser user = await _userManager.GetUserAsync(User);
 
                 AuthToken authToken = await AuthTokenRepo.GetTokensForNameAsync(user.UserName);
@@ -149,9 +147,18 @@ namespace MirrorOfErised.Controllers
                 // Get Key
                 var filesResponse = await GoogleCalendarAPI.ListFiles(authToken.Token, authToken.RefreshToken, async token =>
                 {
-             
-                    token.Contains("e");
+                    IdentityUser identityUser = await _userManager.GetUserAsync(User);
+
+                    AuthToken Event = await AuthTokenRepo.GetTokensForNameAsync(identityUser.UserName);
+                    dynamic Response = JsonConvert.DeserializeObject(token);
+                    Event.Token = Response.access_token;
+                    Event.ExpireDate = DateTime.Now.AddSeconds((int)Response.expires_in);
+
+                    await AuthTokenRepo.UpdateTokenAsync(Event);
+
                 });
+
+                filesResponse.ToLower();
 
                 return RedirectToAction(nameof(Index));
             }

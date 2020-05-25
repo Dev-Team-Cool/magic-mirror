@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MirrorOfErised.api.Models;
 using MirrorOfErised.models.Repos;
+using Newtonsoft.Json;
 using Project.API.Models;
 
 
@@ -22,16 +23,18 @@ namespace Project.API.Controllers
     {
         private const string AuthSchemes = CookieAuthenticationDefaults.AuthenticationScheme + ",Identity.Application"; /* "CombinationScheme," + CookieAuthenticationDefaults.AuthenticationScheme + ","+ JwtBearerDefaults.AuthenticationScheme;*/
         private readonly IAuthTokenRepo AuthTokenRepo;
+        private readonly GoogleCalendarAPI googleCalendarAPI;
 
         public UserManager<IdentityUser> UserManager { get; }
         public RoleManager<IdentityRole> RoleManager { get; }
 
 
-        public EventsController(IAuthTokenRepo AuthTokenRepo, UserManager<IdentityUser> IdentitiyUserManager, RoleManager<IdentityRole> roleManager)
+        public EventsController(IAuthTokenRepo AuthTokenRepo, UserManager<IdentityUser> IdentitiyUserManager, RoleManager<IdentityRole> roleManager,GoogleCalendarAPI googleCalendarAPI)
         {
             this.AuthTokenRepo = AuthTokenRepo;
             UserManager = IdentitiyUserManager;
             RoleManager = roleManager;
+            this.googleCalendarAPI = googleCalendarAPI;
         }
 
 
@@ -60,7 +63,7 @@ namespace Project.API.Controllers
 
         }*/
 
-        // GET: api/AuthToken/id
+        // GET: api/AuthToken/username
         [HttpGet("{UserName}")]
         /*        [Authorize(AuthenticationSchemes = AuthSchemes, Roles = "Admin")]*/
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
@@ -81,6 +84,42 @@ namespace Project.API.Controllers
             Mapper.ConvertTo_DTO(Event, ref Event_DTO);
 
             return Ok(Event_DTO);
+        }
+
+
+        // GET: api/AuthToken/id
+        [HttpGet("Calendar/{UserName}")]
+        /*        [Authorize(AuthenticationSchemes = AuthSchemes, Roles = "Admin")]*/
+/*        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+*/        public async Task<ActionResult> GetCalender(string UserName)
+        {
+            if (string.IsNullOrEmpty(UserName))
+            {
+                return BadRequest("Ongeldige EventId");
+            }
+
+            AuthToken authToken = await AuthTokenRepo.GetTokensForNameAsync(UserName);
+
+            if (authToken == null)
+            {
+                return NotFound("Geen tokens gevonden");
+            }
+
+            // Get Key
+            var filesResponse = await googleCalendarAPI.ListFiles(authToken.Token, authToken.RefreshToken, async token =>
+            {
+                AuthToken Event = await AuthTokenRepo.GetTokensForNameAsync(UserName);
+                dynamic Response = JsonConvert.DeserializeObject(token);
+                Event.Token = Response.access_token;
+                Event.ExpireDate = DateTime.Now.AddSeconds((int)Response.expires_in);
+
+                await AuthTokenRepo.UpdateTokenAsync(Event);
+
+            });
+
+            
+
+            return Ok(filesResponse);
         }
 
     }
