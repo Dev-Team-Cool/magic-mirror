@@ -64,6 +64,16 @@ namespace MirrorOfErised.Controllers
 
         // POST: UserEntry/Create
 
+        private string saveImage(IFormFile image, IdentityUser identityUser)
+        {
+            string uniqueFileName = null;
+            string uploadsFolder = Path.Combine(hostingEnvironment.WebRootPath, "images");
+            uniqueFileName = Guid.NewGuid().ToString() + "_" + identityUser.UserName + "_" + image.FileName;
+            string FilePath = Path.Combine(uploadsFolder, uniqueFileName);
+            image.CopyTo(new FileStream(FilePath, FileMode.Create));
+            return uniqueFileName;
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]  
         public async Task<ActionResult> Create(UserEntryCreateViewModel model )
@@ -80,24 +90,24 @@ namespace MirrorOfErised.Controllers
                         return Redirect("/Error/403");
                     }
 
-                    if (model.Image1 !=null)
+                    if (model.Image1 != null & model.Image2 != null & model.Image3 != null)
                     {
-                        string uploadsFolder = Path.Combine(hostingEnvironment.WebRootPath, "images");
-                        uniqueFileName = Guid.NewGuid().ToString() + "_" + identityUser.UserName + "_" + model.Image1.FileName ;
-                        string FilePath = Path.Combine(uploadsFolder, uniqueFileName);
-                        model.Image1.CopyTo(new FileStream(FilePath, FileMode.Create));
+                        UserEntry newEntry = new UserEntry
+                        {
+                            Address = model.Address,
+                            Name = model.Name,
+                            Image1Path = saveImage(model.Image1, identityUser),
+                            Image2Path = saveImage(model.Image2, identityUser),
+                            Image3Path = saveImage(model.Image3, identityUser),
+                            UserId = identityUser.Id
+                            
+                            
+                        };
+
+                        await userEntryrepo.AddImage(newEntry);
                     }
 
-                    UserEntry newEntry = new UserEntry
-                    {
-                        Name = model.Name,
-                        Image1Path = uniqueFileName,
-                        UserId = identityUser.Id
 
-
-                    };
-
-                    userEntryrepo.AddImage(newEntry);
                     /*if (fileobj == null || fileobj.Length == 0)
                     {
                         ViewData["Message"] = "Please select atleast one image";
@@ -137,7 +147,7 @@ namespace MirrorOfErised.Controllers
         {
             try
             {
-                // Retrieve access token and refresh token from database
+               /* // Retrieve access token and refresh token from database
                 IdentityUser user = await _userManager.GetUserAsync(User);
 
                 AuthToken authToken = await AuthTokenRepo.GetTokensForNameAsync(user.UserName);
@@ -156,9 +166,11 @@ namespace MirrorOfErised.Controllers
 
                     await AuthTokenRepo.UpdateTokenAsync(Event);
 
-                });
+                });*/
 
-                filesResponse.ToLower();
+
+
+
 
                 return RedirectToAction(nameof(Index));
             }
