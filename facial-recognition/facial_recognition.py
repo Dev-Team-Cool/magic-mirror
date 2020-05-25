@@ -1,9 +1,11 @@
-from facenet_pytorch import InceptionResnetV1
+from facenet_pytorch import InceptionResnetV1, extract_face
 import numpy as np
 from torch import Tensor
 from joblib import dump, load
 from utils import load_images
-
+from collections import Counter
+from PIL.ExifTags import TAGS
+from PIL import ImageDraw
 
 class FacialRecognition:
     def __init__(self, pretrained):
@@ -22,26 +24,51 @@ class FacialRecognition:
         if self.vectors is None:
             raise TypeError('No vectors where loaded. Make sure one exists.')
 
-        embedding = FaceEmbedding(self.__resnet, '').calculate(img_tensor)
-        self.do_prediction(embedding)
+        embedding = FaceEmbedding(self.__resnet, '').calculate_embedding(img_tensor)
+        return self.do_prediction(embedding)
         # return self.__model.predict(embedding)
     
     def do_prediction(self, img_embedding):
-        scores = []
+        for embedding in self.vectors:
+            embedding.calculate_distance(img_embedding)
+        
+        self.vectors.sort()
+        best_scores = self.vectors[:3]
 
-        # for key, embeddings in self.vectors.items():
-        #     for face_embedding in embeddings:
-        #         scores.append({'users': key, 'score': np.linalg.norm(face_embedding - img_embedding)})
-        #     users[key] = len(scores) - 1
-
-        print('scores: ', scores)
+        print('scores: ')
+        for score in self.vectors:
+            print(score)
+        count = {}
+        for vector in best_scores:
+            if vector.label not in count:
+                count[vector.label] = 1
+            else:
+                count[vector.label] = count[vector.label] + 1
+        
+        counter = Counter(count)
+        return counter.most_common(1)[0]
 
     def __generate_tensor(self, image):
         from facenet_pytorch import MTCNN
-        from matplotlib.image import imread
+        from PIL import Image
 
-        img_file = imread(image)
-        return MTCNN().forward(img_file)
+        img_file = Image.open(image)
+        exif = img_file._getexif()
+        exif_parsed = {}
+        for key, value in exif.items():
+            exif_parsed[TAGS[key]] = value
+        print(exif_parsed)
+        if 'Orientation' in exif_parsed.keys() and exif_parsed['Orientation'] == 6:
+            img_file = img_file.transpose(Image.ROTATE_270)
+        if img_file.height > 720:
+            size = 480,480
+            img_file.thumbnail(size, Image.ANTIALIAS)
+        
+        box, probas = MTCNN().detect(img_file)
+        # draw = ImageDraw.Draw(img_file)
+        # draw.rectangle(box[0])
+        # img_file.show()
+        return extract_face(img_file, box[0])
 
     def train_classifier(self, training_data_path):
         # from sklearn.neighbors import KNeighborsClassifier
@@ -51,7 +78,11 @@ class FacialRecognition:
         tmp = []
         
         for key, images in X_train.items():
-            tmp.append([FaceEmbedding(self.__resnet, key).calculate(self.__generate_tensor(image))) for image in images])
+            for image in images:
+                print('Handling ', image)
+                img_cropped = self.__generate_tensor(image)
+                if img_cropped is not None:
+                    tmp.append(FaceEmbedding(self.__resnet, key, image).calculate_embedding(img_cropped))
         
         self.vectors = tmp
         # X_train = np.array([self.__calculate_embedding((self.__generate_tensor(image))) for image in X_train])
@@ -71,12 +102,26 @@ class FacialRecognition:
             return None
 
 class FaceEmbedding:
-    def __init__(self, resnet, label):
+    def __init__(self, resnet, label, image_location = ''):
         self.__resnet = resnet
         self.embedding = None
         self.label = label
+        self.score = 4
+        self.file = image_location
 
-    def calculate(self, img_tensor):
+    def calculate_embedding(self, img_tensor):
         embedding = self.__resnet.forward(img_tensor.unsqueeze(0)).detach().numpy()
         self.embedding = embedding
         return self
+
+    def calculate_distance(self, reference_embedding):
+        if (self.embedding is not None):
+            self.score = np.linalg.norm(self.embedding - reference_embedding.embedding)
+
+        return self
+    
+    def __lt__(self, other):
+        return self.score < other.score
+    
+    def __str__(self):
+        return f'Score: {self.score} - label: {self.label} - {self.file}'
