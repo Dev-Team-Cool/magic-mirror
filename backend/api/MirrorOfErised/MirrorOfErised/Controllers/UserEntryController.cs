@@ -99,9 +99,10 @@ namespace MirrorOfErised.Controllers
                             Image1Path = saveImage(model.Image1, identityUser),
                             Image2Path = saveImage(model.Image2, identityUser),
                             Image3Path = saveImage(model.Image3, identityUser),
-                            UserId = identityUser.Id
-                            
-                            
+                            UserId = identityUser.Id,
+                            CommutingWay = model.CommutingWay
+
+
                         };
 
                         await userEntryrepo.AddImage(newEntry);
