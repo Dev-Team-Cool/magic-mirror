@@ -35,6 +35,9 @@ namespace MirrorOfErised.ViewModels
 
         public string Address { get; set; }
 
+        [Display(Name = "Way you go to work")]
+        public string CommutingWay { get; set; }
+
 
         [ScaffoldColumn(false)]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
