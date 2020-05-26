@@ -19,5 +19,6 @@ namespace MirrorOfErised.models.Data
 
         public virtual DbSet<AuthToken> Tokens { get; set; }
         public virtual DbSet<UserEntry> UserEntry { get; set; }
+        public virtual DbSet<UserSettings> UserSettings { get; set; }
     }
 }

@@ -20,12 +20,13 @@ namespace MirrorOfErised.Controllers
 
         private readonly UserManager<IdentityUser> _userManager;
         private readonly IHostingEnvironment hostingEnvironment;
+        private readonly IUserSettingsRepo userSettingsRepo;
         private readonly IUserEntryRepo userEntryrepo;
 
         public GoogleCalendarAPI GoogleCalendarAPI { get; }
         public IAuthTokenRepo AuthTokenRepo { get; }
 
-        public UserEntryController(IUserEntryRepo userEntry, UserManager<IdentityUser> userManager, IHostingEnvironment hostingEnvironment , GoogleCalendarAPI googleCalendarAPI , IAuthTokenRepo authTokenRepo )   /*IUserEventRepo userEventRepo,*/
+        public UserEntryController(IUserEntryRepo userEntry, UserManager<IdentityUser> userManager, IHostingEnvironment hostingEnvironment , GoogleCalendarAPI googleCalendarAPI , IAuthTokenRepo authTokenRepo ,IUserSettingsRepo userSettingsRepo )   /*IUserEventRepo userEventRepo,*/
         {
             this.userEntryrepo = userEntry;
 
@@ -33,6 +34,7 @@ namespace MirrorOfErised.Controllers
             this.hostingEnvironment = hostingEnvironment;
             GoogleCalendarAPI = googleCalendarAPI;
             AuthTokenRepo = authTokenRepo;
+            this.userSettingsRepo = userSettingsRepo;
         }
         // GET: UserEntry
         public ActionResult Index()
@@ -76,7 +78,7 @@ namespace MirrorOfErised.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]  
-        public async Task<ActionResult> Create(UserEntryCreateViewModel model )
+        public async Task<ActionResult> Create(UserEntryCreateViewModel model)
         {
  
             if (ModelState.IsValid)
@@ -95,8 +97,8 @@ namespace MirrorOfErised.Controllers
                         UserEntry newEntry = new UserEntry
                         {
                             Address = model.Address,
-                            Name = model.Name,
-                            Image1Path = saveImage(model.Image1, identityUser),
+/*                            Name = model.Name,
+*/                            Image1Path = saveImage(model.Image1, identityUser),
                             Image2Path = saveImage(model.Image2, identityUser),
                             Image3Path = saveImage(model.Image3, identityUser),
                             UserId = identityUser.Id,
@@ -105,7 +107,23 @@ namespace MirrorOfErised.Controllers
 
                         };
 
-                        await userEntryrepo.AddImage(newEntry);
+                        await userEntryrepo.AddEntry(newEntry);
+
+
+                        if (userSettingsRepo.GetSettingsForUserIdAsync(identityUser.Id) == null)
+                        {
+                            UserSettings userSettings = new UserSettings
+                            {
+                                Assistant = true,
+                                Calendar = true,
+                                Commuting = true,
+                                UserId = identityUser.Id
+                            };
+
+                            var UpdatetSetting = await userSettingsRepo.AddSetting(userSettings);
+                        }
+
+
                     }
 
 
@@ -118,11 +136,11 @@ namespace MirrorOfErised.Controllers
                     userEntry.UserId = identityUser.Id;*/
 
 
-                    return RedirectToAction(nameof(Index));
+                    return Redirect("/Home/index");
                 }
                 catch
                 {
-                    return View();
+                    return View(model);
                 }
             }
             return View();
@@ -135,7 +153,10 @@ namespace MirrorOfErised.Controllers
 
         public ActionResult Settings()
         {
-            return View();
+            var id= _userManager.GetUserId(User);
+            UserSettings setting = userSettingsRepo.GetSettingsForUserIdAsync(id);
+
+            return View(setting);
         }
 
 
@@ -144,42 +165,29 @@ namespace MirrorOfErised.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
 
-        public async Task<ActionResult> Settings(IFormCollection collection)
+        public async Task<ActionResult> Settings(IFormCollection collection, UserSettings settings)
         {
-            try
+            if (ModelState.IsValid)
             {
-               /* // Retrieve access token and refresh token from database
-                IdentityUser user = await _userManager.GetUserAsync(User);
+                try
+            {
 
-                AuthToken authToken = await AuthTokenRepo.GetTokensForNameAsync(user.UserName);
+                var user = await _userManager.GetUserAsync(User);
+                settings.UserId = user.Id;
+                settings.identityUser = user;
 
-
-
-                // Get Key
-                var filesResponse = await GoogleCalendarAPI.ListFiles(authToken.Token, authToken.RefreshToken, async token =>
-                {
-                    IdentityUser identityUser = await _userManager.GetUserAsync(User);
-
-                    AuthToken Event = await AuthTokenRepo.GetTokensForNameAsync(identityUser.UserName);
-                    dynamic Response = JsonConvert.DeserializeObject(token);
-                    Event.Token = Response.access_token;
-                    Event.ExpireDate = DateTime.Now.AddSeconds((int)Response.expires_in);
-
-                    await AuthTokenRepo.UpdateTokenAsync(Event);
-
-                });*/
+                var UpdatetSetting = await userSettingsRepo.UpdateSetting(settings);
 
 
-
-
-
-                return RedirectToAction(nameof(Index));
+                return Redirect("/Home/index");
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
                 return View();
             }
+           }
+            return View();
         }
 
 
