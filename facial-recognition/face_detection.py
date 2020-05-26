@@ -1,14 +1,14 @@
 import cv2
 import threading
 import time
-from facenet_pytorch import MTCNN, extract_face
+from facenet_pytorch import MTCNN, extract_face, fixed_image_standardization
 from facial_recognition import FacialRecognition
 
 class FaceDetection(threading.Thread):
     def __init__(self):
         threading.Thread.__init__(self)
         self.detector = MTCNN(keep_all=True) #detection classifier
-        self.recognizer = FacialRecognition('facial_recognition.model')
+        self.recognizer = FacialRecognition()
         self.recognizer.train_classifier('data/trainV2')
         self.cap = cv2.VideoCapture(0)    # Camera object
         self._detected_person = None
@@ -25,7 +25,7 @@ class FaceDetection(threading.Thread):
         """
         Main thread: frame rate sets the amount of times the detect and convert function will be called per second.
         """
-        frame_rate = 20
+        frame_rate = 30
         prev = 0
         print('Started looking...')
         while True:
@@ -52,7 +52,7 @@ class FaceDetection(threading.Thread):
             for box in boxes:
                 test = extract_face(frame, box)
                 frame = cv2.rectangle(frame, (box[0],box[1]), (box[2], box[3]), (255,0,0))
-                prediction = self.recognizer.predict(test)
+                prediction = self.recognizer.predict(fixed_image_standardization(test))
                 print(box, prediction)
                 cv2.putText(frame, prediction[0], (int(box[0]), int(box[1] - 10)), cv2.FONT_HERSHEY_COMPLEX, 1, (200, 0, 0))
                 # cv2.putText(frame, prediction[0], (box[0], box[1] - 10), cv2.FONT_HERSHEY_COMPLEX, 0.9, (255, 0, 0))
