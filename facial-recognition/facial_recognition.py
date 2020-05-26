@@ -1,4 +1,4 @@
-from facenet_pytorch import InceptionResnetV1, extract_face
+from facenet_pytorch import InceptionResnetV1, extract_face, fixed_image_standardization
 import numpy as np
 from torch import Tensor
 from joblib import dump, load
@@ -8,7 +8,7 @@ from PIL.ExifTags import TAGS
 from PIL import ImageDraw
 
 class FacialRecognition:
-    def __init__(self, pretrained):
+    def __init__(self):
         self.__resnet = InceptionResnetV1('vggface2').eval()
         self.vectors = None
         # self.__model = self.load_model(pretrained)
@@ -23,9 +23,16 @@ class FacialRecognition:
         """
         if self.vectors is None:
             raise TypeError('No vectors where loaded. Make sure one exists.')
-
-        embedding = FaceEmbedding(self.__resnet, '').calculate_embedding(img_tensor)
-        return self.do_prediction(embedding)
+        
+        results = []
+        if isinstance(img_tensor, list):
+            for tensor in img_tensor: 
+                embedding = FaceEmbedding(self.__resnet, '').calculate_embedding(tensor)
+                results.append(self.do_prediction(embedding)[0])
+            return results
+        else:
+            embedding = FaceEmbedding(self.__resnet, '').calculate_embedding(img_tensor)
+            return self.do_prediction(embedding)
         # return self.__model.predict(embedding)
     
     def do_prediction(self, img_embedding):
@@ -57,18 +64,21 @@ class FacialRecognition:
         exif_parsed = {}
         for key, value in exif.items():
             exif_parsed[TAGS[key]] = value
-        print(exif_parsed)
-        if 'Orientation' in exif_parsed.keys() and exif_parsed['Orientation'] == 6:
-            img_file = img_file.transpose(Image.ROTATE_270)
+
+        if 'Orientation' in exif_parsed.keys():
+            if exif_parsed['Orientation'] == 6:
+                img_file = img_file.transpose(Image.ROTATE_270)
+            elif exif_parsed['Orientation'] == 8:
+                img_file = img_file.transpose(Image.ROTATE_90)
         if img_file.height > 720:
             size = 480,480
             img_file.thumbnail(size, Image.ANTIALIAS)
         
         box, probas = MTCNN().detect(img_file)
-        # draw = ImageDraw.Draw(img_file)
-        # draw.rectangle(box[0])
-        # img_file.show()
-        return extract_face(img_file, box[0])
+        
+        if box is None:
+            return None
+        return fixed_image_standardization(extract_face(img_file, box[0]))
 
     def train_classifier(self, training_data_path):
         # from sklearn.neighbors import KNeighborsClassifier
@@ -124,4 +134,8 @@ class FaceEmbedding:
         return self.score < other.score
     
     def __str__(self):
-        return f'Score: {self.score} - label: {self.label} - {self.file}'
+        return f'Score: {self.score} - label: {self.label}'
+
+def draw_box(img, box):
+    draw = ImageDraw.Draw(img)
+    draw.rectangle(box)

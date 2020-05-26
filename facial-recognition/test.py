@@ -1,11 +1,14 @@
 from facial_recognition import FacialRecognition
-from facenet_pytorch import MTCNN, extract_face
+from facenet_pytorch import MTCNN, extract_face, fixed_image_standardization
 from PIL import Image, ImageDraw
+from PIL.ExifTags import TAGS
 from utils import load_images
+import sklearn.metrics as metrics
+import numpy as np
 
 train_data = '/home/florian/Documents/school/magic-mirror/facial-recognition/data/trainV2'
 
-facial_recognition = FacialRecognition('')
+facial_recognition = FacialRecognition()
 
 # Train the classifier
 facial_recognition.train_classifier(train_data)
@@ -31,10 +34,50 @@ def draw_box(img, box):
     draw = ImageDraw.Draw(img)
     draw.rectangle(box)
 
-test_image_path = '/home/florian/Documents/school/magic-mirror/facial-recognition/data/valV2/Gaelle/2020-05-24-211038.jpg'
+# test_image_path = '/home/florian/Documents/school/magic-mirror/facial-recognition/data/valV2'
+# test_images = load_images(test_image_path)
+# X_test = []
+# X_test2 = []
+# y_test = []
+
+# detector = MTCNN()
+
+# for label, images in test_images.items():
+#     for image in images:
+#         img_file = Image.open(image)
+#         exif = img_file._getexif()
+#         exif_parsed = {}
+#         for key, value in exif.items():
+#             exif_parsed[TAGS[key]] = value
+
+#         if 'Orientation' in exif_parsed.keys() and exif_parsed['Orientation'] == 6:
+#             img_file = img_file.transpose(Image.ROTATE_270)
+#         if img_file.height > 720:
+#             size = 480,480
+#             img_file.thumbnail(size, Image.ANTIALIAS)
+
+#         boxes, probas = detector.detect(img_file)
+#         box = boxes[0]
+
+#         X_test.append(fixed_image_standardization(extract_face(img_file, box)))
+#         X_test2.append(MTCNN().forward(img_file))
+#         y_test.append(label)
+
+# print('Detect:', X_test)
+# print('-----------------')
+# print('Forward:', X_test2)
+# print('-----------------s')
+# y_pred = facial_recognition.predict(X_test)
+# y_pred = np.array(y_pred)
+# print('Results', y_pred)
+# print('Report', metrics.classification_report(y_test, y_pred))
+# print('Accuracy:', metrics.accuracy_score(y_test, y_pred))
+        
+test_image_path = '/home/florian/Documents/school/magic-mirror/facial-recognition/data/valV2/IMG_20200525_133954.jpg'
 test_image = Image.open(test_image_path)
 size=480,480
 test_image.thumbnail(size, Image.ANTIALIAS)
+# test_image = test_image.transpose(Image.ROTATE_270)
 boxes, proba = MTCNN().detect(test_image)
 
 print(len(boxes))
@@ -45,6 +88,4 @@ box = boxes[0]
 print(box)
 draw_box(test_image, box)
 face_img = extract_face(test_image, box, save_path='data/extracted_test.jpg')
-faces.append(facial_recognition.predict(face_img))
-
-test_image.show()
+faces.append(facial_recognition.predict(fixed_image_standardization(face_img)))
