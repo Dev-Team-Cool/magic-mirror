@@ -11,9 +11,9 @@ namespace MirrorOfErised.models
 {
     public class UserEntry
     {
-        [Required(ErrorMessage = "Name is obligatory")]
+/*        [Required(ErrorMessage = "Name is obligatory")]
         [Display(Name = "Display name")]
-        public string Name { get; set; }
+        public string Name { get; set; }*/
 
         [Required(ErrorMessage = "The image is obligatory")]
         [Display(Name = "Image")]

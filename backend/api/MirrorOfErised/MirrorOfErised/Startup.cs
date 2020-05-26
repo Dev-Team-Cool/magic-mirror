@@ -50,6 +50,7 @@ namespace MirrorOfErised
 
             services.AddScoped<IAuthTokenRepo, AuthTokenRepo>();
             services.AddScoped<IUserEntryRepo, UserEntryRepo>();
+            services.AddScoped<IUserSettingsRepo, UserSettingsRepo>();
 
             services.AddAuthentication().AddGoogle(options =>
             {

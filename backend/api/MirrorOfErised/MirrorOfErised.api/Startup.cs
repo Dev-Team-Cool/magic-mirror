@@ -81,6 +81,9 @@ namespace MirrorOfErised.api
             });
 
             services.AddScoped<IAuthTokenRepo, AuthTokenRepo>();
+            services.AddScoped<IUserEntryRepo, UserEntryRepo>();
+            services.AddScoped<IUserSettingsRepo, UserSettingsRepo>();
+
 
             //4. open API documentatie
             services.AddSwaggerGen(c =>
