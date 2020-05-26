@@ -7,10 +7,13 @@ using System.Threading.Tasks;
 
 namespace MirrorOfErised.models.Repos
 {
-    public interface IUserEntryRepo
+    public interface IUserSettingsRepo
     {
-        Task<UserEntry>AddEntry(UserEntry entry);
-        UserEntry GetEntryForIdAsync(string username);
+        Task<UserSettings>AddSetting(UserSettings settings);
+        Task<UserSettings>UpdateSetting(UserSettings settings);
+        UserSettings GetSettingsForUserIdAsync(string id);
+
+
 
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using MirrorOfErised.models;
 using MirrorOfErised.models.Repos;
 using Project.API.Models;
 using System;
@@ -20,6 +21,30 @@ namespace MirrorOfErised.api.Models
 
 
             return AuthToken_DTO;
+        }
+
+        public static UserEntry_DTO ConvertEntryTo_DTO(UserEntry userentry, ref UserEntry_DTO UserEntry_DTO)
+        {
+
+            UserEntry_DTO.Address = userentry.Address;
+            UserEntry_DTO.CommutingWay = userentry.CommutingWay;
+            UserEntry_DTO.Image1Path = userentry.Image1Path;
+            UserEntry_DTO.Image2Path = userentry.Image2Path;
+            UserEntry_DTO.Image3Path = userentry.Image3Path;
+
+
+            return UserEntry_DTO;
+        }
+        public static UserSetting_DTO ConvertSettingTo_DTO(UserSettings userSetting, ref UserSetting_DTO UserSetting_DTO)
+        {
+
+            UserSetting_DTO.Commuting = userSetting.Commuting;
+            UserSetting_DTO.Calendar = userSetting.Calendar;
+            UserSetting_DTO.Assistant = userSetting.Assistant;
+
+
+
+            return UserSetting_DTO;
         }
 
         /*public static async Task<AuthToken> ConvertTo_Entity(AuthToken_DTO AuthToken_DTO, AuthTokenRepo eventRepo , UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager, IdentityUser Loggedin, AuthToken @event)
