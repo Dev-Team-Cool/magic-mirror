@@ -143,6 +143,10 @@
               "target": "Package",
               "version": "[1.45.0, )"
             },
+            "IronPython": {
+              "target": "Package",
+              "version": "[2.7.10, )"
+            },
             "Microsoft.AspNetCore.Authentication.Abstractions": {
               "target": "Package",
               "version": "[2.2.0, )"

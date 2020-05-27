@@ -72,8 +72,8 @@ namespace Project.API.Controllers
 
         /*        [Authorize(AuthenticationSchemes = AuthSchemes, Roles = "Admin")]*/
         [HttpGet("{UserName}")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<ActionResult<AuthToken>> GetEvent(string UserName)
+/*        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+*/        public async Task<ActionResult<AuthToken>> GetEvent(string UserName)
         {
             try 
             { 

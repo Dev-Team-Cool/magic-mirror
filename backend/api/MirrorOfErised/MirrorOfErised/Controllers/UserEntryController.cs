@@ -21,12 +21,13 @@ namespace MirrorOfErised.Controllers
         private readonly UserManager<IdentityUser> _userManager;
         private readonly IHostingEnvironment hostingEnvironment;
         private readonly IUserSettingsRepo userSettingsRepo;
+        private readonly FacePython facePython;
         private readonly IUserEntryRepo userEntryrepo;
 
         public GoogleCalendarAPI GoogleCalendarAPI { get; }
         public IAuthTokenRepo AuthTokenRepo { get; }
 
-        public UserEntryController(IUserEntryRepo userEntry, UserManager<IdentityUser> userManager, IHostingEnvironment hostingEnvironment , GoogleCalendarAPI googleCalendarAPI , IAuthTokenRepo authTokenRepo ,IUserSettingsRepo userSettingsRepo )   /*IUserEventRepo userEventRepo,*/
+        public UserEntryController(IUserEntryRepo userEntry, UserManager<IdentityUser> userManager, IHostingEnvironment hostingEnvironment , GoogleCalendarAPI googleCalendarAPI , IAuthTokenRepo authTokenRepo ,IUserSettingsRepo userSettingsRepo, FacePython facePython )   /*IUserEventRepo userEventRepo,*/
         {
             this.userEntryrepo = userEntry;
 
@@ -35,6 +36,7 @@ namespace MirrorOfErised.Controllers
             GoogleCalendarAPI = googleCalendarAPI;
             AuthTokenRepo = authTokenRepo;
             this.userSettingsRepo = userSettingsRepo;
+            this.facePython = facePython;
         }
         // GET: UserEntry
         public ActionResult Index()
@@ -56,6 +58,10 @@ namespace MirrorOfErised.Controllers
         // GET: UserEntry/Create
         public async Task<ActionResult> Create()
         {
+            
+            
+            var result= facePython.validateImage("8");
+            
             IdentityUser identityUser = await _userManager.GetUserAsync(User);
             if (identityUser.EmailConfirmed == false)
             {
@@ -73,6 +79,11 @@ namespace MirrorOfErised.Controllers
             uniqueFileName = Guid.NewGuid().ToString() + "_" + identityUser.UserName + "_" + image.FileName;
             string FilePath = Path.Combine(uploadsFolder, uniqueFileName);
             image.CopyTo(new FileStream(FilePath, FileMode.Create));
+            var result = facePython.validateImage(uniqueFileName);
+            if (result == "False")
+            {
+                return "False";
+            }
             return uniqueFileName;
         }
 
@@ -98,14 +109,20 @@ namespace MirrorOfErised.Controllers
                         {
                             Address = model.Address,
 /*                            Name = model.Name,
-*/                            Image1Path = saveImage(model.Image1, identityUser),
+*/                          Image1Path = saveImage(model.Image1, identityUser),
                             Image2Path = saveImage(model.Image2, identityUser),
                             Image3Path = saveImage(model.Image3, identityUser),
                             UserId = identityUser.Id,
                             CommutingWay = model.CommutingWay
-
+                            
 
                         };
+                        if (newEntry.Image1Path == "false" | newEntry.Image2Path == "false"| newEntry.Image3Path == "false")
+                        {
+                            ViewBag.error = "Images not valid";
+                            return View(model);
+                        }
+
 
                         await userEntryrepo.AddEntry(newEntry);
 
