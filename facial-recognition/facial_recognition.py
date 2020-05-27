@@ -38,23 +38,33 @@ class FacialRecognition:
     
     def do_prediction(self, img_embedding):
         for embedding in self.__embeddings:
+            # Calculate each distance from the training examples to the current person
             embedding.calculate_distance(img_embedding)
         
         self.__embeddings.sort()
-        best_scores = self.__embeddings[:3]
+        closest_embeddings = self.__embeddings[:3] # Get the top 3 closest embeddings
 
-        if best_scores[0].score > 1.1:
-            return ['Unknown', -1]
+        if closest_embeddings[0].score > 1.1:
+            # If the best score is greater then a certain treshold we classify the person as unknown
+            return ['Unknown', closest_embeddings[0].probability]
         
+        # Return the predicted class and average probability for the 3 closest
+        return (self.__majority_voting(self.__count_occurences(closest_embeddings)), np.average([embedding.probability for embedding in closest_embeddings]))
+
+    def __count_occurences(self, face_embeddings):
+        """Count the occurences per class"""
         count = {}
-        for vector in best_scores:
-            if vector.label not in count:
-                count[vector.label] = 1
+        for embedding in face_embeddings:
+            if embedding.label not in count.keys():
+                count[embedding.label] = 1
             else:
-                count[vector.label] = count[vector.label] + 1
+                count[embedding.label] += 1
         
-        counter = Counter(count)
-        return counter.most_common(1)[0]
+        return count
+
+    def __majority_voting(self, embedding_count):
+        counter = Counter(embedding_count)
+        return counter.most_common(1)[0][0] # Only return the label of the FaceEmbedding
 
     def __generate_tensor(self, image):
         from facenet_pytorch import MTCNN
@@ -72,12 +82,8 @@ class FacialRecognition:
             size = 480,480
             img_file.thumbnail(size, Image.ANTIALIAS)
         
-        faces = self.__detector.forward(img_file)
+        face = self.__detector.forward(img_file)
         
-        if len(faces) > 1:
-            print('To many faces found.')
-            return None
-        face = faces[0]
         if face is None:
             print('No face found')
             return None
@@ -120,6 +126,10 @@ class FaceEmbedding:
         self.score = 4
         self.file = image_location
 
+    @property
+    def probability(self):
+        return (4 - self.score) / 4 * 100
+ 
     def calculate_embedding(self, img_tensor):
         embedding = self.__resnet.forward(img_tensor.unsqueeze(0)).detach().numpy()
         self.embedding = embedding
