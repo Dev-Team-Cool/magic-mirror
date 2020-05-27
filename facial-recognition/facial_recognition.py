@@ -102,14 +102,15 @@ class FacialRecognition:
         # print('Model trained')
         # self.__model = knn_classifier
     
-    def export_classifier(self, path):
-        dump(self.__model, path)
+    def save(self, filename='face_embeddings.model'):
+        if self.embeddings is not None:
+            dump(self.embeddings, filename)
 
-    def load_model(self, model_path):
+    def load(self, filename='face_embeddings.model'):
         try:
-            return load(model_path)
+            self.embeddings = load(filename)
         except:
-            return None
+            print('Unable to load model')
 
 class FaceEmbedding:
     def __init__(self, resnet, label, image_location = ''):
