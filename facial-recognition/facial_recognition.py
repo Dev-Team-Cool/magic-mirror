@@ -1,10 +1,12 @@
-from facenet_pytorch import InceptionResnetV1, extract_face, fixed_image_standardization
-import numpy as np
-from torch import Tensor
-from joblib import dump, load
-from utils import load_images
-import utils
 from collections import Counter
+
+import numpy as np
+from facenet_pytorch import (InceptionResnetV1, extract_face,
+                             fixed_image_standardization)
+from joblib import dump, load
+from PIL import Image
+
+import utils
 
 
 class FacialRecognition:
