@@ -46,6 +46,10 @@
               "target": "Package",
               "version": "[1.45.0, )"
             },
+            "IronPython": {
+              "target": "Package",
+              "version": "[2.7.10, )"
+            },
             "Microsoft.AspNetCore.Authentication.Abstractions": {
               "target": "Package",
               "version": "[2.2.0, )"
@@ -137,6 +141,14 @@
             "Google.Apis.Calendar.v3": {
               "target": "Package",
               "version": "[1.45.0.1949, )"
+            },
+            "IronPython": {
+              "target": "Package",
+              "version": "[2.7.10, )"
+            },
+            "IronPython.StdLib": {
+              "target": "Package",
+              "version": "[2.7.10, )"
             },
             "Microsoft.AspNetCore.Authentication.Google": {
               "target": "Package",
