@@ -10,7 +10,11 @@ from collections import Counter
 class FacialRecognition:
     def __init__(self):
         self.__resnet = InceptionResnetV1('vggface2').eval()
-        self.embeddings = None
+        self.__embeddings = None
+
+    @property
+    def embeddings_loaded(self):
+        return not self.__embeddings is None
     
     def predict(self, img_tensor: Tensor):
         """
@@ -19,8 +23,8 @@ class FacialRecognition:
         :param img_tensor: The tensor generated from MTCNN
         :returns: A tuple with the probability and the class
         """
-        if self.vectors is None:
-            raise TypeError('No vectors where loaded. Make sure one exists.')
+        if self.__embeddings is None:
+            raise TypeError('No face embeddings where loaded. Make sure one exists.')
         
         results = []
         if isinstance(img_tensor, list):
@@ -33,11 +37,11 @@ class FacialRecognition:
             return self.do_prediction(embedding)
     
     def do_prediction(self, img_embedding):
-        for embedding in self.embeddings:
+        for embedding in self.__embeddings:
             embedding.calculate_distance(img_embedding)
         
-        self.embeddings.sort()
-        best_scores = self.embeddings[:3]
+        self.__embeddings.sort()
+        best_scores = self.__embeddings[:3]
 
         if best_scores[0].score > 1.1:
             return ['Unknown', -1]
@@ -93,17 +97,20 @@ class FacialRecognition:
                 if face is not None:
                     tmp.append(FaceEmbedding(self.__resnet, label, image).calculate_embedding(face))
         
-        self.embeddings = tmp
+        self.__embeddings = tmp
 
     def save(self, filename='face_embeddings.model'):
-        if self.embeddings is not None:
-            dump(self.embeddings, filename)
+        if self.__embeddings is not None:
+            dump(self.__embeddings, filename)
     
     def load(self, filename='face_embeddings.model'):
         try:
-            self.embeddings = load(filename)
+            self.__embeddings = load(filename)
         except:
             print('Unable to load model')
+
+        return self
+
 
 class FaceEmbedding:
     def __init__(self, resnet, label, image_location = ''):
