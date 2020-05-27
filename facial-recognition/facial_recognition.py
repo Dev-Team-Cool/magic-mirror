@@ -18,7 +18,7 @@ class FacialRecognition:
     def embeddings_loaded(self):
         return not self.__embeddings is None
     
-    def predict(self, img_tensor: Tensor):
+    def predict(self, img_tensor):
         """
         Do a prediction about who this person is.
 
@@ -69,23 +69,9 @@ class FacialRecognition:
         return counter.most_common(1)[0][0] # Only return the label of the FaceEmbedding
 
     def __generate_tensor(self, image):
-        from facenet_pytorch import MTCNN
-        from PIL import Image
-
-        img_file = Image.open(image)
-        exif_parsed = utils.parse_jpeg_exif(img_file)
-
-        if 'Orientation' in exif_parsed.keys():
-            if exif_parsed['Orientation'] == 6:
-                img_file = img_file.transpose(Image.ROTATE_270)
-            elif exif_parsed['Orientation'] == 8:
-                img_file = img_file.transpose(Image.ROTATE_90)
-        if img_file.height > 720:
-            size = 480,480
-            img_file.thumbnail(size, Image.ANTIALIAS)
-        
-        face = self.__detector.forward(img_file)
-        
+        image = Image.open(image)
+        image = utils.prepare_image(image)
+        face = self.__detector.forward(image)
         if face is None:
             print('No face found')
             return None
@@ -96,7 +82,7 @@ class FacialRecognition:
         from facenet_pytorch import MTCNN
         self.__detector = MTCNN()
         
-        traing_data = load_images(training_data_path)
+        traing_data = utils.load_images(training_data_path)
         tmp = []
         
         for label, images in traing_data.items():
