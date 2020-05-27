@@ -1,4 +1,5 @@
 import os
+from PIL.ExifTags import TAGS
 
 
 def load_images(directory):
@@ -13,3 +14,15 @@ def load_images(directory):
                     images[sub_dir.name].append(img_file.path)
     
     return images
+
+def extract_exif(image):
+    return image.__getexif()
+
+def parse_jpeg_exif(image):
+    """Parse the raw meta-data of a JPEG image"""
+    raw_exif = extract_exif(image)
+    exif_parsed = {}
+    for key, value in raw_exif.items():
+        exif_parsed[TAGS[key]] = value
+
+    return exif_parsed

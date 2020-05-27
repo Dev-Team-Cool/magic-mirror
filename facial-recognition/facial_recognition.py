@@ -3,16 +3,14 @@ import numpy as np
 from torch import Tensor
 from joblib import dump, load
 from utils import load_images
+import utils
 from collections import Counter
-from PIL.ExifTags import TAGS
-from PIL import ImageDraw
+
 
 class FacialRecognition:
     def __init__(self):
         self.__resnet = InceptionResnetV1('vggface2').eval()
-        self.vectors = None
-        # self.__model = self.load_model(pretrained)
-    
+        self.embeddings = None
     
     def predict(self, img_tensor: Tensor):
         """
@@ -33,18 +31,17 @@ class FacialRecognition:
         else:
             embedding = FaceEmbedding(self.__resnet, '').calculate_embedding(img_tensor)
             return self.do_prediction(embedding)
-        # return self.__model.predict(embedding)
     
     def do_prediction(self, img_embedding):
-        for embedding in self.vectors:
+        for embedding in self.embeddings:
             embedding.calculate_distance(img_embedding)
         
-        self.vectors.sort()
-        best_scores = self.vectors[:3]
+        self.embeddings.sort()
+        best_scores = self.embeddings[:3]
 
-        print('scores: ')
-        for score in self.vectors:
-            print(score)
+        if best_scores[0].score > 1.1:
+            return ['Unknown', -1]
+        
         count = {}
         for vector in best_scores:
             if vector.label not in count:
@@ -60,10 +57,7 @@ class FacialRecognition:
         from PIL import Image
 
         img_file = Image.open(image)
-        exif = img_file._getexif()
-        exif_parsed = {}
-        for key, value in exif.items():
-            exif_parsed[TAGS[key]] = value
+        exif_parsed = utils.parse_jpeg_exif(img_file)
 
         if 'Orientation' in exif_parsed.keys():
             if exif_parsed['Orientation'] == 6:
@@ -74,38 +68,37 @@ class FacialRecognition:
             size = 480,480
             img_file.thumbnail(size, Image.ANTIALIAS)
         
-        box, probas = MTCNN().detect(img_file)
+        faces = self.__detector.forward(img_file)
         
-        if box is None:
+        if len(faces) > 1:
+            print('To many faces found.')
             return None
-        return fixed_image_standardization(extract_face(img_file, box[0]))
+        face = faces[0]
+        if face is None:
+            print('No face found')
+            return None
+
+        return face
 
     def train_classifier(self, training_data_path):
-        # from sklearn.neighbors import KNeighborsClassifier
-        # if self.__model: return
-
-        X_train = load_images(training_data_path)
+        from facenet_pytorch import MTCNN
+        self.__detector = MTCNN()
+        
+        traing_data = load_images(training_data_path)
         tmp = []
         
-        for key, images in X_train.items():
+        for label, images in traing_data.items():
             for image in images:
-                print('Handling ', image)
-                img_cropped = self.__generate_tensor(image)
-                if img_cropped is not None:
-                    tmp.append(FaceEmbedding(self.__resnet, key, image).calculate_embedding(img_cropped))
+                face = self.__generate_tensor(image)
+                if face is not None:
+                    tmp.append(FaceEmbedding(self.__resnet, label, image).calculate_embedding(face))
         
-        self.vectors = tmp
-        # X_train = np.array([self.__calculate_embedding((self.__generate_tensor(image))) for image in X_train])
-        # X_train = X_train.reshape(-1, 512)
-        # knn_classifier = KNeighborsClassifier(n_neighbors=2)
-        # knn_classifier.fit(X_train, y_train)
-        # print('Model trained')
-        # self.__model = knn_classifier
-    
+        self.embeddings = tmp
+
     def save(self, filename='face_embeddings.model'):
         if self.embeddings is not None:
             dump(self.embeddings, filename)
-
+    
     def load(self, filename='face_embeddings.model'):
         try:
             self.embeddings = load(filename)
@@ -123,6 +116,7 @@ class FaceEmbedding:
     def calculate_embedding(self, img_tensor):
         embedding = self.__resnet.forward(img_tensor.unsqueeze(0)).detach().numpy()
         self.embedding = embedding
+
         return self
 
     def calculate_distance(self, reference_embedding):
@@ -136,7 +130,3 @@ class FaceEmbedding:
     
     def __str__(self):
         return f'Score: {self.score} - label: {self.label}'
-
-def draw_box(img, box):
-    draw = ImageDraw.Draw(img)
-    draw.rectangle(box)
