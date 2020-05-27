@@ -8,10 +8,12 @@ import numpy as np
 
 train_data = '/home/florian/Documents/school/magic-mirror/facial-recognition/data/trainV2'
 
-facial_recognition = FacialRecognition()
+facial_recognition = FacialRecognition().load('face_embeddings.model')
+if not facial_recognition.embeddings_loaded:
+    # Train the classifier
+    facial_recognition.train_classifier(train_data)
+    facial_recognition.save()
 
-# Train the classifier
-facial_recognition.train_classifier(train_data)
 # facial_recognition.export_classifier('facial_recognition.model')
 
 # Read image and predict
@@ -29,10 +31,6 @@ facial_recognition.train_classifier(train_data)
 
 #         prediction = facial_recognition.predict(img_cropped)
 #         print('Guess: ', prediction[0], ' - Actual: ', key)
-
-def draw_box(img, box):
-    draw = ImageDraw.Draw(img)
-    draw.rectangle(box)
 
 # test_image_path = '/home/florian/Documents/school/magic-mirror/facial-recognition/data/valV2'
 # test_images = load_images(test_image_path)
@@ -73,7 +71,7 @@ def draw_box(img, box):
 # print('Report', metrics.classification_report(y_test, y_pred))
 # print('Accuracy:', metrics.accuracy_score(y_test, y_pred))
         
-test_image_path = '/home/florian/Documents/school/magic-mirror/facial-recognition/data/valV2/IMG_20200525_133954.jpg'
+test_image_path = '/home/florian/Documents/school/magic-mirror/facial-recognition/data/mr_bean.jpg'
 test_image = Image.open(test_image_path)
 size=480,480
 test_image.thumbnail(size, Image.ANTIALIAS)
@@ -83,9 +81,8 @@ boxes, proba = MTCNN().detect(test_image)
 print(len(boxes))
 faces = []
 
-# for box in boxes:
-box = boxes[0]
-print(box)
-draw_box(test_image, box)
-face_img = extract_face(test_image, box, save_path='data/extracted_test.jpg')
-faces.append(facial_recognition.predict(fixed_image_standardization(face_img)))
+for box in boxes:
+    face_img = extract_face(test_image, box)
+    faces.append(facial_recognition.predict(fixed_image_standardization(face_img)))
+
+print(faces)
