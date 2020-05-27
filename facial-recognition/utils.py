@@ -1,4 +1,6 @@
 import os
+from enum import Enum
+from PIL import Image
 from PIL.ExifTags import TAGS
 
 
@@ -21,7 +23,55 @@ def parse_jpeg_exif(image):
     """Parse the raw meta-data of a JPEG image"""
     raw_exif = extract_exif(image)
     exif_parsed = {}
-    for key, value in raw_exif.items():
-        exif_parsed[TAGS[key]] = value
+    if raw_exif is not None:
+        for key, value in raw_exif.items():
+            exif_parsed[TAGS[key]] = value
 
     return exif_parsed
+
+def is_gray_scaled(image):
+    pixel_mode = image.mode
+    if pixel_mode == '1' or pixel_mode == 'L':
+        return True
+    
+    return False
+
+def handle_orientation(image, image_orientation):
+    if image_orientation == Orientation.ROTATE_180:
+        image = image.rotate(180)
+    if image_orientation == Orientation.ROTATE_90_CW:
+        image = image.rotate(-90)
+    elif image_orientation == Orientation.ROTATE_270_CW:
+        image = image.rotate(90)
+    
+    return image
+
+def prepare_image(image):
+    # Check if image is gray scaled
+    if (is_gray_scaled(image)):
+        print('Image is gray scaled')
+        return None
+    if image.height > 720:
+        # Resize huge images to something smaller so they can get processed faster
+        size = 1280, 720
+        image.thumbnail(size, Image.ANTIALIAS)
+    
+    exif_data = parse_jpeg_exif(image)
+    if 'Orientation' in exif_data.keys():
+        image_orientation = exif_data.get('Orientation', Orientation.HORIZONTAL)
+        image = handle_orientation(image, image_orientation)
+    
+    return image
+        
+
+
+class Orientation(Enum):
+    HORIZONTAL = 1
+    MIRROR_HORIZONZAL = 2
+    ROTATE_180 = 3
+    MIRROR_VERTICAL = 4
+    MIRROR_HORIZONZAL_ROTATE_270_CW = 5
+    ROTATE_90_CW = 6
+    MIRROR_HORIZONZAL_ROTATE_90_CW = 7
+    ROTATE_270_CW = 8 
+    
