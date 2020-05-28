@@ -3,9 +3,8 @@ import os
 
 from PIL import Image
 from facenet_pytorch import MTCNN
-
-import utils
-from config import Config
+from facial_recognition.config import Config
+import facial_recognition.utils as utils
 
 def main(img_file: str):
     tmp_path = Config.get('tmp_train_path')
