@@ -12,6 +12,7 @@ from facial_recognition.facial_recognition import FacialRecognition
 
 
 def load_model():
+    Config.load_config('config.json')
     facial_recognition = FacialRecognition().load()
     if not facial_recognition.embeddings_loaded:
         raise Exception('No model loaded.')
