@@ -1,0 +1,5 @@
+{
+    "train_data_path": "/home/florian/Documents/school/magic-mirror/facial-recognition/data/trainV2",
+    "model_path": "/home/florian/Documents/school/magic-mirror/facial-recognition/face-recognition.model",
+    "score_treshold": 1.1
+}
