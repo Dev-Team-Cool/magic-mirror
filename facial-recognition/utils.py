@@ -1,10 +1,11 @@
 import os
-from enum import Enum
+from enum import IntEnum
 from PIL import Image
 from PIL.ExifTags import TAGS
 
 
 def load_images(directory):
+    print(directory)
     sub_dirs = os.scandir(directory)
     images = {}
     for sub_dir in sub_dirs:
@@ -38,11 +39,11 @@ def is_gray_scaled(image):
 
 def handle_orientation(image, image_orientation):
     if image_orientation == Orientation.ROTATE_180:
-        image = image.rotate(180)
+        image = image.transpose(Image.ROTATE_180)
     if image_orientation == Orientation.ROTATE_90_CW:
-        image = image.rotate(-90)
+        image = image.transpose(Image.ROTATE_270)
     elif image_orientation == Orientation.ROTATE_270_CW:
-        image = image.rotate(90)
+        image = image.transpose(Image.ROTATE_90)
     
     return image
 
@@ -65,7 +66,7 @@ def prepare_image(image):
         
 
 
-class Orientation(Enum):
+class Orientation(IntEnum):
     HORIZONTAL = 1
     MIRROR_HORIZONZAL = 2
     ROTATE_180 = 3
@@ -73,5 +74,5 @@ class Orientation(Enum):
     MIRROR_HORIZONZAL_ROTATE_270_CW = 5
     ROTATE_90_CW = 6
     MIRROR_HORIZONZAL_ROTATE_90_CW = 7
-    ROTATE_270_CW = 8 
+    ROTATE_270_CW = 8
     
