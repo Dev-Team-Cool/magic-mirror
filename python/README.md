@@ -1,5 +1,14 @@
 # Facial Detection / Recognition module
 
+## Setup
+
+Run `pip install -e ./` in your virtual environment to install the package and its dependencies.
+Import the packages wherevere you want. eg:
+```
+import facial_recognition
+from facial_recognition.config import Config
+```
+
 ## Get Started
 
 1. Train a model  
