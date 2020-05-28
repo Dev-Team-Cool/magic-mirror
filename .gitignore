@@ -4,6 +4,7 @@ project-env
 # Python compiled binaries
 */__pycache__
 *.pyc
+*.egg-info
 
 # Training data
 python/data
