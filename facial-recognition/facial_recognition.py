@@ -7,6 +7,7 @@ from joblib import dump, load
 from PIL import Image
 
 import utils
+from config import Config
 
 
 class FacialRecognition:
@@ -46,7 +47,7 @@ class FacialRecognition:
         self.__embeddings.sort()
         closest_embeddings = self.__embeddings[:3] # Get the top 3 closest embeddings
 
-        if closest_embeddings[0].score > 1.1:
+        if closest_embeddings[0].score > Config.get('score_treshold', 1.1):
             # If the best score is greater then a certain treshold we classify the person as unknown
             return ['Unknown', closest_embeddings[0].probability]
         
@@ -68,22 +69,23 @@ class FacialRecognition:
         counter = Counter(embedding_count)
         return counter.most_common(1)[0][0] # Only return the label of the FaceEmbedding
 
-    def __generate_tensor(self, image):
+    def __generate_tensor(self, image_file):
         """Creates a tensor of the faces based on the input image"""
-        image = Image.open(image)
+        image = Image.open(image_file)
         image = utils.prepare_image(image)
+
         face = self.__detector.forward(image)
         if face is None:
-            print('No face found')
+            print(image_file, '- NOK')
             return None
-
+        print(image_file, '- OK')
         return face
 
-    def train_classifier(self, training_data_path):
+    def train_classifier(self):
         from facenet_pytorch import MTCNN
         self.__detector = MTCNN()
         
-        traing_data = utils.load_images(training_data_path)
+        traing_data = utils.load_images(Config.get('train_data_path'))
         tmp = []
         
         for label, images in traing_data.items():
@@ -94,13 +96,13 @@ class FacialRecognition:
         
         self.__embeddings = tmp
 
-    def save(self, filename='face_embeddings.model'):
+    def save(self):
         if self.__embeddings is not None:
-            dump(self.__embeddings, filename)
+            dump(self.__embeddings, Config.get('model_path', 'facial_recognition.model'))
     
-    def load(self, filename='face_embeddings.model'):
+    def load(self):
         try:
-            self.__embeddings = load(filename)
+            self.__embeddings = load(Config.get('model_path', 'facial_recognition.model'))
         except:
             print('Unable to load model')
 
