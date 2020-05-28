@@ -15,8 +15,8 @@ class Config:
             raise Exception('Could not load the config.', config_file)
     
     @staticmethod
-    def get(key):
-        if Config.config is None: return None
-        if key not in Config.config.keys(): return None
+    def get(key, fallback=None):
+        if Config.config is None: return fallback
+        if key not in Config.config.keys(): return fallback
 
-        return Config.config.get(key, '')
+        return Config.config.get(key, fallback)
