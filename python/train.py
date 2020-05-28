@@ -1,9 +1,8 @@
 import os
 
-from facial_recognition import FacialRecognition
-
-from config import Config
-import utils
+from facial_recognition.facial_recognition import FacialRecognition
+from facial_recognition.config import Config
+import facial_recognition.utils as utils
 
 Config.load_config('config.json')
 

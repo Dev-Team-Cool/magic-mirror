@@ -6,10 +6,10 @@ from facenet_pytorch import MTCNN, extract_face, fixed_image_standardization
 from PIL import Image, ImageDraw
 from PIL.ExifTags import TAGS
 
-import utils
-from config import Config
-from facial_recognition import FacialRecognition
-from utils import load_images
+import facial_recognition.utils as utils
+from facial_recognition.config import Config
+from facial_recognition.facial_recognition import FacialRecognition
+
 
 def load_model():
     facial_recognition = FacialRecognition().load()
@@ -22,7 +22,7 @@ def main(test_dir):
     # Train a model first with train.py
     facial_recognition = load_model()
 
-    test_images = load_images(test_dir)
+    test_images = utils.load_images(test_dir)
     X_test = []
     y_test = []
 
