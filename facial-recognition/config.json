@@ -1,5 +1,6 @@
 {
     "train_data_path": "/home/florian/Documents/school/magic-mirror/facial-recognition/data/trainV2",
+    "tmp_train_path": "/home/florian/Documents/school/magic-mirror/facial-recognition/data/valV2",
     "save_training_data": false,
     "saved_training_data_path": "/home/florian/Documents/school/magic-mirror/facial-recognition/data/trained",
     "model_path": "/home/florian/Documents/school/magic-mirror/facial-recognition/facial_recognition.model",
