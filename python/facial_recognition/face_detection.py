@@ -5,7 +5,7 @@ import time
 import cv2
 from facenet_pytorch import MTCNN, extract_face, fixed_image_standardization
 
-from facial_recognition import FacialRecognition
+from facial_recognition.facial_recognition import FacialRecognition
 
 
 class FaceDetection(threading.Thread):

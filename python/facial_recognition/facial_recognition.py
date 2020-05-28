@@ -6,8 +6,8 @@ from facenet_pytorch import (InceptionResnetV1, extract_face,
 from joblib import dump, load
 from PIL import Image
 
-import utils
-from config import Config
+import facial_recognition.utils as utils
+from facial_recognition.config import Config
 
 
 class FacialRecognition:
