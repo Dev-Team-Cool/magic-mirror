@@ -867,3 +867,4 @@ F:\School\magic-mirror\backend\api\MirrorOfErised\MirrorOfErised\bin\Debug\netco
 F:\School\magic-mirror\backend\api\MirrorOfErised\MirrorOfErised\obj\Debug\netcoreapp3.1\MirrorOfErised.MvcApplicationPartsAssemblyInfo.cs
 F:\School\magic-mirror\backend\api\MirrorOfErised\MirrorOfErised\obj\Debug\netcoreapp3.1\MirrorOfErised.MvcApplicationPartsAssemblyInfo.cache
 F:\School\magic-mirror\backend\api\MirrorOfErised\MirrorOfErised\bin\Debug\netcoreapp3.1\libman.json
+F:\School\magic-mirror\backend\api\MirrorOfErised\MirrorOfErised\bin\Debug\netcoreapp3.1\Controllers\config.json

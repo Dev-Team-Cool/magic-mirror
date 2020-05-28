@@ -60,7 +60,7 @@ namespace MirrorOfErised.Controllers
         {
             
             
-            var result= facePython.validateImage("8");
+            /*var result= facePython.validateImage("8");*/
             
             IdentityUser identityUser = await _userManager.GetUserAsync(User);
             if (identityUser.EmailConfirmed == false)
@@ -80,9 +80,9 @@ namespace MirrorOfErised.Controllers
             string FilePath = Path.Combine(uploadsFolder, uniqueFileName);
             image.CopyTo(new FileStream(FilePath, FileMode.Create));
             var result = facePython.validateImage(uniqueFileName);
-            if (result == "False")
+            if (result.Contains("NOK")| result.Contains("Traceback"))
             {
-                return "False";
+                return "false";
             }
             return uniqueFileName;
         }
@@ -119,7 +119,21 @@ namespace MirrorOfErised.Controllers
                         };
                         if (newEntry.Image1Path == "false" | newEntry.Image2Path == "false"| newEntry.Image3Path == "false")
                         {
-                            ViewBag.error = "Images not valid";
+                            string errormessage = "You need to change ";
+                            if (newEntry.Image1Path == "false")
+                            {
+                                errormessage += "Image 1 ";
+                            }
+                            if (newEntry.Image2Path == "false")
+                            {
+                                errormessage += "Image 2 ";
+                            }
+                            if (newEntry.Image3Path == "false")
+                            {
+                                errormessage += "Image 3 ";
+                            }
+
+                            ViewBag.error = errormessage;
                             return View(model);
                         }
 
