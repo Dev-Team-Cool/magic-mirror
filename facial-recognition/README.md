@@ -27,3 +27,13 @@
         export DEBUG=true
         python start.py
     ```
+
+## Validate a single image
+
+You can use the script `validate_image.py` to validate a single image.  
+Pass the filename as a parameter and set the property `tmp_train_path` in the `config.json` file.
+The script will automatically move a correctly processed file.
+
+```
+    python validate_image.py afbeelding.jpg
+```
