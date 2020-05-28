@@ -23,7 +23,7 @@ class FacialRecognition:
         Do a prediction about who this person is.
 
         :param img_tensor: The tensor generated from MTCNN
-        :returns: A tuple with the probability and the class
+        :returns: A tuple with the class and the probability
         """
         if self.__embeddings is None:
             raise TypeError('No face embeddings where loaded. Make sure one exists.')
@@ -32,15 +32,15 @@ class FacialRecognition:
         if isinstance(img_tensor, list):
             for tensor in img_tensor: 
                 embedding = FaceEmbedding(self.__resnet, '').calculate_embedding(tensor)
-                results.append(self.do_prediction(embedding)[0])
+                results.append(self.__do_prediction(embedding))
             return results
         else:
             embedding = FaceEmbedding(self.__resnet, '').calculate_embedding(img_tensor)
-            return self.do_prediction(embedding)
+            return self.__do_prediction(embedding)
     
-    def do_prediction(self, img_embedding):
+    def __do_prediction(self, img_embedding):
         for embedding in self.__embeddings:
-            # Calculate each distance from the training examples to the current person
+            # Calculate each distance from the training examples to the reference person
             embedding.calculate_distance(img_embedding)
         
         self.__embeddings.sort()
@@ -69,6 +69,7 @@ class FacialRecognition:
         return counter.most_common(1)[0][0] # Only return the label of the FaceEmbedding
 
     def __generate_tensor(self, image):
+        """Creates a tensor of the faces based on the input image"""
         image = Image.open(image)
         image = utils.prepare_image(image)
         face = self.__detector.forward(image)
@@ -125,6 +126,7 @@ class FaceEmbedding:
         return self
 
     def calculate_distance(self, reference_embedding):
+        """Calculate the euclidian distance between this embedding and the reference emebedding"""
         if (self.embedding is not None):
             self.score = np.linalg.norm(self.embedding - reference_embedding.embedding)
 
