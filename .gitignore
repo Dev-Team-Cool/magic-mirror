@@ -6,7 +6,7 @@ project-env
 *.pyc
 
 # Training data
-facial-recognition/data
+python/data
 
 # Trained classifiers
 *.model
