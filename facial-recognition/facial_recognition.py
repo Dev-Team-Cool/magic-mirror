@@ -81,20 +81,22 @@ class FacialRecognition:
         print(image_file, '- OK')
         return face
 
-    def train_classifier(self):
+    def train_classifier(self, training_data):
         from facenet_pytorch import MTCNN
         self.__detector = MTCNN()
         
-        traing_data = utils.load_images(Config.get('train_data_path'))
         tmp = []
         
-        for label, images in traing_data.items():
+        for label, images in training_data.items():
             for image in images:
                 face = self.__generate_tensor(image)
                 if face is not None:
                     tmp.append(FaceEmbedding(self.__resnet, label, image).calculate_embedding(face))
         
-        self.__embeddings = tmp
+        if self.__embeddings is not None:
+            self.__embeddings = self.__embeddings + tmp
+        else:
+            self.__embeddings = tmp
 
     def save(self):
         if self.__embeddings is not None:
