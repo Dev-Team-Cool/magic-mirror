@@ -26,7 +26,8 @@ def parse_jpeg_exif(image):
     exif_parsed = {}
     if raw_exif is not None:
         for key, value in raw_exif.items():
-            exif_parsed[TAGS[key]] = value
+            if key in TAGS:
+                exif_parsed[TAGS[key]] = value
 
     return exif_parsed
 
