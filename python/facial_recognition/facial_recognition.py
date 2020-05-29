@@ -1,8 +1,7 @@
 from collections import Counter
 
 import numpy as np
-from facenet_pytorch import (InceptionResnetV1, extract_face,
-                             fixed_image_standardization)
+from facenet_pytorch import InceptionResnetV1
 from joblib import dump, load
 from PIL import Image
 
