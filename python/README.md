@@ -9,6 +9,8 @@ import facial_recognition
 from facial_recognition.config import Config
 ```
 
+On Windows use the following [site](https://pytorch.org/get-started/locally/) to install the correct version of torch.
+
 ## Get Started
 
 1. Train a model  
