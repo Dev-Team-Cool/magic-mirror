@@ -37,6 +37,9 @@ def is_gray_scaled(image):
     
     return False
 
+def is_jpeg(image):
+    return image.format == 'JPEG'
+
 def handle_orientation(image, image_orientation):
     if image_orientation == Orientation.ROTATE_180:
         image = image.transpose(Image.ROTATE_180)
@@ -49,6 +52,8 @@ def handle_orientation(image, image_orientation):
 
 def prepare_image(image):
     # Check if image is gray scaled
+    if (not is_jpeg(image)):
+        return None
     if (is_gray_scaled(image)):
         print('Image is gray scaled')
         return None
