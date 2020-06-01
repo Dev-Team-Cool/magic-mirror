@@ -1,0 +1,38 @@
+<annotation>
+	<folder>CreatedImages</folder>
+	<filename>image2.jpg</filename>
+	<path>F:\School\magic-mirror\badgeDetection\ImageAugmentation\CreatedImages\image2.jpg</path>
+	<source>
+		<database>Unknown</database>
+	</source>
+	<size>
+		<width>1941</width>
+		<height>2376</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>Badge</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>1005</xmin>
+			<ymin>1788</ymin>
+			<xmax>1203</xmax>
+			<ymax>2129</ymax>
+		</bndbox>
+	</object>
+	<object>
+		<name>ML6 logo</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>1005</xmin>
+			<ymin>2064</ymin>
+			<xmax>1213</xmax>
+			<ymax>2117</ymax>
+		</bndbox>
+	</object>
+</annotation>
