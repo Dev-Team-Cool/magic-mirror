@@ -52,9 +52,12 @@ namespace MirrorOfErised.api
 
             //2. Registraties (van context, Identity) 
             //2.1. Context
-            var connectionString = Configuration.GetConnectionString("DefaultConnection");
-            services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionString));
-
+            string connectionString = Configuration.GetConnectionString("DefaultConnection");
+            services.AddEntityFrameworkNpgsql().AddDbContext<ApplicationDbContext>(opt =>
+            {
+                opt.UseNpgsql(Configuration.GetConnectionString("DefaultConnection"));
+            });
+            
             //2.2 Identity ( NIET de AddDefaultIdentity())
             services.AddIdentity<IdentityUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
