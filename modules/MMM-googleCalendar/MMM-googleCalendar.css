@@ -1,0 +1,40 @@
+.calendar{
+    width:370px;
+    box-shadow: 0px 0px 35px -16px rgba(0,0,0,0.75);
+    font-family: 'Roboto', sans-serif;
+    padding: 20px 30px;
+    color:#363b41;
+    display: inline-block;
+    margin-left: 65px;
+  }
+
+  .calendar_events{
+    color:#A39D9E;
+  }
+
+  .event_item{
+    margin: 18px 0;
+    padding:5px;
+  }
+
+  .ei_Dot,.ei_Title{
+    display:inline-block;
+  }
+  
+  .ei_Dot{
+    border-radius:50%;
+    width:10px;
+    height: 10px;
+    background-color: #A39D9E;
+    box-shadow: 0px 0px 52px -18px rgba(0, 0, 0, 0.75);
+  }
+
+  .ei_Title{
+    margin-left:10px;
+    color:#363b41;
+  }
+  
+  .ei_Copy{
+    font-size:12px;
+    margin-left:27px;
+  }
