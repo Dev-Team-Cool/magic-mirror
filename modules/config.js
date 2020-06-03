@@ -101,7 +101,7 @@ var config = {
 			module: 'MMM-MyCommute',
 			position: 'top_right',
 			config: {
-			  apiKey: 'AIzaSyAsLMvF5YCyhCmCNfOjch50-8yAAmn84YA',
+			  apiKey: "YOUR API KEY",
 			  origin: 'Edgard Tinelstraat 91, Sinaai-Waas, 9112',
 			  startTime: '00:00',
 			  endTime: '23:59',
