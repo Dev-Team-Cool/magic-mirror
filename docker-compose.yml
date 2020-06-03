@@ -17,6 +17,10 @@ services:
     ports:
       - "443:443" 
       - "80:80"
+    environment:
+      SENDGRID: # Sendgrid key
+      CLIENTID: # Google client id
+      CLIENTSECRET: # Google client secret
   api:
     container_name: api
     image: api:latest
@@ -25,5 +29,9 @@ services:
     ports:
       - "5001:443"
       - "5000:80"
+    environment:
+      SENDGRID: # Sendgrid key
+      CLIENTID: # Google client id
+      CLIENTSECRET: # Google client secret
 volumes:
   dbdata:
