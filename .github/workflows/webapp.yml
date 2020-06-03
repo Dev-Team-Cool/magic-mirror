@@ -20,13 +20,15 @@ jobs:
     if: github.event.pull_request.merged == true && startsWith(github.event.pull_request.head.ref, 'release/webapp')
     steps:
     - uses: actions/checkout@v2
-    - uses: crazy-max/ghaction-docker-buildx@v2
     - name: Cache
       if: github.event_name == 'pull_request'
       uses: actions/cache@v1
       with:
         path: .github
         key: ${{ runner.os }}-github
+    - name: Test
+      run: echo hallo
+    - uses: crazy-max/ghaction-docker-buildx@v2
     - name: Docker login
       env:
         DOCKERHUB_ACCESS_TOKEN: ${{ secrets.DOCKERHUB_ACCESS_TOKEN }}
@@ -46,13 +48,13 @@ jobs:
     if: github.event.pull_request.merged == true && startsWith(github.event.pull_request.head.ref, 'release/webapp')
     steps:
     - uses: actions/checkout@v2
-    - uses: crazy-max/ghaction-docker-buildx@v2
     - name: Cache
       if: github.event_name == 'pull_request'
       uses: actions/cache@v1
       with:
         path: .github
         key: ${{ runner.os }}-github
+    - uses: crazy-max/ghaction-docker-buildx@v2
     - name: Docker login
       env:
         DOCKERHUB_ACCESS_TOKEN: ${{ secrets.DOCKERHUB_ACCESS_TOKEN }}
