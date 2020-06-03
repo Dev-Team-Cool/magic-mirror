@@ -17,17 +17,8 @@ jobs:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
     name: Build ASP.NET webapp docker image for arm architecture
-    if: github.event.pull_request.merged == true && startsWith(github.event.pull_request.head.ref, 'release/webapp')
     steps:
     - uses: actions/checkout@v2
-    - name: Cache
-      if: github.event_name == 'pull_request'
-      uses: actions/cache@v1
-      with:
-        path: .github
-        key: ${{ runner.os }}-github
-    - name: Test
-      run: echo hallo
     - uses: crazy-max/ghaction-docker-buildx@v2
     - name: Docker login
       env:
@@ -45,15 +36,8 @@ jobs:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
     name: Build ASP.NET api docker image for arm architecture
-    if: github.event.pull_request.merged == true && startsWith(github.event.pull_request.head.ref, 'release/webapp')
     steps:
     - uses: actions/checkout@v2
-    - name: Cache
-      if: github.event_name == 'pull_request'
-      uses: actions/cache@v1
-      with:
-        path: .github
-        key: ${{ runner.os }}-github
     - uses: crazy-max/ghaction-docker-buildx@v2
     - name: Docker login
       env:
