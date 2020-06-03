@@ -1,0 +1,55 @@
+# This is a basic workflow to help you get started with Actions
+
+name: WebApp Build
+
+# Controls when the action will run. Triggers the workflow on push or pull request
+# events but only for the master branch
+on:
+  pull_request:
+    types: 
+      - closed
+    branches:
+      - release/webapp-*
+  push:
+    branches: 
+      - test/workflow
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  webapp:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    name: Build ASP.NET docker webapp on arm
+    
+    steps:
+    - uses: actions/checkout@v2
+    - uses: uraimo/run-on-arch-action@v1.0.9
+      env:
+        DOCKERHUB_ACCESS_TOKEN: ${{ secrets.DOCKERHUB_ACCESS_TOKEN }}
+        DOCKERHUB_USER: florianvd
+      with:
+        architecture: armv7
+        distribution: ubuntu20.04
+        run: |
+          cd backend/api/MirrorOfErised && docker build --file MirrorOfErised/Dockerfile --tag florianvd/mirror-of-erised:webapp-latest
+          echo $DOCKERHUB_ACCESS_TOKEN | docker login -u $DOCKERHUB_USER --password-stdin
+          docker push florianvd/mirror-of-erised:webapp-latest
+  api:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    name: Build ASP.NET docker api on arm
+    
+    steps:
+    - uses: actions/checkout@v2
+    - uses: uraimo/run-on-arch-action@v1.0.9
+      env:
+        DOCKERHUB_ACCESS_TOKEN: ${{ secrets.DOCKERHUB_ACCESS_TOKEN }}
+        DOCKERHUB_USER: florianvd
+      with:
+        architecture: armv7
+        distribution: ubuntu20.04
+        run: |
+          cd backend/api/MirrorOfErised && docker build --file MirrorOfErised.api/Dockerfile --tag florianvd/mirror-of-erised:api-latest
+          echo $DOCKERHUB_ACCESS_TOKEN | docker login -u $DOCKERHUB_USER --password-stdin
+          docker push florianvd/mirror-of-erised:api-latest
+                    
