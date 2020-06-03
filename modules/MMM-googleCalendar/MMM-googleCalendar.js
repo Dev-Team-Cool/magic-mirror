@@ -15,6 +15,7 @@ Module.register("MMM-googleCalendar",{
     },
 
     getData: function() {
+        // Loads the calendar events from the url specified in defaults.url, sends the loaded events to processData.
         self = this;
         var dataRequest = new XMLHttpRequest();
         dataRequest.open("GET", self.defaults.url, true);
@@ -41,30 +42,32 @@ Module.register("MMM-googleCalendar",{
     	// Override dom generator.
 	getDom: function() {
         var wrapper = document.createElement("div");
-        wrapper.className = "calendar"
+        wrapper.className = "o-row";
+        var container = document.createElement("div");
+        container.className = "o-container"
+        wrapper.appendChild(container);
         var date = document.createElement('h3');
         date.innerHTML = this.getDate();
-        wrapper.appendChild(date);
+        container.appendChild(date);
         var events = document.createElement('div');
         events.className = 'calendar_events';
-        wrapper.appendChild(events);
+        container.appendChild(events);
         if (this.dataRequest){
             this.dataRequest.items.forEach(element => {
                 var event_item = document.createElement('div');
-                event_item.className = "event_item";
-                wrapper.appendChild(event_item);
-                var ei_dot = document.createElement('div')
-                ei_dot.className = "ei_dot";
-                wrapper.appendChild(ei_dot);
-                var title = document.createElement('div')
-                title.className = "ei_title";
+                event_item.className = "c-card";
+                events.appendChild(event_item);
+                var body = document.createElement('div');
+                body.className = "c-card__body";
+                event_item.appendChild(body);
+                var title = document.createElement('div');
+                title.className = "c-card__title";
                 title.innerHTML = this.getTime(element);
-                wrapper.appendChild(title);
-                var summary = document.createElement('div');
-                summary.className = "ei_copy";
+                body.appendChild(title);
+                var summary = document.createElement('p');
+                summary.className = "c-body__text";
                 summary.innerHTML = element.summary;
-                wrapper.appendChild(summary);
-
+                body.appendChild(summary);
             });
         }
         console.log(wrapper);
@@ -88,10 +91,15 @@ Module.register("MMM-googleCalendar",{
     },
 
     getTime: function(date){
+        // This function returns a string with hh+mm for a calendar event
         var eventTime = new Date(date.start.dateTime);
         var hours = String(eventTime.getHours());
         var minutes = String(eventTime.getMinutes()).padStart(2, '0');
         var time = hours + ':' + minutes;
+        var eventTime = new Date(date.end.dateTime);
+        var hours_end = String(eventTime.getHours());
+        var minutes_end = String(eventTime.getMinutes()).padStart(2, '0');
+        var time = hours + ':' + minutes + ' - ' + hours_end + ':' + minutes_end;
         return time
     },
 
