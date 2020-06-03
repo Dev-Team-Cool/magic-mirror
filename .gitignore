@@ -16,3 +16,6 @@ python/data
 .vscode
 .ipynb_checkpoints
 
+#node modules
+node_modules
+

@@ -1,0 +1,8 @@
+{
+    "train_data_path": "C:\\src\\test_mm\\MagicMirror\\modules\\MMM-facialrec\\python\\train-data",
+    "tmp_train_path": "C:\\src\\training_photos2",
+    "save_training_data": true,
+    "saved_training_data_path": "C:\\src\\trained",
+    "model_path": "C:\\src\\test_mm\\MagicMirror\\modules\\MMM-facialrec\\python\\facial_recognition.model",
+    "score_treshold": 1.1
+}
