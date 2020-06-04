@@ -10,9 +10,6 @@ on:
       - closed
     branches:
       - 'master'
-  push:
-    branches:
-      - develop
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -20,6 +17,9 @@ jobs:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
     name: Build ASP.NET webapp docker image for arm architecture
+
+    if: github.event.pull_request.merged == true && startsWith(github.event.pull_request.head.ref, 'release/webapp')
+
     steps:
     - uses: actions/checkout@v2
     - uses: crazy-max/ghaction-docker-buildx@v2
@@ -35,6 +35,7 @@ jobs:
       env:
         DOCKERHUB_ACCESS_TOKEN: ${{ secrets.DOCKERHUB_ACCESS_TOKEN }}
         DOCKERHUB_USER: florianvd
+      if: success()
       run: |
         echo $DOCKERHUB_ACCESS_TOKEN | docker login --username $DOCKERHUB_USER --password-stdin
     - name: Run buildx
@@ -47,6 +48,9 @@ jobs:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
     name: Build ASP.NET api docker image for arm architecture
+
+    if: github.event.pull_request.merged == true && startsWith(github.event.pull_request.head.ref, 'release/webapp')
+
     steps:
     - uses: actions/checkout@v2
     - uses: crazy-max/ghaction-docker-buildx@v2
@@ -62,6 +66,7 @@ jobs:
       env:
         DOCKERHUB_ACCESS_TOKEN: ${{ secrets.DOCKERHUB_ACCESS_TOKEN }}
         DOCKERHUB_USER: florianvd
+      if: success()
       run: |
         echo $DOCKERHUB_ACCESS_TOKEN | docker login --username $DOCKERHUB_USER --password-stdin
     - name: Run buildx
