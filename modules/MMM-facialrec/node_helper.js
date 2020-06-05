@@ -7,45 +7,64 @@
 
 var NodeHelper = require("node_helper");
 const { PythonShell } = require('python-shell');
-var pythonStarted = false;
+// var pythonAlreadyStarted = false;
 
 module.exports = NodeHelper.create({
-	pyshell: null,
-	python_start: function(){
-		const self = this;
-		var options = {
+	initialize: function(config) {
+		console.log(config)
+		this.config = config;
+	},
+	python_start: function() {
+		// const self = this;
+		const options = {
 			mode: 'text',
-			pythonPath: 'C:\\Users\\cotty\\AppData\\Local\\Programs\\Python\\Python38\\python.exe', // path to python executable, change this to where python is installed on your local machine
-			scriptPath: 'C:\\src\\test_mm\\MagicMirror\\modules\\MMM-facialrec\\python\\', // path to dir where the script to be started resides
+			pythonPath: this.config.pythonPath, // path to python executable, change this to where python is installed on your local machine
+			scriptPath: this.config.scriptPath, // path to dir where the script to be started resides
 			pythonOptions: ['-u'], // Unbuffered
 		};
 
-		self.pyshell = new PythonShell(
+		pyshell = new PythonShell(
 			// starts the face recognition script
 			'start.py', options
 		);
-
-		self.pyshell.on("message", function(message){
+		pyshell.on("message", (message) => {
 			// Receives a message in the form of {'detected': 'name of user'} the message is a string and needs to be converted to json first
-			var obj = JSON.parse(message)
-			if(obj.detected != "Unknown" && obj.detected != 'no user'){
-				// If a user is found, send the user name to the module and stop the python shell. Shell will be restarted in 5 seconds to see if the user is still there
-				self.sendSocketNotification('user', obj.detected);
-				self.pyshell.childProcess.kill('SIGINT');
-				pythonStarted = false;
+			try {
+				message = JSON.parse(message);
+				prediction = message.detected;
+				console.log('Prediction: ', prediction)
+				if(prediction != "Unknown" && prediction != 'no user'){
+					// If a user is found, send the user name to the module and stop the python shell. Shell will be restarted in 5 seconds to see if the user is still there
+					pyshell.childProcess.kill('SIGINT');
+					this.pythonAlreadyStarted = false;
+					console.info('Ending...')
+				}
+
+				// Notify module of current prediction
+				this.sendSocketNotification('USER_FOUND', prediction);
+				
+			} catch(err) {
+				// Unable to parse as JSON; Probably just some random info from the Python script
+				return;
 			}
-			else{
-				// Notify module that no user has been found yet. Can either be an unknown face or no user
-				self.sendSocketNotification('user', obj.detected);
-			};
 		})
 
 	},
+	recognize: function() {
+		if (this.pythonAlreadyStarted) return;
+		console.info('Starting...')
+		this.python_start();
+		this.pythonAlreadyStarted = true;
+	},
 	socketNotificationReceived: function(notification, payload) {
-		// This is where the helper receives it's notifications from the module. If the payload is start and pythonStarted is false we will execute the python script.
-		if(payload === "start" && !pythonStarted){
-			this.python_start();
-			pythonStarted = true;
-		};
+		// This is where the helper receives it's notifications from the module. If the payload is start and pythonAlreadyStarted is false we will execute the python script.
+		switch(notification) {
+			case 'INIT':
+				this.initialize(payload);
+				break;
+			case 'START_RECOGNITION':
+				this.recognize();
+				break;
+		}
 	  }
 });
