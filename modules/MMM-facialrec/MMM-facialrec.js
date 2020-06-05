@@ -11,27 +11,26 @@ Module.register("MMM-facialrec", {
 	defaults: {
 		updateInterval: 5000,
 		retryDelay: 5000,
-		animationSpeed: 0
+		animationSpeed: 0,
+		pythonPath: '',
+		scriptPath: ''
 	},
 
 	requiresVersion: "2.1.0", // Required version of MagicMirror
 
 	start: function() {
-		var self = this;
-
 		// Variable that keeps track of the current user.
 		this.user = "No user found";
+		this.sendSocketNotification('INIT', this.config);
 		
 		// Sends a request to start the python script every 5 seconds, node helper ignores this request if python script is already started.
-		setInterval(function() {
-			self.sendSocketNotification("MMM-facialrec-NOTIFICATION_TEST", "start");
+		setInterval(() => {
+			this.sendSocketNotification("START_RECOGNITION", true);
 		}, this.config.updateInterval);
 	},
 
 	// Generates the DOM elements to be displayed, currently it only shows the name of the current user.
 	getDom: function() {
-		var self = this;
-
 		// create element wrapper that will be displayed in the module.
 		var wrapper = document.createElement("div");
 		wrapper.innerHTML = this.user;
@@ -59,36 +58,45 @@ Module.register("MMM-facialrec", {
 			"MMM-facialrec.css",
 		];
 	},
-
+	processPrediction: function(prediction) {
+		if (prediction == 'no user' || prediction == 'unknown')
+			this.unknownFlow();
+		else
+			this.userFlow(prediction);
+	},
+	findUser: function (userIdentiefer) {
+		// TODO: Fetch user data from the local API service
+		return userIdentiefer
+	},
+	hideOtherModules: function () {
+		MM.getModules().exceptModule(this).enumerate(function(module) {
+			module.hide(1000);
+		});
+	},
+	showOtherModules: function () {
+		MM.getModules().exceptModule(this).enumerate(function(module) {
+			module.show(1000);
+		});
+	},
+	unknownFlow: function () {
+		this.user = "Hello stranger!"
+		this.updateDom();
+		this.hideOtherModules();
+	},
+	userFlow: function (user) {
+		const currentUser = this.findUser(user);
+		this.user = currentUser;
+		this.updateDom();
+		this.showOtherModules();
+	},
 	// socketNotificationReceived from node helper
 	socketNotificationReceived: function (notification, payload) {
-		if(notification === "user" && payload !== this.user){
-			console.log('user received')
-			this.user = "Hello: " + payload;
-			this.updateDom();
-			MM.getModules().exceptModule(this).enumerate(function(module) {
-				module.show(1000, function() {
-					//Module shown.
-				});
-			});
+		switch(notification)  {
+			case 'USER_FOUND':
+				this.processPrediction(payload)
+				break;
+			default:
+				break;
 		}
-		if (notification === "user" && payload ===  "unknown"){
-			this.user = "Hello stranger"
-			this.updateDom();
-			MM.getModules().exceptModule(this).enumerate(function(module) {
-				module.hide(1000, function() {
-					//Module hidden.
-				});
-			});
-		};
-		if (notification === "user" && payload === "no user"){
-			this.user = "No user found";
-			this.updateDom();
-			MM.getModules().exceptModule(this).enumerate(function(module) {
-				module.hide(1000, function() {
-					//Module hidden.
-				});
-			});
-		}
-	},
+	}
 });
