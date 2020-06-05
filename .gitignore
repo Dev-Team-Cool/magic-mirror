@@ -1,6 +1,9 @@
 # Python virtual environment
 project-env
 
+# Symlinks
+modules/MMM-facialrec/*.py
+
 # Python compiled binaries
 */__pycache__
 *.pyc
