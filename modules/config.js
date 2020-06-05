@@ -147,7 +147,11 @@ var config = {
 		},
 		{
 			module: "MMM-facialrec",
-			position: "top_right"
+			position: "top_right",
+			config: {
+				pythonPath: '/home/florian/Documents/school/magic-mirror/project-env/bin/python',
+				scriptPath: '/home/florian/Documents/school/MagicMirror/modules/MMM-facialrec'
+			}
 		},
 		
 	]
