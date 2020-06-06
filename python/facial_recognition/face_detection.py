@@ -63,6 +63,8 @@ class FaceDetection(threading.Thread):
                 if self.__debug:
                     frame = cv2.rectangle(frame, (box[0],box[1]), (box[2], box[3]), (255,0,0)) # Draw a rectangle arround the face
                     cv2.putText(frame, f'{prediction[0]}', (int(box[0]), int(box[1] - 10)), cv2.FONT_HERSHEY_COMPLEX, 1, (200, 0, 0))
+        else:
+            self.return_prediction(('no user', 100))
     
     def return_prediction(self, prediction):
         import json
