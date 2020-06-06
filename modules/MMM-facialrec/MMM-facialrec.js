@@ -61,7 +61,7 @@ Module.register("MMM-facialrec", {
 	processPrediction: function(prediction) {
 		if (prediction == 'no user' || prediction == 'unknown')
 			this.unknownFlow();
-		else
+		else if(this.user !== prediction)
 			this.userFlow(prediction);
 	},
 	findUser: function (userIdentiefer) {
@@ -80,12 +80,14 @@ Module.register("MMM-facialrec", {
 	},
 	unknownFlow: function () {
 		this.user = "Hello stranger!"
+		this.sendNotification('USER_LEFT')
 		this.updateDom();
 		this.hideOtherModules();
 	},
 	userFlow: function (user) {
 		const currentUser = this.findUser(user);
 		this.user = currentUser;
+		this.sendNotification('USER_FOUND', currentUser)
 		this.updateDom();
 		this.showOtherModules();
 	},
