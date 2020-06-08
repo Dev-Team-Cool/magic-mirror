@@ -10,7 +10,7 @@ namespace MirrorOfErised.models.Repos
     public interface IUserEntryRepo
     {
         Task<UserEntry>AddEntry(UserEntry entry);
-        UserEntry GetEntryForIdAsync(string username);
+        Task<UserEntry> GetEntryForIdAsync(string username);
 
     }
 }
