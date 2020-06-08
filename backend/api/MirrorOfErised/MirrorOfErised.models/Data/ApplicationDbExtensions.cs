@@ -12,27 +12,20 @@ namespace MirrorOfErised.models.Data
 {
     public static class ApplicationDbExtensions
     {
-
-
-        public async static Task SeedRoles(RoleManager<IdentityRole> roleManager)
+        public static async Task SeedRoles(RoleManager<IdentityRole> roleManager)
         {
-
             if (await roleManager.FindByNameAsync("Admin") == null)
             {
                 await roleManager.CreateAsync(new IdentityRole("Admin"));  //Admin over alles
-
             }
-
-
-
         }
 
-        public async static Task SeedUsers(UserManager<IdentityUser> userMgr, RoleManager<IdentityRole> roleManager)
+        public async static Task SeedUsers(UserManager<User> userMgr, RoleManager<IdentityRole> roleManager)
         {
             //1. Admin aanmaken ---------------------------------------------------
             if (await userMgr.FindByNameAsync("mirror@mirror.ow") == null)  //controleer de UserName
             {
-                var user = new IdentityUser()
+                var user = new User()
                 {
                     Id = Guid.NewGuid().ToString(),
                     UserName = "mirror@mirror.ow",
@@ -43,19 +36,12 @@ namespace MirrorOfErised.models.Data
                 var userResult = await userMgr.CreateAsync(user, "D@s1re");
                 var role = (await roleManager.FindByNameAsync("Admin"));
                 var roleResult = await userMgr.AddToRoleAsync(user, role.Name);
-                // var claimResult = await userMgr.AddClaimAsync(user, new Claim("DocentWeb", "True"));
 
                 if (!userResult.Succeeded || !roleResult.Succeeded)
                 {
                     throw new InvalidOperationException("Failed to build user and roles");
                 }
-
             }
-            
         }
-
-
-
-       
     }
 }
