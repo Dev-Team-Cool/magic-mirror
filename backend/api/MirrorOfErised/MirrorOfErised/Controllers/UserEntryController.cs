@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using MirrorOfErised.models;
 using MirrorOfErised.models.Repos;
 using MirrorOfErised.ViewModels;
@@ -19,14 +21,16 @@ namespace MirrorOfErised.Controllers
         private readonly IUserSettingsRepo _userSettingsRepo;
         private readonly FacePython _facePython;
         private readonly IUserEntryRepo _userEntryrepo;
+        private readonly IConfiguration _configuration;
 
-        public UserEntryController(IUserEntryRepo userEntry, UserManager<User> userManager, IHostingEnvironment hostingEnvironment, IUserSettingsRepo userSettingsRepo, FacePython facePython )
+        public UserEntryController(IUserEntryRepo userEntry, UserManager<User> userManager, IHostingEnvironment hostingEnvironment, IUserSettingsRepo userSettingsRepo, FacePython facePython, IConfiguration configuration)
         {
             this._userEntryrepo = userEntry;
             this._userManager = userManager;
             this._hostingEnvironment = hostingEnvironment;
             this._userSettingsRepo = userSettingsRepo;
             this._facePython = facePython;
+            this._configuration = configuration;
         }
         
         // GET: UserEntry
@@ -58,31 +62,30 @@ namespace MirrorOfErised.Controllers
         }
 
         // POST: UserEntry/Create
-        private string saveImage(IFormFile image, IdentityUser identityUser)
+        private string SaveImage(IFormFile image, User user)
         {
-            string uniqueFileName = null;
-            string uploadsFolder = Path.Combine(_hostingEnvironment.WebRootPath, "images");
-            uniqueFileName = Guid.NewGuid().ToString() + "_" + identityUser.UserName + "_" + image.FileName;
-            string FilePath = Path.Combine(uploadsFolder, uniqueFileName);
-            image.CopyTo(new FileStream(FilePath, FileMode.Create));
-            var result = _facePython.validateImage(uniqueFileName);
-            if (result.Contains("NOK")| result.Contains("Traceback"))
-            {
-                return "false";
-            }
+            string uploadsFolder = _configuration["UploadConfig:UploadFolder"];
+            string uniqueFileName = $"{Guid.NewGuid().ToString()}_{user.UserName}_{image.FileName}";
+            string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+            image.CopyTo(new FileStream(filePath, FileMode.Create));
+            
             return uniqueFileName;
         }
 
-        private List<ImageEntry> processImages(IFormFile[] uploadedImages, ref UserEntry user)
+        private List<ImageEntry> SaveAndProcessImages(IFormFile[] uploadedImages, ref UserEntry userEntry)
         {
             List<ImageEntry> images = new List<ImageEntry>();
             foreach (IFormFile uploadedImage in uploadedImages)
             {
-                images.Add(new ImageEntry()
+                string fileName = SaveImage(uploadedImage, userEntry.User);
+                ImageEntry image = new ImageEntry()
                 {
-                    ImagePath = uploadedImage.FileName,
-                    User = user
-                });
+                    ImagePath = fileName,
+                    User = userEntry
+                };
+                image.IsValid = _facePython.ValidateImage(ref image);
+                if (!image.IsValid) throw new Exception($"Image with filename: {uploadedImage.FileName} is invalid.");
+                images.Add(image);
             }
             return images;
         }
@@ -109,7 +112,15 @@ namespace MirrorOfErised.Controllers
                             CommutingWay = model.CommutingWay,
                             User = identityUser
                         };
-                        entry.Images = processImages(model.Images, ref entry);
+                        try
+                        {
+                            entry.Images = SaveAndProcessImages(model.Images, ref entry);
+                        }
+                        catch (Exception e)
+                        {
+                            ModelState.AddModelError("Images", e.Message);
+                            return View(model);
+                        }
 
                         await _userEntryrepo.AddEntry(entry);
                     }
@@ -123,10 +134,12 @@ namespace MirrorOfErised.Controllers
                 }
                 catch
                 {
+                    ViewBag.error = "Something unexpected went wrong.";
                     return View(model);
                 }
             }
-            return View();
+            
+            return View(model);
         }
 
 
