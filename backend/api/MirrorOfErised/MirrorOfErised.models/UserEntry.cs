@@ -1,48 +1,26 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
-using System;
+﻿using Microsoft.AspNetCore.Identity;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text;
 using System.Text.Json.Serialization;
 
 namespace MirrorOfErised.models
 {
     public class UserEntry
     {
-/*        [Required(ErrorMessage = "Name is obligatory")]
-        [Display(Name = "Display name")]
-        public string Name { get; set; }*/
-
-        [Required(ErrorMessage = "The image is obligatory")]
-        [Display(Name = "Image")]
-
-        public string Image1Path { get; set; }
-
-        [Required(ErrorMessage = "The image is obligatory")]
-        [Display(Name = "Image")]
-
-        public string Image2Path { get; set; }
-
-        [Required(ErrorMessage = "The image is obligatory")]
-        [Display(Name = "Image")]
-
-        public string Image3Path { get; set; }
-
-        [Display(Name = "Fill in your address if you want traffic info otherwise leave blank")]
-        public string Address { get; set; }
-
-        [Display(Name = "Way you go to work")]
-        public string CommutingWay { get; set; }
-
-        [ScaffoldColumn(false)]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key]
-        [JsonIgnore]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public string UserId { get; set; }
+        public User User { get; set; }
+        public List<ImageEntry> Images { get; set; }
+        public UserAddress Address { get; set; }
+        public CommutingOption CommutingWay { get; set; }
+    }
 
-        public IdentityUser identityUser { get; set; }
-
+    public enum CommutingOption
+    {
+        Train,
+        Car,
+        Other
     }
 }
