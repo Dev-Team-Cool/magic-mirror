@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -10,34 +9,26 @@ using Microsoft.AspNetCore.Mvc;
 using MirrorOfErised.models;
 using MirrorOfErised.models.Repos;
 using MirrorOfErised.ViewModels;
-using Newtonsoft.Json;
 
 namespace MirrorOfErised.Controllers
 {
     public class UserEntryController : Controller
     {
+        private readonly UserManager<User> _userManager;
+        private readonly IHostingEnvironment _hostingEnvironment;
+        private readonly IUserSettingsRepo _userSettingsRepo;
+        private readonly FacePython _facePython;
+        private readonly IUserEntryRepo _userEntryrepo;
 
-
-        private readonly UserManager<IdentityUser> _userManager;
-        private readonly IHostingEnvironment hostingEnvironment;
-        private readonly IUserSettingsRepo userSettingsRepo;
-        private readonly FacePython facePython;
-        private readonly IUserEntryRepo userEntryrepo;
-
-        public GoogleCalendarAPI GoogleCalendarAPI { get; }
-        public IAuthTokenRepo AuthTokenRepo { get; }
-
-        public UserEntryController(IUserEntryRepo userEntry, UserManager<IdentityUser> userManager, IHostingEnvironment hostingEnvironment , GoogleCalendarAPI googleCalendarAPI , IAuthTokenRepo authTokenRepo ,IUserSettingsRepo userSettingsRepo, FacePython facePython )   /*IUserEventRepo userEventRepo,*/
+        public UserEntryController(IUserEntryRepo userEntry, UserManager<User> userManager, IHostingEnvironment hostingEnvironment, IUserSettingsRepo userSettingsRepo, FacePython facePython )
         {
-            this.userEntryrepo = userEntry;
-
-            _userManager = userManager;
-            this.hostingEnvironment = hostingEnvironment;
-            GoogleCalendarAPI = googleCalendarAPI;
-            AuthTokenRepo = authTokenRepo;
-            this.userSettingsRepo = userSettingsRepo;
-            this.facePython = facePython;
+            this._userEntryrepo = userEntry;
+            this._userManager = userManager;
+            this._hostingEnvironment = hostingEnvironment;
+            this._userSettingsRepo = userSettingsRepo;
+            this._facePython = facePython;
         }
+        
         // GET: UserEntry
         public ActionResult Index()
         {
@@ -58,10 +49,6 @@ namespace MirrorOfErised.Controllers
         // GET: UserEntry/Create
         public async Task<ActionResult> Create()
         {
-            
-            
-            /*var result= facePython.validateImage("8");*/
-            
             IdentityUser identityUser = await _userManager.GetUserAsync(User);
             if (identityUser.EmailConfirmed == false)
             {
@@ -71,15 +58,14 @@ namespace MirrorOfErised.Controllers
         }
 
         // POST: UserEntry/Create
-
         private string saveImage(IFormFile image, IdentityUser identityUser)
         {
             string uniqueFileName = null;
-            string uploadsFolder = Path.Combine(hostingEnvironment.WebRootPath, "images");
+            string uploadsFolder = Path.Combine(_hostingEnvironment.WebRootPath, "images");
             uniqueFileName = Guid.NewGuid().ToString() + "_" + identityUser.UserName + "_" + image.FileName;
             string FilePath = Path.Combine(uploadsFolder, uniqueFileName);
             image.CopyTo(new FileStream(FilePath, FileMode.Create));
-            var result = facePython.validateImage(uniqueFileName);
+            var result = _facePython.validateImage(uniqueFileName);
             if (result.Contains("NOK")| result.Contains("Traceback"))
             {
                 return "false";
@@ -87,86 +73,52 @@ namespace MirrorOfErised.Controllers
             return uniqueFileName;
         }
 
+        private List<ImageEntry> processImages(IFormFile[] uploadedImages, ref UserEntry user)
+        {
+            List<ImageEntry> images = new List<ImageEntry>();
+            foreach (IFormFile uploadedImage in uploadedImages)
+            {
+                images.Add(new ImageEntry()
+                {
+                    ImagePath = uploadedImage.FileName,
+                    User = user
+                });
+            }
+            return images;
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]  
         public async Task<ActionResult> Create(UserEntryCreateViewModel model)
         {
- 
             if (ModelState.IsValid)
             {
                 try
                 {
-                    string uniqueFileName = null;
-                    IdentityUser identityUser = await _userManager.GetUserAsync(User);
+                    User identityUser = await _userManager.GetUserAsync(User);
                     if (identityUser.EmailConfirmed == false)
                     {
                         return Redirect("/Error/403");
                     }
 
-                    if (model.Image1 != null & model.Image2 != null & model.Image3 != null)
+                    if (model.Images.Length > 2)
                     {
-                        UserEntry newEntry = new UserEntry
+                        UserEntry entry = new UserEntry()
                         {
                             Address = model.Address,
-/*                            Name = model.Name,
-*/                          Image1Path = saveImage(model.Image1, identityUser),
-                            Image2Path = saveImage(model.Image2, identityUser),
-                            Image3Path = saveImage(model.Image3, identityUser),
-                            UserId = identityUser.Id,
-                            CommutingWay = model.CommutingWay
-                            
-
+                            CommutingWay = model.CommutingWay,
+                            User = identityUser
                         };
-                        if (newEntry.Image1Path == "false" | newEntry.Image2Path == "false"| newEntry.Image3Path == "false")
-                        {
-                            string errormessage = "You need to change ";
-                            if (newEntry.Image1Path == "false")
-                            {
-                                errormessage += "Image 1 ";
-                            }
-                            if (newEntry.Image2Path == "false")
-                            {
-                                errormessage += "Image 2 ";
-                            }
-                            if (newEntry.Image3Path == "false")
-                            {
-                                errormessage += "Image 3 ";
-                            }
+                        entry.Images = processImages(model.Images, ref entry);
 
-                            ViewBag.error = errormessage;
-                            return View(model);
-                        }
-
-
-                        await userEntryrepo.AddEntry(newEntry);
-
-
-                        if (userSettingsRepo.GetSettingsForUserIdAsync(identityUser.Id) == null)
-                        {
-                            UserSettings userSettings = new UserSettings
-                            {
-                                Assistant = true,
-                                Calendar = true,
-                                Commuting = true,
-                                UserId = identityUser.Id
-                            };
-
-                            var UpdatetSetting = await userSettingsRepo.AddSetting(userSettings);
-                        }
-
-
+                        await _userEntryrepo.AddEntry(entry);
                     }
-
-
-                    /*if (fileobj == null || fileobj.Length == 0)
+                    else
                     {
-                        ViewData["Message"] = "Please select atleast one image";
+                        ModelState.AddModelError("Images", "We need at least 3 images of you.");
+                        return View(model);
                     }
-
-                    IdentityUser identityUser = await _userManager.GetUserAsync(User);
-                    userEntry.UserId = identityUser.Id;*/
-
-
+                   
                     return Redirect("/Home/index");
                 }
                 catch
@@ -175,61 +127,47 @@ namespace MirrorOfErised.Controllers
                 }
             }
             return View();
-
-
         }
 
 
         // settings page
-
-        public ActionResult Settings()
+        public async Task<ActionResult> Settings()
         {
             var id= _userManager.GetUserId(User);
-            UserSettings setting = userSettingsRepo.GetSettingsForUserIdAsync(id);
+            UserSettings setting = await _userSettingsRepo.GetSettingsForUserIdAsync(id);
 
             return View(setting);
         }
 
-
-
         // POST: UserEntry/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-
         public async Task<ActionResult> Settings(IFormCollection collection, UserSettings settings)
         {
             if (ModelState.IsValid)
             {
                 try
-            {
+                {
+                    User user = await _userManager.GetUserAsync(User);
+                    settings.UserId = user.Id;
+                    settings.User = user;
 
-                var user = await _userManager.GetUserAsync(User);
-                settings.UserId = user.Id;
-                settings.identityUser = user;
-
-                var UpdatetSetting = await userSettingsRepo.UpdateSetting(settings);
-
-
-                return Redirect("/Home/index");
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                return View();
-            }
-           }
+                    await _userSettingsRepo.UpdateSetting(settings);
+                    return Redirect("/Home/index");
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    return View();
+                }
+            } 
             return View();
         }
-
-
-
-
-
+        
         // GET: UserEntry/Edit/5
         public ActionResult Edit(int id)
         {
             return View();
-
         }
 
         // POST: UserEntry/Edit/5
