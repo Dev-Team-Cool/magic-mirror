@@ -6,75 +6,42 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
 
 namespace MirrorOfErised.models.Repos
 {
     public class FacePython
     {
-        private ScriptEngine _engine;
-
-        public FacePython()
+        private readonly IConfiguration _configuration;
+        public FacePython(IConfiguration configuration)
         {
-            _engine = Python.CreateEngine();
+            _configuration = configuration;
         }
-
-        /*        public TResult RunFromString<TResult>(string item, string variableName)
-                {
-                    // for easier debugging write it out to a file and call: _engine.CreateScriptSourceFromFile(filePath);
-                    ScriptSource source = _engine.CreateScriptSourceFromFile(@"F:\School\magic-mirror\backend\api\MirrorOfErised\MirrorOfErised\Controllers\test.py", scope);
-                    scope.SetVariable
-                    var argv = new List<string>();
-                    argv.Add("");
-                    argv.Add(item);
-
-                    _engine.GetSysModule().SetVariable("argv", argv);
-
-                    CompiledCode cc = source.Compile();
-
-                    ScriptScope scope = _engine.CreateScope();
-                    cc.Execute(scope);
-
-                    return scope.GetVariable<TResult>(variableName);
-                }*/
-
-        public string validateImage(string item)
+        public bool ValidateImage(ref ImageEntry item)
         {
-            ProcessStartInfo start = new ProcessStartInfo();
-            start.FileName = @"F:\SideProjects\AI\venv\Scripts\python.exe";
-
-            
-            var script = @"F:\School\magic-mirror\backend\api\MirrorOfErised\MirrorOfErised\Controllers\test.py";
+            ProcessStartInfo start = new ProcessStartInfo { FileName = _configuration["UploadConfig:PythonPath"] };
+            string scriptSource = _configuration["UploadConfig:ValidationScriptPath"];
 
 
-            start.Arguments = $"\"{script}\" \"{item}\"";
+            start.Arguments = $"\"{scriptSource}\" \"{item.ImagePath}\"";
 
             start.UseShellExecute = false;
             start.CreateNoWindow = true;
             start.RedirectStandardOutput = true;
             start.RedirectStandardError = true;
 
-            var errors = "";
-            var results = "";
+            string errors = null;
+            string results = null;
             using (Process process = Process.Start(start))
             {
                 errors = process.StandardError.ReadToEnd();
                 results = process.StandardOutput.ReadToEnd();
-                /*using (StreamReader reader = process.StandardOutput)
-                {
-                    string result = reader.ReadToEnd();
-                    Console.Write(result);
-                }*/
             }
 
-            if (errors == "")
-            {
-                return results;
-            }
-            else
-            {
-                return errors;
-            }
-
+            if (!string.IsNullOrEmpty(errors) || results.Contains("NOK"))
+                return false;
+            return true;
         }
     }
 }
