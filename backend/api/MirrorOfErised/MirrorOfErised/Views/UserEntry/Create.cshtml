@@ -1,63 +1,68 @@
-﻿@model MirrorOfErised.ViewModels.UserEntryCreateViewModel
-
+﻿@using MirrorOfErised.models
+@model MirrorOfErised.ViewModels.UserEntryCreateViewModel
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Setup user profile";
 }
 
-<h1>Create</h1>
-
-<h4>UserEntry</h4>
+<h1>Setup your user profile</h1>
 <hr />
+
 <div class="row">
     <div class="col-md-4">
         <form enctype="multipart/form-data" asp-action="Create">
-            <div asp-validation-summary="All" class="text-danger"></div>
-            <!--  <div class="form-group">
-            <label asp-for="Name" class="control-label"></label>
-            <input asp-for="Name" class="form-control" />
-            <span asp-validation-for="Name" class="text-danger"></span>
-        </div>
-             -->
-            <p>Images for face recognition</p>
+            <div>
+                <span asp-validation-summary="All" class="text-danger"></span>
+            </div>
+            <p>Upload some images of you</p>
+            <small id="imageHelp" class="form-text text-muted">Make sure the uploaded image only contains your face and is not grayscaled.</small>
             @if (ViewBag.error != null)
             {
                    <div class="alert-danger">@ViewBag.error</div>
             }
             <div class="form-group">
-                <label asp-for="Image1" class="col-sm-2 col-form-label"></label>
+                <label asp-for="Images" class="col-sm-2 col-form-label"></label>
                 <div class="col-sm-10">
                     <div class="custom-file">
-                        <input asp-for="Image1" class="form-control custom-file-input">
+                        <input asp-for="Images" accept="image/jpeg" multiple="multiple" class="form-control custom-file-input">
                         <label class="custom-file-label">Choose File...</label>
                     </div>
                 </div>
+                <span asp-validation-for="Images" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Image2" class="col-sm-2 col-form-label"></label>
-                <div class="col-sm-10">
-                    <div class="custom-file">
-                        <input asp-for="Image2" class="form-control custom-file-input">
-                        <label class="custom-file-label">Choose File...</label>
-                    </div>
-                </div>
+            <div class="form-group d-none" id="js-commute-car">
+                <fieldset>
+                    <legend>Your address</legend>
+                    <small id="addressHelp" class="form-text text-muted">
+                        We use this to give you real-time updates of traffic when you're on your way home.
+                        You can leave this empty.
+                    </small>
+                    <label asp-for="Address.Street" class="control-label"></label>
+                    <input asp-for="Address.Street" class="form-control"/>
+                    <span asp-validation-for="Address.Street" class="text-danger"></span>
+
+                    <label asp-for="Address.City" class="control-label"></label>
+                    <input asp-for="Address.City" class="form-control"/>
+                    <span asp-validation-for="Address.City" class="text-danger"></span>
+                </fieldset>
             </div>
-            <div class="form-group">
-                <label asp-for="Image3" class="col-sm-2 col-form-label"></label>
-                <div class="col-sm-10">
-                    <div class="custom-file">
-                        <input asp-for="Image3" class="form-control custom-file-input">
-                        <label class="custom-file-label">Choose File...</label>
-                    </div>
-                </div>
-            </div>
-            <div class="form-group">
-                <label asp-for="Address" class="control-label"></label>
-                <input asp-for="Address" class="form-control" />
-                <span asp-validation-for="Address" class="text-danger"></span>
+            <div class="form-group d-none" id="js-commute-train">
+                <fieldset>
+                    <legend>Departing station</legend>
+                    <small id="trainHelp" class="form-text text-muted">
+                        We use this to give you real-time updates of the current train schedule.
+                        You can leave this empty.
+                    </small>
+                    <label asp-for="Address.City" class="control-label"></label>
+                    <input asp-for="Address.City" class="form-control"/>
+                    <span asp-validation-for="Address.City" class="text-danger"></span>
+                </fieldset>
             </div>
             <div class="form-group">
                 <label asp-for="CommutingWay" class="control-label"></label>
-                <input asp-for="CommutingWay" class="form-control" />
+                <select asp-for="CommutingWay" id="js-commuting" class="form-control"
+                    asp-items="Html.GetEnumSelectList<CommutingOption>()">
+                    <option>Select a commute type</option>
+                </select>
                 <span asp-validation-for="CommutingWay" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -68,20 +73,24 @@
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
 @section Scripts {
     <script>
         $(document).ready(function () {
-            $('.custom-file-input').on("change", function () {
-                var fileName = $(this).val().split("\\").pop();
-                $(this).next('.custom-file-label').html(fileName);
+            function showFieldSet(id) {
+                const options = ['train', 'car', 'other']
+                const selectedOption = options[id];
+                options.map(option => {
+                    if (option === selectedOption)
+                        $(`#js-commute-${option}`).removeClass('d-none');
+                    else
+                        $(`#js-commute-${option}`).addClass('d-none');
+
+                })
+            }
+            $('#js-commuting').on('change', function(e) {
+                showFieldSet(e.target.value);
             });
         });
     </script>
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-
-
 }
