@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using MirrorOfErised.models;
 using MirrorOfErised.models.Repos;
 using MirrorOfErised.Models;
 
@@ -14,23 +15,18 @@ namespace MirrorOfErised.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
-        private readonly IAuthTokenRepo authtokenrepo;
-        private readonly UserManager<IdentityUser> userManager;
+        private readonly UserManager<User> userManager;
 
-        public HomeController(ILogger<HomeController> logger, IAuthTokenRepo authTokenRepo, UserManager<IdentityUser> userManager)
+        public HomeController(UserManager<User> userManager)
         {
-            _logger = logger;
-            this.authtokenrepo = authTokenRepo;
             this.userManager = userManager;
         }
 
         public async Task<IActionResult> Index()
         {
-            //
             try
             {
-                IdentityUser identityUser = await userManager.GetUserAsync(User);
+                User identityUser = await userManager.GetUserAsync(User);
                 if (identityUser.EmailConfirmed == false)
                 {
                     ViewBag.verified = "NO";
@@ -39,7 +35,6 @@ namespace MirrorOfErised.Controllers
             catch (Exception)
             {
                 return View();
-
             }
 
             return View();

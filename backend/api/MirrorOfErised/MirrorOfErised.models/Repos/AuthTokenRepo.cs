@@ -15,14 +15,14 @@ namespace MirrorOfErised.models.Repos
     {
 
         private readonly ApplicationDbContext context;
-        private readonly UserManager<IdentityUser> usermanager;
+        private readonly UserManager<User> usermanager;
 
-        //wel dependend van SchoolDbContext ( niet DbContext)
-        public AuthTokenRepo(ApplicationDbContext Context, UserManager<IdentityUser> Usermanager)
+        public AuthTokenRepo(ApplicationDbContext Context, UserManager<User> Usermanager)
         {
             this.context = Context;
             this.usermanager = Usermanager;
         }
+        
         public async Task<AuthToken> Addtokens(List<AuthenticationToken> Tokens, List<Claim> claims)
         {
             try
@@ -45,8 +45,8 @@ namespace MirrorOfErised.models.Repos
                         selected.ExpireDate = DateTime.Parse(token.Value.ToString());
 
                     }
-
                 }
+                
                 foreach (var claim in claims)
                 {
                     if (claim.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress")
@@ -54,13 +54,9 @@ namespace MirrorOfErised.models.Repos
                         selected.UserName = claim.Value;
                     }
                 }
-                IdentityUser user = await usermanager.FindByNameAsync(selected.UserName);
+                
+                User user = await usermanager.FindByNameAsync(selected.UserName);
                 selected.UserId = user.Id;
-
-                /*                if (SelectedWaardering.WaarderingId is null)
-                                {
-                                    SelectedWaardering.WaarderingId = Guid.NewGuid().ToString();
-                                }*/
 
                 try
                 {
@@ -70,13 +66,8 @@ namespace MirrorOfErised.models.Repos
                 {
                     var result = context.Tokens.Update(selected);
                 }
-                 //cahngeTraking => iets wat in geheugen wordt bijgehouden
-                 //cahngeTraking => iets wat in geheugen wordt bijgehouden
-                await context.SaveChangesAsync();
-
                 
-
-                /*return result != OK*/
+                await context.SaveChangesAsync();
                 return selected;
             }
             catch (Exception ex)
@@ -91,29 +82,25 @@ namespace MirrorOfErised.models.Repos
             throw new NotImplementedException();
         }
 
-        public async Task<AuthToken> GetTokensForNameAsync(string Username)
+        public async Task<AuthToken> GetTokensForNameAsync(string username)
         {
 
-            var User = context.Tokens.Where(e => e.UserName == Username).OrderByDescending(e => e.ExpireDate).Take(1);
+            var user = context.Tokens.Where(e => e.UserName == username).OrderByDescending(e => e.ExpireDate).Take(1);
 
-            return User.FirstOrDefault();
+            return await user.FirstOrDefaultAsync();
         }
-
-
+        
         public async Task UpdateTokenAsync(AuthToken authToken)
         {
             try
             {
                 var result = context.Tokens.Update(authToken);
                 await context.SaveChangesAsync();
-
             }
             catch (Exception ex)
             {
-
                 throw ex;
             }
-            
         }
     }
 }
