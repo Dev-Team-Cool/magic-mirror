@@ -11,7 +11,7 @@ namespace MirrorOfErised.models.Repos
     {
         Task<UserSettings>AddSetting(UserSettings settings);
         Task<UserSettings>UpdateSetting(UserSettings settings);
-        UserSettings GetSettingsForUserIdAsync(string id);
+        Task<UserSettings> GetSettingsForUserIdAsync(string id);
 
 
 

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace MirrorOfErised.models.Repos
 {
@@ -12,22 +13,18 @@ namespace MirrorOfErised.models.Repos
     {
 
         private readonly ApplicationDbContext context;
-        private readonly UserManager<IdentityUser> usermanager;
 
-        //wel dependend van SchoolDbContext ( niet DbContext)
-        public UserSettingsRepo(ApplicationDbContext Context, UserManager<IdentityUser> Usermanager)
+        public UserSettingsRepo(ApplicationDbContext Context, UserManager<User> Usermanager)
         {
             this.context = Context;
-            this.usermanager = Usermanager;
         }
         public async Task<UserSettings> AddSetting(UserSettings settings)
         {
             try
             {
-                var result = context.UserSettings.Add(settings);  //cahngeTraking => iets wat in geheugen wordt bijgehouden
+                var result = context.UserSettings.Add(settings);
                 await context.SaveChangesAsync();
 
-                //return result != OK
                 return settings;
             }
             catch (Exception ex)
@@ -37,31 +34,26 @@ namespace MirrorOfErised.models.Repos
             }
         }
 
-        public UserSettings GetSettingsForUserIdAsync(string id)
+        public async Task<UserSettings> GetSettingsForUserIdAsync(string id)
         {
             try
             {
-
-            UserSettings entry = context.UserSettings.Where(e => e.UserId == id).FirstOrDefault();
-
-            return entry;
-
+                return await context.UserSettings.Where(e => e.UserId == id).FirstOrDefaultAsync();
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
                 return null;
             }
-}
+        }
 
         public async Task<UserSettings> UpdateSetting(UserSettings settings)
         {
             try
             {
-                var result = context.UserSettings.Update(settings);  //cahngeTraking => iets wat in geheugen wordt bijgehouden
+                var result = context.UserSettings.Update(settings);
                 await context.SaveChangesAsync();
 
-                //return result != OK
                 return settings;
             }
             catch (Exception ex)

@@ -7,36 +7,21 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using MirrorOfErised.models;
 
 namespace MirrorOfErised.ViewModels
 {
     public class UserEntryCreateViewModel
     {
-/*        [Required(ErrorMessage = "Name is obligatory")]
-        [Display(Name = "Display name")]
-        public string Name { get; set; }*/
-
         [Required(ErrorMessage = "The image is obligatory")]
         [Display(Name = "Image")]
-
-        public IFormFile Image1 { get; set; }
-
-        [Required(ErrorMessage = "The image is obligatory")]
-        [Display(Name = "Image")]
-
-        public IFormFile Image2 { get; set; }
-
-        [Required(ErrorMessage = "The image is obligatory")]
-        [Display(Name = "Image")]
-
-        public IFormFile Image3 { get; set; }
+        public IFormFile[] Images { get; set; }
 
         [Display(Name = "Fill in your address if you want traffic info otherwise leave blank")]
+        public UserAddress Address { get; set; }
 
-        public string Address { get; set; }
-
-        [Display(Name = "Way you go to work")]
-        public string CommutingWay { get; set; }
+        [Display(Name = "How do you go to work?")]
+        public CommutingOption CommutingWay { get; set; }
 
 
         [ScaffoldColumn(false)]
@@ -44,7 +29,5 @@ namespace MirrorOfErised.ViewModels
         [Key]
         [JsonIgnore]
         public string UserId { get; set; }
-
-        public IdentityUser identityUser { get; set; }
     }
 }
