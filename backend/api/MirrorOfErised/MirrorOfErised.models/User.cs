@@ -7,5 +7,6 @@ namespace MirrorOfErised.models
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public bool HasCompletedSignUp { get; set; } = false;
+        public bool IsActive { get; set; } = true;
     }
 }
