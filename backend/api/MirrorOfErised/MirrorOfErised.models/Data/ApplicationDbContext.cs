@@ -26,6 +26,12 @@ namespace MirrorOfErised.models.Data
                 entity.Property(i => i.CreatedAt)
                     .HasDefaultValueSql("CURRENT_TIMESTAMP");
             });
+
+            builder.Entity<User>(user =>
+            {
+                user.Property(u => u.CreatedAt)
+                    .HasDefaultValueSql("CURRENT_TIMESTAMP");
+            });
         }
     }
 }
