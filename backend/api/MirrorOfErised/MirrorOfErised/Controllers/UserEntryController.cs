@@ -35,23 +35,6 @@ namespace MirrorOfErised.Controllers
             this._configuration = configuration;
         }
         
-        // GET: UserEntry
-        public ActionResult Index()
-        {
-            return View();
-        }
-
-        // GET: UserEntry/Details/5
-        public ActionResult Details(string id)
-        {
-            if (id == null)
-            {
-                return Redirect("/Error/400");
-            }
-
-            return View();
-        }
-
         // GET: UserEntry/Create
         public async Task<ActionResult> Create()
         {
@@ -168,52 +151,6 @@ namespace MirrorOfErised.Controllers
                 }
             } 
             return View();
-        }
-        
-        // GET: UserEntry/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
-        // POST: UserEntry/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                // TODO: Add update logic here
-
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: UserEntry/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: UserEntry/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                // TODO: Add delete logic here
-
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
         }
     }
 }
