@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -14,6 +15,7 @@ using MirrorOfErised.ViewModels;
 
 namespace MirrorOfErised.Controllers
 {
+    [Authorize]
     public class UserEntryController : Controller
     {
         private readonly UserManager<User> _userManager;
@@ -54,10 +56,6 @@ namespace MirrorOfErised.Controllers
         public async Task<ActionResult> Create()
         {
             IdentityUser identityUser = await _userManager.GetUserAsync(User);
-            if (identityUser.EmailConfirmed == false)
-            {
-                return Redirect("/Error/403");
-            }
             return View();
         }
 
@@ -99,11 +97,6 @@ namespace MirrorOfErised.Controllers
                 try
                 {
                     User identityUser = await _userManager.GetUserAsync(User);
-                    if (identityUser.EmailConfirmed == false)
-                    {
-                        return Redirect("/Error/403");
-                    }
-
                     if (model.Images.Length > 2)
                     {
                         UserEntry entry = new UserEntry()
