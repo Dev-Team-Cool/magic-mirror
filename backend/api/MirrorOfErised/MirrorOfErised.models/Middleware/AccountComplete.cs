@@ -18,12 +18,14 @@ namespace MirrorOfErised.models.Middleware
         public async Task InvokeAsync(HttpContext context, UserManager<User> userManager)
         {
             var user = await userManager.GetUserAsync(context.User);
-            if (context.Request.Path != "/Identity/Account/ConfirmEmail" && context.Request.Path != "/UserEntry/Create")
+            if (user != null)
             {
-                if (!user.EmailConfirmed) context.Response.Redirect("/Identity/Account/ConfirmEmail");
-                if (!user.HasCompletedSignUp) context.Response.Redirect("/UserEntry/Create");
+                if (context.Request.Path != "/Identity/Account/ConfirmEmail" && context.Request.Path != "/UserEntry/Create")
+                {
+                    if (!user.EmailConfirmed) context.Response.Redirect("/Identity/Account/ConfirmEmail");
+                    if (!user.HasCompletedSignUp) context.Response.Redirect("/UserEntry/Create");
+                }
             }
-            
             await _next(context);
         }
     }
