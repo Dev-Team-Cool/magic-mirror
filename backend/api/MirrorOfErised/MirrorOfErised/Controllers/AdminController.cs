@@ -1,8 +1,10 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using MirrorOfErised.models;
+using MirrorOfErised.models.Repos;
 using MirrorOfErised.ViewModels;
 
 namespace MirrorOfErised.Controllers
@@ -11,16 +13,22 @@ namespace MirrorOfErised.Controllers
     public class AdminController : Controller
     {
         private readonly SignInManager<User> _signInManager;
+        private readonly IUserRepo _userRepo;
         
-        public AdminController(SignInManager<User> signInManager)
+        public AdminController(SignInManager<User> signInManager, IUserRepo userRepo)
         {
             _signInManager = signInManager;
+            _userRepo = userRepo;
         }
         
         // GET admin
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            UserViewModel userViewModel = new UserViewModel()
+            {
+                Users = await _userRepo.GetAllUsers()
+            };
+            return View(userViewModel);
         }
         
         // GET admin/login
@@ -43,6 +51,20 @@ namespace MirrorOfErised.Controllers
             }
 
             return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Disable(UserViewModel model)
+        {
+            var user = await _userRepo.GetUserById(model.changedUser.Id);
+            if (user != null)
+            {
+                user.IsActive = !user.IsActive;
+                await _userRepo.Update(user);
+            }
+
+            return RedirectToAction("Index");
         }
     }
 }
