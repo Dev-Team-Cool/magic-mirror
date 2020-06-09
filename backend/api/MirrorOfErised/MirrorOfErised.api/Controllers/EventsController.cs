@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using MirrorOfErised.api.Models;
 using MirrorOfErised.models;
 using MirrorOfErised.models.Repos;
+using MirrorOfErised.models.Services;
 using Newtonsoft.Json;
 using Project.API.Models;
 
@@ -24,7 +25,7 @@ namespace Project.API.Controllers
     {
 /*        private const string AuthSchemes = CookieAuthenticationDefaults.AuthenticationScheme + ",Identity.Application"; *//* "CombinationScheme," + CookieAuthenticationDefaults.AuthenticationScheme + ","+ JwtBearerDefaults.AuthenticationScheme;*/
         private readonly IAuthTokenRepo AuthTokenRepo;
-        private readonly GoogleCalendarAPI googleCalendarAPI;
+        private readonly GoogleCalendarService googleCalendarAPI;
         private readonly IUserEntryRepo userEntryRepo;
         private readonly IUserSettingsRepo userSettings;
 
@@ -32,7 +33,7 @@ namespace Project.API.Controllers
         public RoleManager<IdentityRole> RoleManager { get; }
 
 
-        public EventsController(IAuthTokenRepo AuthTokenRepo, UserManager<IdentityUser> IdentitiyUserManager, RoleManager<IdentityRole> roleManager,GoogleCalendarAPI googleCalendarAPI, IUserEntryRepo userEntryRepo,IUserSettingsRepo userSettings)
+        public EventsController(IAuthTokenRepo AuthTokenRepo, UserManager<IdentityUser> IdentitiyUserManager, RoleManager<IdentityRole> roleManager,GoogleCalendarService googleCalendarAPI, IUserEntryRepo userEntryRepo,IUserSettingsRepo userSettings)
         {
             this.AuthTokenRepo = AuthTokenRepo;
             UserManager = IdentitiyUserManager;
