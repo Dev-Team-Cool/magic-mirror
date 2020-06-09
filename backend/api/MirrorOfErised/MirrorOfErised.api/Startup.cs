@@ -18,6 +18,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using MirrorOfErised.models.Data;
 using MirrorOfErised.models.Repos;
+using MirrorOfErised.models.Services;
 using Newtonsoft.Json;
 
 namespace MirrorOfErised.api
@@ -134,7 +135,7 @@ namespace MirrorOfErised.api
                 });
             }*/
 
-            services.AddHttpClient<GoogleCalendarAPI>();
+            services.AddHttpClient<GoogleCalendarService>();
 
         }
 

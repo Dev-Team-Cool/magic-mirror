@@ -17,6 +17,7 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using MirrorOfErised.models;
 using MirrorOfErised.models.Middleware;
+using MirrorOfErised.models.Services;
 using MirrorOfErised.Services;
 
 namespace MirrorOfErised
@@ -49,6 +50,7 @@ namespace MirrorOfErised
             services.AddScoped<IAuthTokenRepo, AuthTokenRepo>();
             services.AddScoped<IUserEntryRepo, UserEntryRepo>();
             services.AddScoped<IUserSettingsRepo, UserSettingsRepo>();
+            services.AddScoped<IUserRepo, UserRepo>();
             services.AddScoped<FacePython>();
 
             services.AddAuthentication().AddGoogle(options =>
@@ -89,7 +91,7 @@ namespace MirrorOfErised
             });
 
 
-            services.AddHttpClient<GoogleCalendarAPI>();
+            services.AddHttpClient<GoogleCalendarService>();
 
             services.AddControllersWithViews();
             services.AddRazorPages();
