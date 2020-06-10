@@ -19,20 +19,21 @@ namespace MirrorOfErised.Controllers
     public class UserEntryController : Controller
     {
         private readonly UserManager<User> _userManager;
-        private readonly IHostingEnvironment _hostingEnvironment;
         private readonly IUserSettingsRepo _userSettingsRepo;
         private readonly PythonRunner _pythonRunner;
-        private readonly IUserEntryRepo _userEntryrepo;
+        private readonly IUserEntryRepo _userEntryRepo;
         private readonly IConfiguration _configuration;
+        private readonly IImageEntryRepo _imageEntryRepo;
 
-        public UserEntryController(IUserEntryRepo userEntry, UserManager<User> userManager, IHostingEnvironment hostingEnvironment, IUserSettingsRepo userSettingsRepo, PythonRunner pythonRunner, IConfiguration configuration)
+        public UserEntryController(IUserEntryRepo userEntry, UserManager<User> userManager, IUserSettingsRepo userSettingsRepo,
+            PythonRunner pythonRunner, IConfiguration configuration, IImageEntryRepo imageEntryRepo)
         {
-            this._userEntryrepo = userEntry;
-            this._userManager = userManager;
-            this._hostingEnvironment = hostingEnvironment;
-            this._userSettingsRepo = userSettingsRepo;
-            this._pythonRunner = pythonRunner;
-            this._configuration = configuration;
+            _userEntryRepo = userEntry;
+            _userManager = userManager;
+            _userSettingsRepo = userSettingsRepo;
+            _pythonRunner = pythonRunner;
+            _configuration = configuration;
+            _imageEntryRepo = imageEntryRepo;
         }
         
         // GET: UserEntry/Create
@@ -53,22 +54,28 @@ namespace MirrorOfErised.Controllers
             return uniqueFileName;
         }
 
-        private async Task<List<ImageEntry>> SaveAndProcessImages(IFormFile[] uploadedImages, UserEntry userEntry)
+        private async Task<ImageEntry> SaveAndProcessImage(IFormFile uploadedImage, User user)
         {
-            List<ImageEntry> images = new List<ImageEntry>();
-            foreach (IFormFile uploadedImage in uploadedImages)
+            string fileName = SaveImage(uploadedImage, user);
+            ImageEntry image = new ImageEntry()
             {
-                string fileName = SaveImage(uploadedImage, userEntry.User);
-                ImageEntry image = new ImageEntry()
-                {
-                    ImagePath = fileName,
-                    User = userEntry
-                };
-                image.IsValid = await _pythonRunner.ValidateImage(image);
-                if (!image.IsValid) throw new Exception($"Image with filename: {uploadedImage.FileName} is invalid.");
-                images.Add(image);
-            }
-            return images;
+                ImagePath = fileName,
+                User = user
+            };
+            image.IsValid = await _pythonRunner.ValidateImage(image);
+            if (!image.IsValid) return null;
+
+            return image;
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Upload(IFormFile image)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            ImageEntry savedImage = await SaveAndProcessImage(image, user);
+            if (savedImage == null) return StatusCode(400);
+            await _imageEntryRepo.AddImage(savedImage);
+            return Ok();
         }
 
         [HttpPost]
@@ -88,17 +95,8 @@ namespace MirrorOfErised.Controllers
                             CommutingWay = model.CommutingWay,
                             User = identityUser
                         };
-                        try
-                        {
-                            entry.Images = await SaveAndProcessImages(model.Images, entry);
-                        }
-                        catch (Exception e)
-                        {
-                            ModelState.AddModelError("Images", e.Message);
-                            return View(model);
-                        }
-
-                        await _userEntryrepo.AddEntry(entry);
+                        
+                        await _userEntryRepo.AddEntry(entry);
                     }
                     else
                     {
