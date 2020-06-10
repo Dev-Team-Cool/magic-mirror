@@ -14,7 +14,7 @@ namespace MirrorOfErised.models.Data
         public virtual DbSet<UserEntry> UserEntry { get; set; }
         public virtual DbSet<UserSettings> UserSettings { get; set; }
         public virtual DbSet<ImageEntry> UserImages { get; set; }
-        
+        public virtual DbSet<TrainJob> TrainJobs { get; set; }
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options): base(options) { }
 
         protected override void OnModelCreating(ModelBuilder builder)
@@ -30,6 +30,12 @@ namespace MirrorOfErised.models.Data
             builder.Entity<User>(user =>
             {
                 user.Property(u => u.CreatedAt)
+                    .HasDefaultValueSql("CURRENT_TIMESTAMP");
+            });
+
+            builder.Entity<TrainJob>(job =>
+            {
+                job.Property(j => j.StartedAt)
                     .HasDefaultValueSql("CURRENT_TIMESTAMP");
             });
         }
