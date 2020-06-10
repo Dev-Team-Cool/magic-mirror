@@ -33,7 +33,7 @@ Module.register("MMM-facialrec", {
 	getDom: function() {
 		// create element wrapper that will be displayed in the module.
 		var wrapper = document.createElement("div");
-		wrapper.innerHTML = this.user;
+		wrapper.innerHTML = this.user.name;
 		return wrapper;
 	},
 
@@ -66,7 +66,12 @@ Module.register("MMM-facialrec", {
 	},
 	findUser: function (userIdentiefer) {
 		// TODO: Fetch user data from the local API service
-		return userIdentiefer
+		return {
+			name: userIdentiefer,
+			tokens: {
+				// tokens here
+			}
+		}
 	},
 	hideOtherModules: function () {
 		MM.getModules().exceptModule(this).enumerate(function(module) {
@@ -79,7 +84,8 @@ Module.register("MMM-facialrec", {
 		});
 	},
 	unknownFlow: function () {
-		this.user = "Hello stranger!"
+		// TODO: Handle user left situation for the GoogleAssistant module
+		this.user = { name: "Hello stranger!" }
 		this.sendNotification('USER_LEFT')
 		this.updateDom();
 		this.hideOtherModules();
