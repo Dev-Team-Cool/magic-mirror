@@ -52,8 +52,9 @@ namespace MirrorOfErised
             services.AddScoped<IUserSettingsRepo, UserSettingsRepo>();
             services.AddScoped<IUserRepo, UserRepo>();
             services.AddScoped<ITrainJobRepo, TrainJobRepo>();
-            services.AddScoped<PythonRunner>();
             services.AddScoped<ITrainJobService, TrainJobService>();
+            services.AddScoped<IImageEntryRepo, ImageEntryRepo>();
+            services.AddScoped<PythonRunner>();
 
             services.AddAuthentication().AddGoogle(options =>
             {
