@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using MirrorOfErised.models;
 using MirrorOfErised.models.Repos;
+using MirrorOfErised.models.Services;
 using MirrorOfErised.ViewModels;
 
 namespace MirrorOfErised.Controllers
@@ -14,11 +15,13 @@ namespace MirrorOfErised.Controllers
     {
         private readonly SignInManager<User> _signInManager;
         private readonly IUserRepo _userRepo;
+        private readonly ITrainJobService _trainJobService;
         
-        public AdminController(SignInManager<User> signInManager, IUserRepo userRepo)
+        public AdminController(SignInManager<User> signInManager, IUserRepo userRepo, ITrainJobService trainJobService)
         {
             _signInManager = signInManager;
             _userRepo = userRepo;
+            _trainJobService = trainJobService;
         }
         
         // GET admin
@@ -65,6 +68,23 @@ namespace MirrorOfErised.Controllers
             }
 
             return RedirectToAction("Index");
+        }
+
+        public async Task<IActionResult> Run()
+        {
+            TrainJobsViewModel jobs = new TrainJobsViewModel()
+            {
+                Jobs = await _trainJobService.GetAllJobs()
+            };
+            return View(jobs);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Run(string _)
+        {
+            string result = await _trainJobService.StartJob();
+            return Ok(result);
         }
     }
 }

@@ -77,3 +77,11 @@ body {
   padding: 0.75rem;
   vertical-align: initial;
 }
+
+.code-block {
+  width: 100%;
+  background: #eff0f1;
+  border-radius: 3px;
+  max-height: 600px;
+  padding: 12px 16px;
+}
