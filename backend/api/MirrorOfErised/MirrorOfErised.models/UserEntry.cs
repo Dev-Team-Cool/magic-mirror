@@ -12,7 +12,6 @@ namespace MirrorOfErised.models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public string UserId { get; set; }
         public User User { get; set; }
-        public List<ImageEntry> Images { get; set; }
         public UserAddress Address { get; set; }
         public CommutingOption CommutingWay { get; set; }
     }
