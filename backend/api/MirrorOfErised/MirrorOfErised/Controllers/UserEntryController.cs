@@ -21,17 +21,17 @@ namespace MirrorOfErised.Controllers
         private readonly UserManager<User> _userManager;
         private readonly IHostingEnvironment _hostingEnvironment;
         private readonly IUserSettingsRepo _userSettingsRepo;
-        private readonly FacePython _facePython;
+        private readonly PythonRunner _pythonRunner;
         private readonly IUserEntryRepo _userEntryrepo;
         private readonly IConfiguration _configuration;
 
-        public UserEntryController(IUserEntryRepo userEntry, UserManager<User> userManager, IHostingEnvironment hostingEnvironment, IUserSettingsRepo userSettingsRepo, FacePython facePython, IConfiguration configuration)
+        public UserEntryController(IUserEntryRepo userEntry, UserManager<User> userManager, IHostingEnvironment hostingEnvironment, IUserSettingsRepo userSettingsRepo, PythonRunner pythonRunner, IConfiguration configuration)
         {
             this._userEntryrepo = userEntry;
             this._userManager = userManager;
             this._hostingEnvironment = hostingEnvironment;
             this._userSettingsRepo = userSettingsRepo;
-            this._facePython = facePython;
+            this._pythonRunner = pythonRunner;
             this._configuration = configuration;
         }
         
@@ -53,7 +53,7 @@ namespace MirrorOfErised.Controllers
             return uniqueFileName;
         }
 
-        private List<ImageEntry> SaveAndProcessImages(IFormFile[] uploadedImages, ref UserEntry userEntry)
+        private async Task<List<ImageEntry>> SaveAndProcessImages(IFormFile[] uploadedImages, UserEntry userEntry)
         {
             List<ImageEntry> images = new List<ImageEntry>();
             foreach (IFormFile uploadedImage in uploadedImages)
@@ -64,7 +64,7 @@ namespace MirrorOfErised.Controllers
                     ImagePath = fileName,
                     User = userEntry
                 };
-                image.IsValid = _facePython.ValidateImage(ref image);
+                image.IsValid = await _pythonRunner.ValidateImage(image);
                 if (!image.IsValid) throw new Exception($"Image with filename: {uploadedImage.FileName} is invalid.");
                 images.Add(image);
             }
@@ -90,7 +90,7 @@ namespace MirrorOfErised.Controllers
                         };
                         try
                         {
-                            entry.Images = SaveAndProcessImages(model.Images, ref entry);
+                            entry.Images = await SaveAndProcessImages(model.Images, entry);
                         }
                         catch (Exception e)
                         {
