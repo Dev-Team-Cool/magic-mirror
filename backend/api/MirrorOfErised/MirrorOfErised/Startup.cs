@@ -89,7 +89,7 @@ namespace MirrorOfErised
 
                 options.Events.OnTicketReceived = async ctx =>
                 {
-                    await ctx.HttpContext.RequestServices.GetService<IAuthTokenRepo>().Addtokens(tokens, claims);
+                    await ctx.HttpContext.RequestServices.GetService<IAuthTokenRepo>().AddTokens(tokens, claims);
                 };
             });
 

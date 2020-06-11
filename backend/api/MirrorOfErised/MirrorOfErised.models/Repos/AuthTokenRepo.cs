@@ -13,22 +13,21 @@ namespace MirrorOfErised.models.Repos
 {
     public class AuthTokenRepo : IAuthTokenRepo
     {
+        private readonly ApplicationDbContext _context;
+        private readonly UserManager<User> _userManager;
 
-        private readonly ApplicationDbContext context;
-        private readonly UserManager<User> usermanager;
-
-        public AuthTokenRepo(ApplicationDbContext Context, UserManager<User> Usermanager)
+        public AuthTokenRepo(ApplicationDbContext context, UserManager<User> userManager)
         {
-            this.context = Context;
-            this.usermanager = Usermanager;
+            _context = context;
+            _userManager = userManager;
         }
         
-        public async Task<AuthToken> Addtokens(List<AuthenticationToken> Tokens, List<Claim> claims)
+        public async Task<AuthToken> AddTokens(List<AuthenticationToken> tokens, List<Claim> claims)
         {
             try
             {
                 AuthToken selected = new AuthToken();
-                foreach (var token in Tokens)
+                foreach (var token in tokens)
                 {
                     if (token.Name == "refresh_token")
                     {
@@ -43,7 +42,6 @@ namespace MirrorOfErised.models.Repos
                     if (token.Name == "expires_at")
                     {
                         selected.ExpireDate = DateTime.Parse(token.Value.ToString());
-
                     }
                 }
                 
@@ -55,19 +53,19 @@ namespace MirrorOfErised.models.Repos
                     }
                 }
                 
-                User user = await usermanager.FindByNameAsync(selected.UserName);
+                User user = await _userManager.FindByNameAsync(selected.UserName);
                 selected.UserId = user.Id;
 
                 try
                 {
-                    var result = await context.Tokens.AddAsync(selected);
+                    var result = await _context.Tokens.AddAsync(selected);
                 }
                 catch (Exception)
                 {
-                    var result = context.Tokens.Update(selected);
+                    var result = _context.Tokens.Update(selected);
                 }
                 
-                await context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
                 return selected;
             }
             catch (Exception ex)
@@ -84,23 +82,17 @@ namespace MirrorOfErised.models.Repos
 
         public async Task<AuthToken> GetTokensForNameAsync(string username)
         {
-
-            var user = context.Tokens.Where(e => e.UserName == username).OrderByDescending(e => e.ExpireDate).Take(1);
-
-            return await user.FirstOrDefaultAsync();
+            return await _context.Tokens
+                .Where(e => e.UserName == username)
+                .OrderByDescending(e => e.ExpireDate)
+                .Take(1)
+                .FirstOrDefaultAsync();
         }
         
         public async Task UpdateTokenAsync(AuthToken authToken)
         {
-            try
-            {
-                var result = context.Tokens.Update(authToken);
-                await context.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+            _context.Tokens.Update(authToken);
+            await _context.SaveChangesAsync();
         }
     }
 }

@@ -11,19 +11,19 @@ namespace MirrorOfErised.models.Repos
 {
     public class UserSettingsRepo : IUserSettingsRepo
     {
+        private readonly ApplicationDbContext _context;
 
-        private readonly ApplicationDbContext context;
-
-        public UserSettingsRepo(ApplicationDbContext Context, UserManager<User> Usermanager)
+        public UserSettingsRepo(ApplicationDbContext context)
         {
-            this.context = Context;
+            _context = context;
         }
+        
         public async Task<UserSettings> AddSetting(UserSettings settings)
         {
             try
             {
-                var result = context.UserSettings.Add(settings);
-                await context.SaveChangesAsync();
+                await _context.UserSettings.AddAsync(settings);
+                await _context.SaveChangesAsync();
 
                 return settings;
             }
@@ -38,7 +38,7 @@ namespace MirrorOfErised.models.Repos
         {
             try
             {
-                return await context.UserSettings.Where(e => e.UserId == id).FirstOrDefaultAsync();
+                return await _context.UserSettings.Where(e => e.UserId == id).FirstOrDefaultAsync();
             }
             catch (Exception ex)
             {
@@ -51,8 +51,8 @@ namespace MirrorOfErised.models.Repos
         {
             try
             {
-                var result = context.UserSettings.Update(settings);
-                await context.SaveChangesAsync();
+                _context.UserSettings.Update(settings);
+                await _context.SaveChangesAsync();
 
                 return settings;
             }

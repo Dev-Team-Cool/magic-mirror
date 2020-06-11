@@ -10,10 +10,8 @@ namespace MirrorOfErised.models
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
-
         [NotMapped]
         public string FullName => $"{FirstName} {LastName}";
-
         public UserEntry Commute { get; set; }
         public UserSettings Settings { get; set; }
         public List<ImageEntry> Images { get; set; }
