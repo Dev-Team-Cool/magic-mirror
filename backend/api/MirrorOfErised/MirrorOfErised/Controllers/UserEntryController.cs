@@ -24,9 +24,10 @@ namespace MirrorOfErised.Controllers
         private readonly IUserEntryRepo _userEntryRepo;
         private readonly IConfiguration _configuration;
         private readonly IImageEntryRepo _imageEntryRepo;
+        private readonly IUserRepo _userRepo;
 
         public UserEntryController(IUserEntryRepo userEntry, UserManager<User> userManager, IUserSettingsRepo userSettingsRepo,
-            PythonRunner pythonRunner, IConfiguration configuration, IImageEntryRepo imageEntryRepo)
+            PythonRunner pythonRunner, IConfiguration configuration, IImageEntryRepo imageEntryRepo, IUserRepo userRepo)
         {
             _userEntryRepo = userEntry;
             _userManager = userManager;
@@ -34,6 +35,7 @@ namespace MirrorOfErised.Controllers
             _pythonRunner = pythonRunner;
             _configuration = configuration;
             _imageEntryRepo = imageEntryRepo;
+            _userRepo = userRepo;
         }
         
         // GET: UserEntry/Create
@@ -87,7 +89,8 @@ namespace MirrorOfErised.Controllers
                 try
                 {
                     User identityUser = await _userManager.GetUserAsync(User);
-                    if (model.Images.Length > 2)
+                    int linkedImagesCount = await _imageEntryRepo.CountImagesForUser(identityUser.Id);
+                    if (linkedImagesCount > 2)
                     {
                         UserEntry entry = new UserEntry()
                         {
@@ -97,10 +100,14 @@ namespace MirrorOfErised.Controllers
                         };
                         
                         await _userEntryRepo.AddEntry(entry);
+                        identityUser.HasCompletedSignUp = true;
+                        await _userRepo.Update(identityUser);
                     }
                     else
                     {
-                        ModelState.AddModelError("Images", "We need at least 3 images of you.");
+                        int imageShortage = 3 - linkedImagesCount;
+                        ViewBag.imageError =
+                            $"We need at least 3 images of you. Upload {imageShortage} extra {(imageShortage == 1 ? "image" : "images")}.";
                         return View(model);
                     }
                    
