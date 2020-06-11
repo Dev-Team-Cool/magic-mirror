@@ -19,18 +19,12 @@ namespace MirrorOfErised.api.Controllers
         private readonly IAuthTokenRepo _authTokenRepo;
         private readonly GoogleCalendarService _googleCalendarApi;
         private readonly IUserRepo _userRepo;
-        private readonly IUserEntryRepo _userEntryRepo;
-        private readonly IUserSettingsRepo _userSettings;
-        private readonly UserManager<User> _userManager;
         
-        public UserController(IAuthTokenRepo authTokenRepo, UserManager<User> userManager, IUserRepo userRepo,
-            GoogleCalendarService googleCalendarApi, IUserEntryRepo userEntryRepo,IUserSettingsRepo userSettings)
+        public UserController(IAuthTokenRepo authTokenRepo, IUserRepo userRepo,
+            GoogleCalendarService googleCalendarApi)
         {
             _authTokenRepo = authTokenRepo;
-            _userManager = userManager;
             _googleCalendarApi = googleCalendarApi;
-            _userEntryRepo = userEntryRepo;
-            _userSettings = userSettings;
             _userRepo = userRepo;
         }
 
@@ -51,7 +45,7 @@ namespace MirrorOfErised.api.Controllers
            catch (Exception ex)
            {
                 Console.WriteLine(ex.ToString());
-               return StatusCode(500);
+                return StatusCode(500);
            }
         }
         
@@ -60,19 +54,14 @@ namespace MirrorOfErised.api.Controllers
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<ActionResult> GetCalender(string userName)
         {
-            try 
+            try
             {
                 if (string.IsNullOrEmpty(userName))
-                {
-                    return BadRequest("Ongeldige EventId");
-                }
+                    return BadRequest("Username is required");
 
                 AuthToken authToken = await _authTokenRepo.GetTokensForNameAsync(userName);
-
                 if (authToken == null)
-                {
-                    return NotFound("Geen tokens gevonden");
-                }
+                    return NotFound("User not found");
 
                 // Get Key
                 var filesResponse = await _googleCalendarApi.ListFiles(authToken.Token, authToken.RefreshToken, async token =>
@@ -87,7 +76,6 @@ namespace MirrorOfErised.api.Controllers
                 });
                 
                 return Ok(filesResponse);
-
             }
             catch (Exception ex)
             {
@@ -95,74 +83,5 @@ namespace MirrorOfErised.api.Controllers
                 return BadRequest("Unable to get user calendar");
             }
         }
-        
-        /*[HttpGet("Info/{UserName}")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<ActionResult<UserEntry>> GetUserInfo(string userName)
-        {
-            try 
-            {
-                if (string.IsNullOrEmpty(userName))
-                {
-                    return BadRequest("Ongeldige user");
-                }
-                var user = await _userManager.FindByNameAsync(userName);
-                if (user == null)
-                {
-                    return NotFound("Geen user entry gevonden");
-
-                }
-
-                var userEntry = _userEntryRepo.GetEntryForIdAsync(user.Id);
-
-                var userEntryDto = new UserEntryDto();
-                Mapper.ConvertEntryTo_DTO(userEntry, ref userEntryDto);
-
-                return Ok(userEntryDto);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.ToString());
-                return BadRequest("Failed to get User");
-            }
-        }*/
-
-        /*[HttpGet("Settings/{UserName}")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-
-        public async Task<ActionResult<UserSettings>> GetUserSettings(string userName)
-        {
-            try
-            {
-                if (string.IsNullOrEmpty(userName))
-                {
-                    return BadRequest("Ongeldige user");
-                }
-
-                if (string.IsNullOrEmpty(userName))
-                {
-                    return BadRequest("Ongeldige user");
-                }
-
-                var user = await _userManager.FindByNameAsync(userName);
-                if (user == null)
-                {
-                    return NotFound("Geen user entry gevonden");
-
-                }
-                
-                var userEntry = _userSettings.GetSettingsForUserIdAsync(user.Id);
-                
-                var userSettingDto = new UserSettingDto();
-                Mapper.ConvertSettingTo_DTO(userEntry, ref userSettingDto);
-
-                return Ok(userSettingDto);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.ToString());
-                return BadRequest("failed to get setting");
-            }
-        }*/
     }
 }
