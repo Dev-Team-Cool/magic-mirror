@@ -22,6 +22,16 @@ namespace MirrorOfErised.models.Repos
                 .ToListAsync();
         }
 
+        public async Task<User> GetUserByUsername(string username)
+        {
+            return await _context.Users
+                .Include(u => u.Commute)
+                .ThenInclude(c => c.Address)
+                .Include(u => u.Settings)
+                .Where(u => u.UserName == username)
+                .FirstOrDefaultAsync();
+        }
+
         public async Task<User> GetUserById(string id)
         {
             return await _context.Users.FindAsync(id);
