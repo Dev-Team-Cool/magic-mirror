@@ -24,7 +24,7 @@ namespace MirrorOfErised.models
         [Key]
         [JsonIgnore]
         public string UserId { get; set; }
-
+        [JsonIgnore]
         public User User { get; set; }
     }
 }

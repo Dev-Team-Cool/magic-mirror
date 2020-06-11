@@ -1,21 +1,15 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using MirrorOfErised.models;
 using MirrorOfErised.models.Data;
 using MirrorOfErised.models.Repos;
 using MirrorOfErised.models.Services;
@@ -25,9 +19,6 @@ namespace MirrorOfErised.api
 {
     public class Startup
     {
-
-        private readonly IWebHostEnvironment env;
-
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -49,6 +40,7 @@ namespace MirrorOfErised.api
             {
                 //circulaire referenties verhinderen door navigatie props
                 options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+                options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
             });
 
             //2. Registraties (van context, Identity) 
@@ -60,11 +52,9 @@ namespace MirrorOfErised.api
             });
             
             //2.2 Identity ( NIET de AddDefaultIdentity())
-            services.AddIdentity<IdentityUser, IdentityRole>()
+            services.AddIdentity<User, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
-
-
-
+            
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
             {
@@ -78,17 +68,12 @@ namespace MirrorOfErised.api
                     ValidAudience = Configuration["Tokens:Audience"],
 
                     IssuerSigningKey = new SymmetricSecurityKey
-            (Encoding.UTF8.GetBytes(Configuration["Tokens:Key"]))
+                        (Encoding.UTF8.GetBytes(Configuration["Tokens:Key"]))
                 };
                 options.SaveToken = false;
                 options.RequireHttpsMetadata = false;
             });
-
-            services.AddScoped<IAuthTokenRepo, AuthTokenRepo>();
-            services.AddScoped<IUserEntryRepo, UserEntryRepo>();
-            services.AddScoped<IUserSettingsRepo, UserSettingsRepo>();
-
-
+            
             //4. open API documentatie
             services.AddSwaggerGen(c =>
             {
@@ -136,11 +121,14 @@ namespace MirrorOfErised.api
             }*/
 
             services.AddHttpClient<GoogleCalendarService>();
-
+            services.AddScoped<IAuthTokenRepo, AuthTokenRepo>();
+            services.AddScoped<IUserEntryRepo, UserEntryRepo>();
+            services.AddScoped<IUserSettingsRepo, UserSettingsRepo>();
+            services.AddScoped<IUserRepo, UserRepo>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, UserManager<IdentityUser> usermgr, RoleManager<IdentityRole> rolemgr)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, UserManager<User> usermgr, RoleManager<IdentityRole> rolemgr)
         {
             if (env.IsDevelopment())
             {
