@@ -30,7 +30,8 @@ namespace MirrorOfErised.models.Data
                     Id = Guid.NewGuid().ToString(),
                     UserName = "mirror@mirror.ow",
                     Email = "mirror@mirror.ow",
-                    EmailConfirmed = true
+                    EmailConfirmed = true,
+                    HasCompletedSignUp = true
                 };
 
                 var userResult = await userMgr.CreateAsync(user, "D@s1re");
