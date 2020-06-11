@@ -14,7 +14,10 @@
     <div class="col-md">
         <p>Upload some images of yourself.</p>
         <small class="form-text text-muted">We need at least 3 pictures of you. Your uploaded picture should only contain your face and should not be grayscaled.</small>
-        <form action="/UserEntry/Upload" method="post" id="my-awesome-dropzone"></form>
+        <form action="/UserEntry/Upload" method="post" id="dropzone">
+            
+        </form>
+        <span class="text-danger">@ViewBag.imageError</span>
         <form enctype="multipart/form-data" asp-action="Create">
             <div>
                 <span asp-validation-summary="All" class="text-danger"></span>
@@ -83,12 +86,12 @@
             });
             
             //Dropzone
-            const dropzone = new Dropzone('#my-awesome-dropzone', {
+            const dropzone = new Dropzone('#dropzone', {
                 url: '/UserEntry/Upload',
                 paramName: 'image', 
                 maxFilesize: 5,
                 init: function () {
-                    $('#my-awesome-dropzone').addClass('dropzone');
+                    $('#dropzone').addClass('dropzone');
                     this.on('complete', function(file) {
                         console.log(file);
                         if (file.status === 'error' && file.xhr.status === 400) {

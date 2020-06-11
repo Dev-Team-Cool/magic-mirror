@@ -13,10 +13,6 @@ namespace MirrorOfErised.ViewModels
 {
     public class UserEntryCreateViewModel
     {
-        [Required(ErrorMessage = "The image is obligatory")]
-        [Display(Name = "Image")]
-        public IFormFile[] Images { get; set; }
-
         [Display(Name = "Fill in your address if you want traffic info otherwise leave blank")]
         public UserAddress Address { get; set; }
 
