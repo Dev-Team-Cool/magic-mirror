@@ -1,93 +1,50 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Project.API.Models;
-namespace Project.API.Controllers
-{
+using MirrorOfErised.api.Models;
+using MirrorOfErised.models;
 
+namespace MirrorOfErised.api.Controllers
+{
     [Route("api/[controller]")]
     [ApiController]
     public class AuthController : ControllerBase
     {
-
-        private readonly SignInManager<IdentityUser> _signInManager;
-        private  readonly IConfiguration configuration;
-        IPasswordHasher<IdentityUser> hasher;
-        UserManager<IdentityUser> IdentityUserManager;
-        ILogger<AuthController> logger;
-
-
-        public AuthController(SignInManager<IdentityUser> signInMgr, IPasswordHasher<IdentityUser> hasher, UserManager<IdentityUser> IdentityUserManager, ILogger<AuthController> logger , IConfiguration configuration)
+        private  readonly IConfiguration _configuration;
+        private readonly IPasswordHasher<User> _hasher;
+        private readonly UserManager<User> _identityUserManager;
+        private readonly ILogger<AuthController> _logger;
+        
+        public AuthController(IPasswordHasher<User> hasher, UserManager<User> userManager, 
+            ILogger<AuthController> logger , IConfiguration configuration)
         {
-            this._signInManager = signInMgr;
-            this.hasher = hasher;
-            this.IdentityUserManager = IdentityUserManager;
-            this.logger = logger;
-            this.configuration = configuration;
-
+            _hasher = hasher;
+            _identityUserManager = userManager;
+            _logger = logger;
+            _configuration = configuration;
         }
-
-       
-
-        /*[HttpPost]
-        [Route("login")] //vult de controller basis route aan
-        [AllowAnonymous]
-        public async Task<IActionResult> Login([FromBody] LoginDTO loginDTO)
-        {
-            //LoginViewModel met (Required) IdentityUserName en Password aanbrengen.
-            var returnMessage = "";
-            if (!ModelState.IsValid)
-                return BadRequest("Onvolledige gegevens.");
-            try
-            {
-                //geen persistence, geen lockout -> via false, false
-                var result = await
-               _signInManager.PasswordSignInAsync(loginDTO.UserName,
-               loginDTO.Password, false, false);
-                if (result.Succeeded)
-                {
-                    return Ok("Welkom " + loginDTO.UserName);
-*//*                    return Ok("Welkom " + identityDTO.IdentityUserName);
-*//*                }
-                throw new Exception("IdentityUser of paswoord niet gevonden.");
-                //zo algemeen mogelijk response. Vertelt niet dat het pwd niet juist is.
-            }
-            catch (Exception exc)
-            {
-                returnMessage = $"Foutief of ongeldig request: {exc.Message}";
-                ModelState.AddModelError("", returnMessage);
-            }
-            return BadRequest(returnMessage); //zo weinig mogelijk (hacker) info
-        }*/
-
+        
         [HttpPost("token")]
         [AllowAnonymous]
-        public async Task<IActionResult> GenerateJwtToken([FromBody]LoginDTO
- identityDTO)
+        public async Task<IActionResult> GenerateJwtToken([FromBody]LoginDto identityDto)
         {
             try
             {
-                var jwtsvc = new JWTServices<IdentityUser>(configuration,
-                logger, IdentityUserManager, hasher);
-                var token = await jwtsvc.GenerateJwtToken(identityDTO);
+                var jwtsvc = new JWTServices<User>(_configuration,
+                _logger, _identityUserManager, _hasher);
+                var token = await jwtsvc.GenerateJwtToken(identityDto);
                 return Ok(token);
             }
             catch (Exception exc)
             {
-                logger.LogError($"Exception thrown when creating JWT: {exc}");
+                _logger.LogError($"Exception thrown when creating JWT: {exc}");
             }
-            //Bij niet succesvolle authenticatie wordt een Badrequest (=zo weinig mogelijke info) teruggeven.
-return BadRequest("Failed to generate JWT token");
+            
+            return BadRequest("Failed to generate JWT token");
         }
-
-
-
     }
 }
