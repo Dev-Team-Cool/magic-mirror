@@ -1,8 +1,8 @@
 from collections import Counter
 
+import torch
 import numpy as np
 from facenet_pytorch import InceptionResnetV1
-from joblib import dump, load
 from PIL import Image
 
 import facial_recognition.utils as utils
@@ -99,11 +99,11 @@ class FacialRecognition:
 
     def save(self):
         if self.__embeddings is not None:
-            dump(self.__embeddings, Config.get('model_path', 'facial_recognition.model'))
+            torch.save(self.__embeddings, Config.get('model_path', 'facial_recognition.pth'))
     
     def load(self):
         try:
-            self.__embeddings = load(Config.get('model_path', 'facial_recognition.model'))
+            self.__embeddings = torch.load(Config.get('model_path', 'facial_recognition.pth'))
         except:
             print('Unable to load model')
 

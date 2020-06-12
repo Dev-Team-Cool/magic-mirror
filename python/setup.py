@@ -8,9 +8,9 @@ setup(
     packages = find_packages(),
     license='BSD',
     install_requires=['torch',
-                      'torchvision'
-                      'opencv_python==4.2.0.34',
+                      'torchvision',
+                      'opencv_python',
                       'facenet_pytorch',
                       'Pillow',
-                      'joblib']
+                      'detecto']
 )
