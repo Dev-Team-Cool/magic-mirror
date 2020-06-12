@@ -7,11 +7,9 @@
 
 var NodeHelper = require("node_helper");
 const { PythonShell } = require('python-shell');
-// var pythonAlreadyStarted = false;
 
 module.exports = NodeHelper.create({
 	initialize: function(config) {
-		console.log(config)
 		this.config = config;
 	},
 	python_start: function() {
@@ -31,11 +29,13 @@ module.exports = NodeHelper.create({
 			// Receives a message in the form of {'detected': 'name of user'} the message is a string and needs to be converted to json first
 			try {
 				message = JSON.parse(message);
-				prediction = message.detected;
+				const prediction = message.detected;
 				console.log('Prediction: ', prediction)
 				if(prediction != "Unknown" && prediction != 'no user'){
 					// If a user is found, send the user name to the module and stop the python shell. Shell will be restarted in 5 seconds to see if the user is still there
-					pyshell.childProcess.kill('SIGINT');
+					// pyshell.childProcess.kill('SIGINT');
+					if (prediction == 'badge')
+						this.sendSocketNotification('BADGE_FOUND')
 					this.pythonAlreadyStarted = false;
 					console.info('Ending...')
 				}
