@@ -12,8 +12,9 @@ modules/MMM-facialrec/*.py
 # Training data
 python/data
 
-# Trained classifiers
-*.model
+# Trained PyTorch classifiers
+*.pth
+*.pt
 
 # Editor specifics
 .vscode
