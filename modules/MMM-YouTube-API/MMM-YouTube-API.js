@@ -94,7 +94,7 @@ Module.register("MMM-YouTube-API", {
             //Put in picture
             //const title = document.createElement("h5");
             const image = document.createElement("img");
-            image.src = 'modules/MMM-EyeCandy/pix/logoML6.png';
+            // image.src = '/home/florian/Documents/school/MagicMirror/modules/MMM-EyeCandy/pix/logoML6.png';
             image.style.height = this.config.imgHeight;
             image.classList.add("yt-image");
             this.imageRef = image;
