@@ -17,9 +17,9 @@ services:
     ports:
       - "80:80"
     environment:
-      SENDGRID: # Sendgrid key
-      CLIENTID: # Google client id
-      CLIENTSECRET: # Google client secret
+      SENDGRID: ${SENDGRID_KEY}
+      CLIENTID: ${CLIENT_ID}
+      CLIENTSECRET: ${CLIENT_SECRET}
   api:
     container_name: api
     image: florianvd/mirror-of-erised:api-latest
@@ -28,8 +28,8 @@ services:
     ports:
       - "5000:80"
     environment:
-      SENDGRID: # Sendgrid key
-      CLIENTID: # Google client id
-      CLIENTSECRET: # Google client secret
+      SENDGRID: ${SENDGRID_KEY}
+      CLIENTID: ${CLIENT_ID}
+      CLIENTSECRET: ${CLIENT_SECRET}
 volumes:
   dbdata:

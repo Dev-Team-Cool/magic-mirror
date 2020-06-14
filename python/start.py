@@ -1,4 +1,7 @@
 from facial_recognition.face_detection import FaceDetection
+from facial_recognition.config import Config
 
-detection = FaceDetection()
+# Load the config
+Config.load_config('/home/florian/Documents/school/magic-mirror/python/config.json')
+detection = FaceDetection().init()
 detection.start()

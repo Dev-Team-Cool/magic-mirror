@@ -1,6 +1,9 @@
 # Python virtual environment
 project-env
 
+# Symlinks
+modules/MMM-facialrec/*.py
+
 # Python compiled binaries
 */__pycache__
 *.pyc
@@ -9,10 +12,14 @@ project-env
 # Training data
 python/data
 
-# Trained classifiers
-*.model
+# Trained PyTorch classifiers
+*.pth
+*.pt
 
 # Editor specifics
 .vscode
 .ipynb_checkpoints
+
+#node modules
+node_modules
 

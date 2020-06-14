@@ -1,0 +1,162 @@
+{
+    "kind": "calendar#events",
+    "etag": "\"p33obt6vmgvaei0g\"",
+    "summary": "cottynmaurits@gmail.com",
+    "updated": "2020-05-27T12:38:55.494Z",
+    "timeZone": "Europe/Brussels",
+    "accessRole": "owner",
+    "defaultReminders": [
+     {
+      "method": "popup",
+      "minutes": 30
+     }
+    ],
+    "nextSyncToken": "CPC-m_aH1OkCEPC-m_aH1OkCGAU=",
+    "items": [
+     {
+      "kind": "calendar#event",
+      "etag": "\"3181166233824000\"",
+      "id": "3caoo495h49a6caagl3iltksl2",
+      "status": "confirmed",
+      "htmlLink": "https://www.google.com/calendar/event?eid=M2Nhb280OTVoNDlhNmNhYWdsM2lsdGtzbDIgY290dHlubWF1cml0c0Bt",
+      "created": "2020-05-27T12:38:36.000Z",
+      "updated": "2020-05-27T12:38:36.912Z",
+      "summary": "Meeting with the boys @Conference room.",
+      "creator": {
+       "email": "cottynmaurits@gmail.com",
+       "self": true
+      },
+      "organizer": {
+       "email": "cottynmaurits@gmail.com",
+       "self": true
+      },
+      "start": {
+       "dateTime": "2020-05-28T08:00:00+02:00"
+      },
+      "end": {
+       "dateTime": "2020-05-28T09:00:00+02:00"
+      },
+      "iCalUID": "3caoo495h49a6caagl3iltksl2@google.com",
+      "sequence": 0,
+      "reminders": {
+       "useDefault": true
+      }
+     },
+     {
+      "kind": "calendar#event",
+      "etag": "\"3181166242980000\"",
+      "id": "3aqr23j9iteea853dumobt8qgc",
+      "status": "confirmed",
+      "htmlLink": "https://www.google.com/calendar/event?eid=M2FxcjIzajlpdGVlYTg1M2R1bW9idDhxZ2MgY290dHlubWF1cml0c0Bt",
+      "created": "2020-05-27T12:38:41.000Z",
+      "updated": "2020-05-27T12:38:41.490Z",
+      "summary": "Push updates to github",
+      "creator": {
+       "email": "cottynmaurits@gmail.com",
+       "self": true
+      },
+      "organizer": {
+       "email": "cottynmaurits@gmail.com",
+       "self": true
+      },
+      "start": {
+       "dateTime": "2020-05-28T09:30:00+02:00"
+      },
+      "end": {
+       "dateTime": "2020-05-28T10:30:00+02:00"
+      },
+      "iCalUID": "3aqr23j9iteea853dumobt8qgc@google.com",
+      "sequence": 0,
+      "reminders": {
+       "useDefault": true
+      }
+     },
+     {
+      "kind": "calendar#event",
+      "etag": "\"3181166252638000\"",
+      "id": "0dvldsihb4bbpupk4hn9rh9q1c",
+      "status": "confirmed",
+      "htmlLink": "https://www.google.com/calendar/event?eid=MGR2bGRzaWhiNGJicHVwazRobjlyaDlxMWMgY290dHlubWF1cml0c0Bt",
+      "created": "2020-05-27T12:38:46.000Z",
+      "updated": "2020-05-27T12:38:46.319Z",
+      "summary": "You need to do something very important at this time.",
+      "creator": {
+       "email": "cottynmaurits@gmail.com",
+       "self": true
+      },
+      "organizer": {
+       "email": "cottynmaurits@gmail.com",
+       "self": true
+      },
+      "start": {
+       "dateTime": "2020-05-28T11:30:00+02:00"
+      },
+      "end": {
+       "dateTime": "2020-05-28T12:30:00+02:00"
+      },
+      "iCalUID": "0dvldsihb4bbpupk4hn9rh9q1c@google.com",
+      "sequence": 0,
+      "reminders": {
+       "useDefault": true
+      }
+     },
+     {
+      "kind": "calendar#event",
+      "etag": "\"3181166262438000\"",
+      "id": "0h91ca1qft35cglnmiq7ab4rm3",
+      "status": "confirmed",
+      "htmlLink": "https://www.google.com/calendar/event?eid=MGg5MWNhMXFmdDM1Y2dsbm1pcTdhYjRybTMgY290dHlubWF1cml0c0Bt",
+      "created": "2020-05-27T12:38:51.000Z",
+      "updated": "2020-05-27T12:38:51.219Z",
+      "summary": "Cage fight with two brown bears",
+      "creator": {
+       "email": "cottynmaurits@gmail.com",
+       "self": true
+      },
+      "organizer": {
+       "email": "cottynmaurits@gmail.com",
+       "self": true
+      },
+      "start": {
+       "dateTime": "2020-05-28T13:30:00+02:00"
+      },
+      "end": {
+       "dateTime": "2020-05-28T14:30:00+02:00"
+      },
+      "iCalUID": "0h91ca1qft35cglnmiq7ab4rm3@google.com",
+      "sequence": 0,
+      "reminders": {
+       "useDefault": true
+      }
+     },
+     {
+      "kind": "calendar#event",
+      "etag": "\"3181166270988000\"",
+      "id": "4rvmhbmtfo9epnsl8is4p6a88j",
+      "status": "confirmed",
+      "htmlLink": "https://www.google.com/calendar/event?eid=NHJ2bWhibXRmbzllcG5zbDhpczRwNmE4OGogY290dHlubWF1cml0c0Bt",
+      "created": "2020-05-27T12:38:55.000Z",
+      "updated": "2020-05-27T12:38:55.494Z",
+      "summary": "Go home.",
+      "creator": {
+       "email": "cottynmaurits@gmail.com",
+       "self": true
+      },
+      "organizer": {
+       "email": "cottynmaurits@gmail.com",
+       "self": true
+      },
+      "start": {
+       "dateTime": "2020-05-28T15:00:00+02:00"
+      },
+      "end": {
+       "dateTime": "2020-05-28T16:00:00+02:00"
+      },
+      "iCalUID": "4rvmhbmtfo9epnsl8is4p6a88j@google.com",
+      "sequence": 0,
+      "reminders": {
+       "useDefault": true
+      }
+     }
+    ]
+   }
