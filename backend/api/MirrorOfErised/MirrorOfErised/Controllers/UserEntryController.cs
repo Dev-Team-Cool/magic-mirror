@@ -39,9 +39,8 @@ namespace MirrorOfErised.Controllers
         }
         
         // GET: UserEntry/Create
-        public async Task<ActionResult> Create()
+        public IActionResult Create()
         {
-            IdentityUser identityUser = await _userManager.GetUserAsync(User);
             return View();
         }
 
@@ -113,8 +112,9 @@ namespace MirrorOfErised.Controllers
                    
                     return Redirect("/Home/index");
                 }
-                catch
+                catch(Exception e)
                 {
+                    Console.WriteLine(e.Message);
                     ViewBag.error = "Something unexpected went wrong.";
                     return View(model);
                 }

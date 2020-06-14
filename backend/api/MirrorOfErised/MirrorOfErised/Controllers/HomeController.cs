@@ -1,35 +1,30 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using MirrorOfErised.models;
-using MirrorOfErised.models.Repos;
 using MirrorOfErised.Models;
 
 namespace MirrorOfErised.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly UserManager<User> userManager;
+        private readonly UserManager<User> _userManager;
 
         public HomeController(UserManager<User> userManager)
         {
-            this.userManager = userManager;
+            _userManager = userManager;
         }
 
         public async Task<IActionResult> Index()
         {
             try
             {
-                User identityUser = await userManager.GetUserAsync(User);
+                User identityUser = await _userManager.GetUserAsync(User);
                 if (identityUser.EmailConfirmed == false)
                 {
-                    ViewBag.verified = "NO";
+                    ViewBag.verified = false;
                 }
             }
             catch (Exception)
