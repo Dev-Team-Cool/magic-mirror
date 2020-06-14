@@ -25,7 +25,6 @@ Module.register("MMM-YouTube-API", {
 
     playVideo() {
         if (this.videoRef) {
-            console.log("Playing")
             this.videoRef.contentWindow.postMessage('{"event":"command","func":"' + 'playVideo' + '","args":""}', '*');
         }
     },
@@ -80,7 +79,6 @@ Module.register("MMM-YouTube-API", {
             else {
                 video.src = this.embedVid + this.config.videoID + "?modestbranding=1&controls=0&enablejsapi=1&iv_load_policy=3&showinfo=0" + (this.config.autoPlay ? "&autoplay=1" : "")
             }
-            console.log("Playing:", video.src)
             video.setAttribute("frameborder", "0");
             video.setAttribute("allow", "autoplay");
             video.style.height = this.config.videoHeight;
@@ -94,7 +92,7 @@ Module.register("MMM-YouTube-API", {
             //Put in picture
             //const title = document.createElement("h5");
             const image = document.createElement("img");
-            // image.src = '/home/florian/Documents/school/MagicMirror/modules/MMM-EyeCandy/pix/logoML6.png';
+            image.src = '/home/florian/Documents/school/MagicMirror/modules/MMM-EyeCandy/pix/logoML6.png';
             image.style.height = this.config.imgHeight;
             image.classList.add("yt-image");
             this.imageRef = image;
