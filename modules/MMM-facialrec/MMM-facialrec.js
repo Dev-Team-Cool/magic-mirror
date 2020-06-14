@@ -43,7 +43,7 @@ Module.register("MMM-facialrec", {
 		const wrapper = document.createElement("div");
 		const { name, hasBadge, validUser } = this.user;
 		if (validUser) {
-			wrapper.innerHTML = `Hello ${name}! `
+			wrapper.innerHTML = `Hello ${name}!</br>`
 			if (hasBadge)
 				wrapper.innerHTML += 'Nice badge my dude!'
 			else
