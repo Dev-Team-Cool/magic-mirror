@@ -26,6 +26,7 @@ Module.register("MMM-facialrec", {
 			hasBadge: false
 		};
 		this.FaceRecognitionTimeOutPassed = true;
+		this.__previousPrediciton = 'no user';
 		
 		// Init node_helper with the config
 		this.sendSocketNotification('INIT', this.config);
@@ -74,7 +75,10 @@ Module.register("MMM-facialrec", {
 		];
 	},
 	processPrediction: function(prediction) {
+		Log.log(prediction)
 		if (!this.FaceRecognitionTimeOutPassed) return false;
+		if (this.__previousPrediciton === prediction) return false; 
+		else this.__previousPrediciton = prediction;
 
 		if (prediction == 'no user' || prediction == 'Unknown')
 			this.unknownFlow(prediction);
@@ -109,7 +113,7 @@ Module.register("MMM-facialrec", {
 		this.user = { name: "Hello stranger!", hasBadge: false };
 
 		if (prediction === 'no user')
-			this.sendNotification('PAGE_SELECT', 5); //Welcome screen
+			this.sendNotification('PAGE_SELECT', 0); //Logo screen
 		else if (prediction === 'Unknown') {
 			this.sendNotification('PAGE_SELECT', 'Home'); //Demo mode
 			this.setTimeoutFacialRecognition(); // Check user again after x amount of time
