@@ -30,6 +30,7 @@ namespace MirrorOfErised.api.Controllers
 
         // GET: api/user/{username}
         [HttpGet("{userName}")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> GetUser(string userName)
         {
            try
