@@ -7,7 +7,7 @@
  * MIT Licensed.
  */
 
-Module.register("MMM-faceBadgeRec", {
+Module.register("MMM-facialrec", {
 	defaults: {
 		updateInterval: 5000,
 		retryDelay: 5000,
@@ -51,7 +51,6 @@ Module.register("MMM-faceBadgeRec", {
 		} else
 			wrapper.innerHTML = 'Hey stranger!'
 
-		wrapper.innerHTML = this.user.name;
 		return wrapper;
 	},
 
@@ -77,9 +76,9 @@ Module.register("MMM-faceBadgeRec", {
 	processPrediction: function(prediction) {
 		if (!this.FaceRecognitionTimeOutPassed) return false;
 
-		if (prediction == 'no user' || prediction == 'unknown')
+		if (prediction == 'no user' || prediction == 'Unknown')
 			this.unknownFlow(prediction);
-		else if(this.user !== prediction)
+		else if(this.user.name !== prediction)
 			this.userFlow(prediction);
 	},
 	findUser: function (userIdentiefer) {
@@ -107,7 +106,7 @@ Module.register("MMM-faceBadgeRec", {
 	},
 	unknownFlow: function (prediction) {
 		// TODO: Handle user left situation for the GoogleAssistant module
-		this.user = { name: "Hello stranger!", hasBadge = false };
+		this.user = { name: "Hello stranger!", hasBadge: false };
 
 		if (prediction === 'no user')
 			this.sendNotification('PAGE_SELECT', 5); //Welcome screen
@@ -125,8 +124,8 @@ Module.register("MMM-faceBadgeRec", {
 		this.user = { validUser: true, ...currentUser};
 		this.sendNotification('PAGE_SELECT', 'Personal'); // Goto the correct page
 		this.sendNotification('USER_FOUND', currentUser);
-		this.setTimeoutFacialRecognition(); // Check user again after x amount of time
 		this.updateDom();
+		this.setTimeoutFacialRecognition(); // Check user again after x amount of time
 		// this.showOtherModules();
 	},
 	// socketNotificationReceived from node helper
@@ -137,6 +136,7 @@ Module.register("MMM-faceBadgeRec", {
 				break;
 			case 'BADGE_FOUND':
 				this.user.hasBadge = true;
+				this.updateDom();
 				break;
 			default:
 				break;

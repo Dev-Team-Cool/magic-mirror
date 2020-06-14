@@ -30,14 +30,12 @@ module.exports = NodeHelper.create({
 			try {
 				message = JSON.parse(message);
 				const prediction = message.detected;
-				console.log('Prediction: ', prediction)
 				if(prediction != "Unknown" && prediction != 'no user'){
 					// If a user is found, send the user name to the module and stop the python shell. Shell will be restarted in 5 seconds to see if the user is still there
 					// pyshell.childProcess.kill('SIGINT');
 					if (prediction == 'badge')
 						this.sendSocketNotification('BADGE_FOUND')
 					this.pythonAlreadyStarted = false;
-					console.info('Ending...')
 				}
 
 				// Notify module of current prediction
@@ -52,7 +50,6 @@ module.exports = NodeHelper.create({
 	},
 	recognize: function() {
 		if (this.pythonAlreadyStarted) return;
-		console.info('Starting...')
 		this.python_start();
 		this.pythonAlreadyStarted = true;
 	},
