@@ -4,7 +4,7 @@ from facial_recognition.facial_recognition import FacialRecognition
 from facial_recognition.config import Config
 import facial_recognition.utils as utils
 
-Config.load_config('config.json')
+Config.load_config()
 
 train_data_path = Config.get('train_data_path')
 if train_data_path is None:
