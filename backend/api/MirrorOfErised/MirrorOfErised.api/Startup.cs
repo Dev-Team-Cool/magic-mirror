@@ -1,3 +1,4 @@
+using System;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -50,7 +51,7 @@ namespace MirrorOfErised.api
             {
                 opt.UseNpgsql(Configuration.GetConnectionString("DefaultConnection"));
             });
-            
+
             //2.2 Identity ( NIET de AddDefaultIdentity())
             services.AddIdentity<User, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
@@ -104,21 +105,6 @@ namespace MirrorOfErised.api
                 });
             });
 
-            /*//5. HSTS & HTTPS-Redirection in production met opties
-            if (!env.IsDevelopment())
-            {
-                services.AddHttpsRedirection(options =>
-                {
-                    //default: 307 redirect
-                    // options.RedirectStatusCode = StatusCodes.Status308PermanentRedirect;
-                    options.HttpsPort = 443;
-                });
-
-                services.AddHsts(options =>
-                {
-                    options.MaxAge = TimeSpan.FromDays(40); //default 30
-                });
-            }*/
 
             services.AddHttpClient<GoogleCalendarService>();
             services.AddScoped<IAuthTokenRepo, AuthTokenRepo>();
@@ -135,7 +121,7 @@ namespace MirrorOfErised.api
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseHttpsRedirection();
+            // app.UseHttpsRedirection();
 
             app.UseRouting();
 
