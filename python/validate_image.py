@@ -38,5 +38,5 @@ if __name__ == '__main__':
     parser.add_argument('file', help='filename')
 
     args = parser.parse_args()
-    Config.load_config('/home/florian/Documents/config.json')
+    Config.load_config()
     main(args.file)
