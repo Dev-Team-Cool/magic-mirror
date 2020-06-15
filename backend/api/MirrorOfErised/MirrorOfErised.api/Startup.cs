@@ -46,10 +46,18 @@ namespace MirrorOfErised.api
 
             //2. Registraties (van context, Identity) 
             //2.1. Context
-            string connectionString = Configuration.GetConnectionString("DefaultConnection");
             services.AddEntityFrameworkNpgsql().AddDbContext<ApplicationDbContext>(opt =>
             {
                 opt.UseNpgsql(Configuration.GetConnectionString("DefaultConnection"));
+            });
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowElectron",
+                    builder =>
+                    {
+                        builder.WithOrigins("http://localhost:8080");
+                    });
             });
 
             //2.2 Identity ( NIET de AddDefaultIdentity())
@@ -123,6 +131,8 @@ namespace MirrorOfErised.api
 
             // app.UseHttpsRedirection();
 
+            app.UseCors("AllowElectron");
+            
             app.UseRouting();
 
             app.UseAuthorization();
