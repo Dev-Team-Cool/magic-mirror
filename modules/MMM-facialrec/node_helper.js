@@ -13,7 +13,6 @@ module.exports = NodeHelper.create({
 		this.config = config;
 	},
 	python_start: function() {
-		// const self = this;
 		const options = {
 			mode: 'text',
 			pythonPath: this.config.pythonPath, // path to python executable, change this to where python is installed on your local machine
@@ -21,11 +20,11 @@ module.exports = NodeHelper.create({
 			pythonOptions: ['-u'], // Unbuffered
 		};
 
-		pyshell = new PythonShell(
+		this.activeShell = new PythonShell(
 			// starts the face recognition script
 			'start.py', options
 		);
-		pyshell.on("message", (message) => {
+		this.activeShell.on("message", (message) => {
 			// Receives a message in the form of {'detected': 'name of user'} the message is a string and needs to be converted to json first
 			try {
 				message = JSON.parse(message);
@@ -35,7 +34,6 @@ module.exports = NodeHelper.create({
 					// pyshell.childProcess.kill('SIGINT');
 					if (prediction == 'badge')
 						this.sendSocketNotification('BADGE_FOUND')
-					this.pythonAlreadyStarted = false;
 				}
 
 				// Notify module of current prediction
@@ -46,12 +44,22 @@ module.exports = NodeHelper.create({
 				return;
 			}
 		})
+		this.activeShell.on('close', err => {
+			// TODO: Handle random crashes. Why do they happen???
+			this.sendSocketNotification('USER_LEFT');
+		})
 
 	},
 	recognize: function() {
 		if (this.pythonAlreadyStarted) return;
 		this.python_start();
 		this.pythonAlreadyStarted = true;
+	},
+	stop: function() {
+		this.activeShell.end(() => {
+			console.log('ended');
+			this.pythonAlreadyStarted = false;
+		})
 	},
 	socketNotificationReceived: function(notification, payload) {
 		// This is where the helper receives it's notifications from the module. If the payload is start and pythonAlreadyStarted is false we will execute the python script.
@@ -61,6 +69,9 @@ module.exports = NodeHelper.create({
 				break;
 			case 'START_RECOGNITION':
 				this.recognize();
+				break;
+			case 'STOP_RECOGNITION':
+				this.stop();
 				break;
 		}
 	  }
