@@ -77,7 +77,6 @@ Module.register("MMM-facialrec", {
 		];
 	},
 	processPrediction: function(prediction) {
-		Log.log(prediction)
 		if (!this.FaceRecognitionTimeOutPassed) return false;
 		if (this.__previousPrediciton === prediction) return false; 
 		else this.__previousPrediciton = prediction;
