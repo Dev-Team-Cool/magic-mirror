@@ -1,5 +1,6 @@
 Module.register("MMM-YouTube-API", {
     defaults: {
+        thumbnailUrl: '',
         videoID: "tkgjOfJaCRQ",
         videoLink: null,
         playbackRate: "1",
@@ -35,33 +36,6 @@ Module.register("MMM-YouTube-API", {
         }
     },
 
-    // getDom: function () {
-    //     var wrapper = document.createElement('div');
-
-    //     var scriptContainer = document.createElement('script');
-    //     scriptContainer.innerHTML = "function onYouTubeIframeAPIReady() { player = new YT.Player('player', { height: '" + this.config.height + "', width: '" + this.config.width + "', playerVars: { 'controls': 0, 'showinfo': 0, 'rel': 0, 'iv_load_policy': 3 }, videoId: '" + this.config.videoID + "', events: { 'onReady': onPlayerReady, 'onStateChange': onPlayerStateChange } }); } function onPlayerReady(event) { player.setPlaybackRate(" + this.config.playbackRate + "); player.setVolume(" + this.config.volume + "); event.target.playVideo(); } function onPlayerStateChange(event) { if (event.data == YT.PlayerState.PLAYING && !done) { done = true; } if (event.data == YT.PlayerState.ENDED && " + this.config.loop + " == true){ player.playVideo(); } } function stopVideo() { player.stopVideo(); }";
-    //     wrapper.appendChild(scriptContainer);
-
-    //     var TempDiv = document.createElement('div');
-    //     wrapper.appendChild(TempDiv);
-    //     TempDiv.setAttribute("id", "player");
-
-    //     var tag = document.createElement('script');
-    //     wrapper.appendChild(tag);
-    //     tag.src = "https://www.youtube.com/iframe_api";
-
-    //     var firstScriptTag = document.getElementsByTagName('script')[0];
-    //     wrapper.appendChild(firstScriptTag);
-    //     firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-
-
-    //     var player;
-    //     var done = false;
-
-    //     return wrapper;
-    // }
-
-
     getDom: function () {
         const container = document.createElement("div");
         container.classList.add("yt-container");
@@ -92,7 +66,7 @@ Module.register("MMM-YouTube-API", {
             //Put in picture
             //const title = document.createElement("h5");
             const image = document.createElement("img");
-            image.src = '/home/florian/Documents/school/MagicMirror/modules/MMM-EyeCandy/pix/logoML6.png';
+            image.src = this.config.thumbnailUrl;
             image.style.height = this.config.imgHeight;
             image.classList.add("yt-image");
             this.imageRef = image;
