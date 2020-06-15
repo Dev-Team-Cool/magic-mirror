@@ -85,14 +85,12 @@ Module.register("MMM-facialrec", {
 		else if(this.user.name !== prediction)
 			this.userFlow(prediction);
 	},
-	findUser: function (userIdentiefer) {
-		// TODO: Fetch user data from the local API service
-		return {
-			name: userIdentiefer,
-			tokens: {
-				// tokens here
-			}
-		}
+	findUser: async function (userIdentiefer) {
+		try {
+			const response = await fetch(`http://localhost:5003/api/user/${userIdentiefer}`)
+			if (response.ok) return await response.json();
+			else return null;
+		} catch(err) {}
 	},
 	hideOtherModules: function () {
 		MM.getModules().exceptModule(this).enumerate(function(module) {
@@ -110,7 +108,7 @@ Module.register("MMM-facialrec", {
 	},
 	unknownFlow: function (prediction) {
 		// TODO: Handle user left situation for the GoogleAssistant module
-		this.user = { name: "Hello stranger!", hasBadge: false };
+		this.user = { firstName: "stranger!", hasBadge: false };
 
 		if (prediction === 'no user')
 			this.sendNotification('PAGE_SELECT', 0); //Logo screen
@@ -123,8 +121,10 @@ Module.register("MMM-facialrec", {
 		this.updateDom();
 		// this.hideOtherModules();
 	},
-	userFlow: function (user) {
-		const currentUser = this.findUser(user);
+	userFlow: async function (user) {
+		const currentUser = await this.findUser(user);
+		if (!currentUser.isActive) return false; // No recognition wanted by this user
+
 		this.user = { validUser: true, ...currentUser};
 		this.sendNotification('PAGE_SELECT', 'Personal'); // Goto the correct page
 		this.sendNotification('USER_FOUND', currentUser);
