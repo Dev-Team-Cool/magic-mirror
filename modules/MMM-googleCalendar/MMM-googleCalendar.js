@@ -10,29 +10,22 @@ Module.register("MMM-googleCalendar",{
     start: function(){
         //Flag for check if module is loaded
 		this.loaded = false;
-
-        this.getData()
     },
-
-    getData: function() {
+    getData: function(user) {
         // Loads the calendar events from the url specified in defaults.url, sends the loaded events to processData.
-        self = this;
-        var dataRequest = new XMLHttpRequest();
-        dataRequest.open("GET", self.defaults.url, true);
-        console.log(self.defaults.url)
-		dataRequest.onreadystatechange = function() {
-			console.log(this.readyState);
+        const dataRequest = new XMLHttpRequest();
+        dataRequest.open("GET", `http://localhost:5003/api/user/${user.userName}/calendar`, true);
+		dataRequest.onreadystatechange = () => {
 			if (this.readyState === 4) {
-				console.log(this.status);
-				if (this.status === 200) {
-					self.processData(JSON.parse(this.response));
-				} else if (this.status === 401) {
-					self.updateDom(self.config.animationSpeed);
-					Log.error(self.name, this.status);
-					retry = false;
-				} else {
-					Log.error(self.name, "Could not load data.");
-				}
+                switch(this.status){
+                    case 200:
+                        this.processData(JSON.parse(this.response));
+                        break;
+                    default:
+                        this.updateDom();
+                        Log.error(this.response);
+                        break;
+                }
 			}
         };
         
@@ -69,8 +62,9 @@ Module.register("MMM-googleCalendar",{
                 summary.innerHTML = element.summary;
                 body.appendChild(summary);
             });
+        } else {
+            wrapper.innerHTML = 'No events found.'
         }
-        console.log(wrapper);
         return wrapper;
     },
 
@@ -103,16 +97,23 @@ Module.register("MMM-googleCalendar",{
         return time
     },
 
-
     processData: function(data) {
-		var self = this;
 		this.dataRequest = data;
-		if (this.loaded === false) { self.updateDom(self.config.animationSpeed) ; }
-        this.loaded = true;
-        // console.log(this.dataRequest)
+		if (this.loaded === false)
+             self.updateDom(self.config.animationSpeed);
+    },
 
-		// the data if load
-		// send notification to helper
-		this.sendSocketNotification("test_module-NOTIFICATION_TEST", data);
-	}
+    notificationReceived: function(noti, payload) {
+        switch(noti) {
+            case 'USER_FOUND':
+                this.getData(payload);
+                break;
+            case 'USER_LEFT':
+                //remove previous calendars
+                this.dataRequest = null;
+                break;
+            default:
+                break;
+        }
+    }
 });
