@@ -20,13 +20,7 @@ Module.register("MMM-facialrec", {
 
 	start: function() {
 		// Variable that keeps track of the current user.
-		this.user = {
-			name: 'No user found',
-			validUser: false,
-			hasBadge: false
-		};
-		this.FaceRecognitionTimeOutPassed = true;
-		this.__previousPrediciton = 'no user';
+		this.setDefaultValues();
 		
 		// Init node_helper with the config
 		this.sendSocketNotification('INIT', this.config);
@@ -37,14 +31,22 @@ Module.register("MMM-facialrec", {
 		// setInterval(() => {
 		// }, this.config.updateInterval);
 	},
-
+	setDefaultValues: function() {
+		this.user = {
+			name: 'No user found',
+			validUser: false,
+			hasBadge: false
+		};
+		this.FaceRecognitionTimeOutPassed = true;
+		this.__previousPrediciton = 'no user';
+	},
 	// Generates the DOM elements to be displayed, currently it only shows the name of the current user.
 	getDom: function() {
 		// create element wrapper that will be displayed in the module.
 		const wrapper = document.createElement("div");
-		const { name, hasBadge, validUser } = this.user;
+		const { firstName, hasBadge, validUser } = this.user;
 		if (validUser) {
-			wrapper.innerHTML = `Hello ${name}!</br>`
+			wrapper.innerHTML = `Hello ${firstName}!</br>`
 			if (hasBadge)
 				wrapper.innerHTML += 'Nice badge my dude!'
 			else
@@ -84,6 +86,11 @@ Module.register("MMM-facialrec", {
 			this.unknownFlow(prediction);
 		else if(this.user.name !== prediction)
 			this.userFlow(prediction);
+	},
+	resetUser: function() {
+		this.setDefaultValues();
+		this.sendNotification('USER_LEFT');
+		this.updateDom();
 	},
 	findUser: async function (userIdentiefer) {
 		try {
@@ -130,13 +137,15 @@ Module.register("MMM-facialrec", {
 		this.sendNotification('USER_FOUND', currentUser);
 		this.updateDom();
 		this.setTimeoutFacialRecognition(); // Check user again after x amount of time
-		// this.showOtherModules();
 	},
 	// socketNotificationReceived from node helper
 	socketNotificationReceived: function (notification, payload) {
 		switch(notification)  {
 			case 'USER_FOUND':
 				this.processPrediction(payload)
+				break;
+			case 'USER_LEFT':
+				this.resetUser();
 				break;
 			case 'BADGE_FOUND':
 				this.user.hasBadge = true;
