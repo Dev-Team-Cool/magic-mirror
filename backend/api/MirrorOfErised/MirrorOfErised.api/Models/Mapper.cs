@@ -12,6 +12,7 @@ namespace MirrorOfErised.api.Models
                 UserName = user.UserName,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
+                IsActive = user.IsActive,
                 Settings = ConvertToUserSettingsDto(user.Settings),
                 CommuteInfo = ConvertToEntryDto(user.Commute),
                 Tokens = ConvertToAuthTokensDto(userTokens)
