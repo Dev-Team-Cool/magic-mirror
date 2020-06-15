@@ -30,7 +30,7 @@ namespace MirrorOfErised.api.Controllers
 
         // GET: api/user/{username}
         [HttpGet("{userName}")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        // [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> GetUser(string userName)
         {
            try
@@ -50,9 +50,11 @@ namespace MirrorOfErised.api.Controllers
            }
         }
         
+        //TODO: Enable the Authorization
+
         // GET: api/user/{username}/calendar
         [HttpGet("{userName}/calendar")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        // [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<ActionResult> GetCalender(string userName)
         {
             try
