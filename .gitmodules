@@ -1,0 +1,6 @@
+[submodule "modules/modules/MMM-GoogleAssistant"]
+	path = modules/modules/MMM-GoogleAssistant
+	url = https://github.com/Dev-Team-Cool/MMM-GoogleAssistant
+[submodule "modules/MMM-GoogleAssistant"]
+	path = modules/MMM-GoogleAssistant
+	url = https://github.com/Dev-Team-Cool/MMM-GoogleAssistant
