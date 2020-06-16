@@ -38,6 +38,18 @@ namespace MirrorOfErised.models.Data
                 job.Property(j => j.StartedAt)
                     .HasDefaultValueSql("CURRENT_TIMESTAMP");
             });
+
+            builder.Entity<UserSettings>(settings =>
+            {
+                settings.Property(s => s.Assistant)
+                    .HasDefaultValue(false);
+
+                settings.Property(s => s.Calendar)
+                    .HasDefaultValue(false);
+
+                settings.Property(s => s.Commuting)
+                    .HasDefaultValue(false);
+            });
         }
     }
 }
