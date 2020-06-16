@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -13,7 +14,16 @@ namespace MirrorOfErised.models.Repos
 
         public async Task<int> CountImagesForUser(string userId)
         {
-            return await _context.UserImages.Where(i => i.User.Id == userId ).CountAsync();
+            return await _context.UserImages
+                .Where(i => i.User.Id == userId )
+                .CountAsync();
+        }
+
+        public async Task<List<ImageEntry>> GetImagesForUserId(string userId)
+        {
+            return await _context.UserImages
+                .Where(i => i.User.Id == userId)
+                .ToListAsync();
         }
 
         public async Task<ImageEntry> AddImage(ImageEntry image)
