@@ -20,9 +20,18 @@ namespace MirrorOfErised.models.Repos
             return entry;
         }
 
+        public UserEntry Update(UserEntry entry)
+        {
+            _context.UserEntry.Update(entry);
+            return entry;
+        }
+
         public async Task<UserEntry> GetEntryForIdAsync(string Id)
         { 
-            return await _context.UserEntry.Where(e => e.User.Id == Id).FirstOrDefaultAsync();
+            return await _context.UserEntry
+                .Include(e => e.Address)
+                .Where(e => e.User.Id == Id)
+                .FirstOrDefaultAsync();
         }
     }
 }

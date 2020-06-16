@@ -1,25 +1,29 @@
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using MirrorOfErised.models;
+using MirrorOfErised.models.Repos;
+using MirrorOfErised.ViewModels;
 
 namespace MirrorOfErised.Areas.Identity.Pages.Account.Manage
 {
     public partial class IndexModel : PageModel
     {
-        private readonly UserManager<IdentityUser> _userManager;
-        private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly UserManager<User> _userManager;
+        private readonly SignInManager<User> _signInManager;
+        private readonly IUserEntryRepo _userEntryRepo;
+        private readonly IUserSettingsRepo _userSettingsRepo;
+        private readonly IUserRepo _userRepo;
 
-        public IndexModel(
-            UserManager<IdentityUser> userManager,
-            SignInManager<IdentityUser> signInManager)
+        public IndexModel(UserManager<User> userManager, SignInManager<User> signInManager,
+            IUserEntryRepo userEntryRepo, IUserSettingsRepo userSettingsRepo, IUserRepo userRepo)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _userEntryRepo = userEntryRepo;
+            _userSettingsRepo = userSettingsRepo;
+            _userRepo = userRepo;
         }
 
         public string Username { get; set; }
@@ -28,25 +32,23 @@ namespace MirrorOfErised.Areas.Identity.Pages.Account.Manage
         public string StatusMessage { get; set; }
 
         [BindProperty]
-        public InputModel Input { get; set; }
+        public UserEntryCreateViewModel Input { get; set; }
 
-        public class InputModel
+        private async Task LoadAsync(User user)
         {
-            [Phone]
-            [Display(Name = "Phone number")]
-            public string PhoneNumber { get; set; }
-        }
+            user = await _userRepo.GetUserByUsername(user.UserName);
 
-        private async Task LoadAsync(IdentityUser user)
-        {
-            var userName = await _userManager.GetUserNameAsync(user);
-            var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
+            Username = user.UserName;
 
-            Username = userName;
-
-            Input = new InputModel
+            Input = new UserEntryCreateViewModel()
             {
-                PhoneNumber = phoneNumber
+                Assistant = user.Settings.Assistant,
+                Calendar = user.Settings.Calendar,
+                City = user.Commute.Address.City,
+                Street = user.Commute.Address.Street,
+                ZipCode = user.Commute.Address.ZipCode,
+                Commute = user.Settings.Commuting,
+                CommutingWay = user.Commute.CommutingWay,
             };
         }
 
@@ -76,17 +78,21 @@ namespace MirrorOfErised.Areas.Identity.Pages.Account.Manage
                 return Page();
             }
 
-            var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
-            if (Input.PhoneNumber != phoneNumber)
-            {
-                var setPhoneResult = await _userManager.SetPhoneNumberAsync(user, Input.PhoneNumber);
-                if (!setPhoneResult.Succeeded)
-                {
-                    StatusMessage = "Unexpected error when trying to set phone number.";
-                    return RedirectToPage();
-                }
-            }
+            UserEntry entry = await _userEntryRepo.GetEntryForIdAsync(user.Id);
+            entry.CommutingWay = Input.CommutingWay;
+            entry.Address.Street = Input.Street;
+            entry.Address.City = Input.City;
+            entry.Address.ZipCode = Input.ZipCode;
 
+            UserSettings settings = await _userSettingsRepo.GetSettingsForUserIdAsync(user.Id);
+            settings.Assistant = Input.Assistant;
+            settings.Calendar = Input.Calendar;
+            settings.Commuting = Input.Commute;
+
+            _userEntryRepo.Update(entry);
+            _userSettingsRepo.Update(settings);
+            await _userSettingsRepo.SaveAsync(); //Flush changes
+            
             await _signInManager.RefreshSignInAsync(user);
             StatusMessage = "Your profile has been updated";
             return RedirectToPage();

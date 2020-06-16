@@ -1,4 +1,5 @@
 @page
+@using MirrorOfErised.models
 @model IndexModel
 @{
     ViewData["Title"] = "Profile";
@@ -16,9 +17,52 @@
                 <input asp-for="Username" class="form-control" disabled />
             </div>
             <div class="form-group">
-                <label asp-for="Input.PhoneNumber"></label>
-                <input asp-for="Input.PhoneNumber" class="form-control" />
-                <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
+                <label asp-for="Input.CommutingWay" class="control-label"></label>
+                <select asp-for="Input.CommutingWay" id="js-commuting" class="form-control"
+                        asp-items="Html.GetEnumSelectList<CommutingOption>()">
+                    <option>Select a commute type</option>
+                </select>
+                <span asp-validation-for="Input.CommutingWay" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <fieldset>
+                    <legend>Your address</legend>
+                    <small id="addressHelp" class="form-text text-muted">
+                        We use this to give you real-time updates of traffic when you're on your way home.
+                        You can leave this empty.
+                    </small>
+                    <label asp-for="Input.Street" class="control-label"></label>
+                    <input asp-for="Input.Street" class="form-control"/>
+                    <span asp-validation-for="Input.Street" class="text-danger"></span>
+
+                    <label asp-for="Input.City" class="control-label"></label>
+                    <input asp-for="Input.City" input="text" class="form-control"/>
+                    <span asp-validation-for="Input.City" class="text-danger"></span>
+                    
+                    <label asp-for="Input.ZipCode" class="control-label"></label>
+                    <input asp-for="Input.ZipCode" input="text" class="form-control"/>
+                    <span asp-validation-for="Input.ZipCode" class="text-danger"></span>
+                </fieldset>
+            </div>
+            <div class="form-group">
+                <fieldset>
+                    <legend>Integration options</legend>
+                    <div class="form-check">
+                        <label class="form-check-label">
+                            <input class="form-check-input" asp-for="Input.Assistant"/> @Html.DisplayNameFor(model => model.Input.Assistant)
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <label class="form-check-label">
+                            <input class="form-check-input" asp-for="Input.Calendar"/> @Html.DisplayNameFor(model => model.Input.Calendar)
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <label class="form-check-label">
+                            <input class="form-check-input" asp-for="Input.Commute"/> @Html.DisplayNameFor(model => model.Input.Commute)
+                        </label>
+                    </div>
+                </fieldset>
             </div>
             <button id="update-profile-button" type="submit" class="btn btn-primary">Save</button>
         </form>

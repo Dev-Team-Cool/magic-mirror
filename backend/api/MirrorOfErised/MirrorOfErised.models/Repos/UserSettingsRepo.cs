@@ -1,9 +1,6 @@
-﻿using Microsoft.AspNetCore.Identity;
-using MirrorOfErised.models.Data;
+﻿using MirrorOfErised.models.Data;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
@@ -36,20 +33,10 @@ namespace MirrorOfErised.models.Repos
             }
         }
 
-        public async Task<UserSettings> UpdateSetting(UserSettings settings)
+        public UserSettings Update(UserSettings settings)
         {
-            try
-            {
-                _context.UserSettings.Update(settings);
-                await _context.SaveChangesAsync();
-
-                return settings;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                return null;
-            }
+            _context.UserSettings.Update(settings);
+            return settings;
         }
     }
 }
