@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace MirrorOfErised.models.Repos
 {
-    public interface IUserRepo
+    public interface IUserRepo: IBaseRepo
     {
         Task<List<User>> GetAllUsers();
         Task<User> GetUserByUsername(string username);

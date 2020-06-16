@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MirrorOfErised.models.Repos
 {
-    public interface IAuthTokenRepo
+    public interface IAuthTokenRepo: IBaseRepo
     {
         Task<AuthToken> AddTokens(List<AuthenticationToken> tokens, List<Claim> claims);
         Task<IEnumerable<AuthToken>> GetTokensAsync();

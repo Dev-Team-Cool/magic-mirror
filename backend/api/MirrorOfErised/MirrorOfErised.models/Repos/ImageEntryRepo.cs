@@ -5,13 +5,10 @@ using MirrorOfErised.models.Data;
 
 namespace MirrorOfErised.models.Repos
 {
-    public class ImageEntryRepo: IImageEntryRepo
+    public class ImageEntryRepo: BaseRepo, IImageEntryRepo
     {
-        private readonly ApplicationDbContext _context;
-
-        public ImageEntryRepo(ApplicationDbContext context)
+        public ImageEntryRepo(ApplicationDbContext context): base(context)
         {
-            _context = context;
         }
 
         public async Task<int> CountImagesForUser(string userId)

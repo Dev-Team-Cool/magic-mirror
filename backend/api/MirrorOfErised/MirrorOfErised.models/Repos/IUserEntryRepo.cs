@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MirrorOfErised.models.Repos
 {
-    public interface IUserEntryRepo
+    public interface IUserEntryRepo: IBaseRepo
     {
         Task<UserEntry>AddEntry(UserEntry entry);
         Task<UserEntry> GetEntryForIdAsync(string username);

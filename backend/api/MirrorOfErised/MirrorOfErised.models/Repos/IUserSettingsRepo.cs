@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MirrorOfErised.models.Repos
 {
-    public interface IUserSettingsRepo
+    public interface IUserSettingsRepo: IBaseRepo
     {
         Task<UserSettings>AddSetting(UserSettings settings);
         Task<UserSettings>UpdateSetting(UserSettings settings);

@@ -5,13 +5,10 @@ using MirrorOfErised.models.Data;
 
 namespace MirrorOfErised.models.Repos
 {
-    public class TrainJobRepo: ITrainJobRepo
+    public class TrainJobRepo: BaseRepo, ITrainJobRepo
     {
-        private readonly ApplicationDbContext _context;
-
-        public TrainJobRepo(ApplicationDbContext context)
+        public TrainJobRepo(ApplicationDbContext context): base(context)
         {
-            _context = context;
         }
 
         public async Task<List<TrainJob>> GetAllJobs()

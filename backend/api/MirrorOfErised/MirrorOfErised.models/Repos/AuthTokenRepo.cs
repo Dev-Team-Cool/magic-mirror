@@ -11,14 +11,12 @@ using System.Threading.Tasks;
 
 namespace MirrorOfErised.models.Repos
 {
-    public class AuthTokenRepo : IAuthTokenRepo
+    public class AuthTokenRepo: BaseRepo, IAuthTokenRepo
     {
-        private readonly ApplicationDbContext _context;
         private readonly UserManager<User> _userManager;
 
-        public AuthTokenRepo(ApplicationDbContext context, UserManager<User> userManager)
+        public AuthTokenRepo(ApplicationDbContext context, UserManager<User> userManager): base(context)
         {
-            _context = context;
             _userManager = userManager;
         }
         
