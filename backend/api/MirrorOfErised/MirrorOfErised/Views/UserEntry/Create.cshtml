@@ -65,15 +65,21 @@
             <div class="form-group">
                 <fieldset>
                     <legend>Integration options</legend>
-                    <label asp-for="Assistant">
-                        <input type="checkbox" asp-for="Assistant">
-                    </label>
-                    <label asp-for="Calendar">
-                        <input type="checkbox" asp-for="Calendar">
-                    </label>
-                    <label asp-for="Commute">
-                        <input type="checkbox" asp-for="Commute">
-                    </label>
+                    <div class="form-check">
+                        <label class="form-check-label">
+                            <input class="form-check-input" asp-for="Assistant" /> @Html.DisplayNameFor(model => model.Assistant)
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <label class="form-check-label">
+                            <input class="form-check-input" asp-for="Calendar"/> @Html.DisplayNameFor(model => model.Calendar)
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <label class="form-check-label">
+                            <input class="form-check-input" asp-for="Commute"/> @Html.DisplayNameFor(model => model.Commute)
+                        </label>
+                    </div>
                 </fieldset>
             </div>
             <span class="text-danger">@ViewBag.error</span>
