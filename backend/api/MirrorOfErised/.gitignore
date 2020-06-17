@@ -273,3 +273,6 @@ __pycache__/
 # tools/
 
 # End of https://www.gitignore.io/api/aspnetcore
+
+# wwwroot processed images
+*/wwwroot/images/processed
