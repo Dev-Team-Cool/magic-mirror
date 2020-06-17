@@ -90,7 +90,7 @@ namespace MirrorOfErised.Controllers
                     {
                         UserEntry entry = new UserEntry()
                         {
-                            Address = new UserAddress() { Street = model.Street, City = model.ActualCity },
+                            Address = new UserAddress() { Street = model.Street, City = model.ActualCity, ZipCode = model.ZipCode },
                             CommutingWay = model.CommutingWay,
                             User = identityUser
                         };
