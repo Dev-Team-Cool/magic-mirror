@@ -21,7 +21,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Build ASP.NET webapp docker image for arm architecture
 
-    if: github.event.pull_request.merged == true && startsWith(github.event.pull_request.head.ref, 'release/webapp')
+    # if: github.event.pull_request.merged == true && startsWith(github.event.pull_request.head.ref, 'release/webapp')
 
     steps:
     - uses: actions/checkout@v2
