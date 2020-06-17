@@ -49,7 +49,7 @@ jobs:
         --cache-from "type=local,src=/tmp/.buildx-cache" \
         --cache-to "type=local,dest=/tmp/.buildx-cache" \
         --output "type=image,push=true" \
-        --platform linux/arm64 \
+        --platform linux/arm \
         --file MirrorOfErised/Dockerfile \
         --tag florianvd/mirror-of-erised:webapp-latest .
   
