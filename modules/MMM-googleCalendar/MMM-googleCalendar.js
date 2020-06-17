@@ -9,9 +9,16 @@ Module.register("MMM-googleCalendar",{
 
     start: function(){
         //Flag for check if module is loaded
-		this.loaded = false;
+        this.loaded = false;
+        this.error = "No events found"
     },
     getData: function(user) {
+        if (!user.settings.calendar) {
+            this.error = 'No access to calendar';
+            this.updateDom();
+            return false; 
+        } // User did not opt-in for calendar usage
+
         // Loads the calendar events from the url specified in defaults.url, sends the loaded events to processData.
         const dataRequest = new XMLHttpRequest();
         dataRequest.open("GET", `http://localhost:5003/api/user/${user.userName}/calendar`, true);
@@ -63,7 +70,7 @@ Module.register("MMM-googleCalendar",{
                 body.appendChild(summary);
             });
         } else {
-            wrapper.innerHTML = 'No events found.'
+            wrapper.innerHTML = this.error;
         }
         return wrapper;
     },

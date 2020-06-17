@@ -7,7 +7,7 @@ Module.register("MMM-NMBS-Connection", {
 		language: config.language,
 		results: 3,
 		showStationNames: false,
-		text: "Loading",
+		text: "",
 		to: "http://irail.be/stations/NMBS/008821196",
 		updateInterval: 10 * 60 * 1000, // 10 * 60 * 1000 = every 10 minutes
 		url: "https://api.irail.be/connections",
@@ -32,7 +32,23 @@ Module.register("MMM-NMBS-Connection", {
 		this.loaded = false;
 		this.forecast = this.config.text;
 		this.updateTimer = null;
+	},
+	startSchedualing: function(user) {
+		if (user.commuteInfo.commutingWay !== 'Train' || !user.settings.commute) {
+			this.hide();
+			return; // User doesn't commute with train or hasn't opt-in for real-time commute info
+		}
+
 		this.scheduleUpdate(this.config.initialLoadDelay);
+	},
+	notificationReceived: function(notification, payload) {
+		switch(notification) {
+			case 'USER_FOUND':
+				this.startSchedualing(payload);
+				break;
+			default:
+				break;
+		}
 	},
 	getDom: function () {
 		let wrapper = document.createElement("div");
@@ -46,12 +62,11 @@ Module.register("MMM-NMBS-Connection", {
 		return wrapper;
 	},
 	updateTemp: function () {
-		const self = this;
 		if (this.config.all) {
-			url = `https://api.irail.be/liveboard/?station=${self.config.from}&arrdep=departure&format=json&lang=${self.config.language}`;
+			url = `https://api.irail.be/liveboard/?station=${this.config.from}&arrdep=departure&format=json&lang=${this.config.language}`;
 		}
 		else {
-			url = `${self.config.url}/?to=${self.config.to}&from=${self.config.from}&timeSel=depart&format=json&lang=${self.config.language}`;
+			url = `${this.config.url}/?to=${this.config.to}&from=${this.config.from}&timeSel=depart&format=json&lang=${this.config.language}`;
 		}
 
 		fetch(url, {
@@ -62,10 +77,10 @@ Module.register("MMM-NMBS-Connection", {
 			.then(function (response) {
 				return response.json();
 			})
-			.then(function (json) {
-				self.scheduleUpdate((self.loaded) ? -1 : self.config.updateInterval);
+			.then((json) => {
+				this.scheduleUpdate((this.loaded) ? -1 : this.config.updateInterval);
 
-				return self.processConnections(json);
+				return this.processConnections(json);
 			})
 			.catch(error => Log.error("Fetch Error =\n", error));
 	},
@@ -310,10 +325,9 @@ Module.register("MMM-NMBS-Connection", {
 			nextLoad = delay;
 		}
 
-		const self = this;
 		clearTimeout(this.updateTimer);
-		this.updateTimer = setTimeout(function () {
-			self.updateTemp();
+		this.updateTimer = setTimeout(() => {
+			this.updateTemp();
 		}, nextLoad);
 	},
 
