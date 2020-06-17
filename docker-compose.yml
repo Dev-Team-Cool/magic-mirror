@@ -11,7 +11,7 @@ services:
       - "dbdata:/var/lib/postgresql/data"
   webapp:
     container_name: webapp
-    image: florianvd/mirror-of-erised:webapp-latest
+    image: florianvd/mirror-of-erised:webapp-arm32
     depends_on:
       - database
     ports:
@@ -22,7 +22,7 @@ services:
       CLIENTSECRET: ${CLIENT_SECRET}
   api:
     container_name: api
-    image: florianvd/mirror-of-erised:api-latest
+    image: florianvd/mirror-of-erised:api-arm32
     depends_on:
       - database
     ports:
