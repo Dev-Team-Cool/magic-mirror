@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 using System.Text.Json.Serialization;
 
-namespace MirrorOfErised.models.Repos
+namespace MirrorOfErised.models
 {
     public class UserSettings
     {
@@ -24,7 +24,7 @@ namespace MirrorOfErised.models.Repos
         [Key]
         [JsonIgnore]
         public string UserId { get; set; }
-
-        public IdentityUser identityUser { get; set; }
+        [JsonIgnore]
+        public User User { get; set; }
     }
 }

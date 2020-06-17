@@ -13,22 +13,21 @@ namespace MirrorOfErised.models.Repos
 {
     public class AuthTokenRepo : IAuthTokenRepo
     {
+        private readonly ApplicationDbContext _context;
+        private readonly UserManager<User> _userManager;
 
-        private readonly ApplicationDbContext context;
-        private readonly UserManager<IdentityUser> usermanager;
-
-        //wel dependend van SchoolDbContext ( niet DbContext)
-        public AuthTokenRepo(ApplicationDbContext Context, UserManager<IdentityUser> Usermanager)
+        public AuthTokenRepo(ApplicationDbContext context, UserManager<User> userManager)
         {
-            this.context = Context;
-            this.usermanager = Usermanager;
+            _context = context;
+            _userManager = userManager;
         }
-        public async Task<AuthToken> Addtokens(List<AuthenticationToken> Tokens, List<Claim> claims)
+        
+        public async Task<AuthToken> AddTokens(List<AuthenticationToken> tokens, List<Claim> claims)
         {
             try
             {
                 AuthToken selected = new AuthToken();
-                foreach (var token in Tokens)
+                foreach (var token in tokens)
                 {
                     if (token.Name == "refresh_token")
                     {
@@ -43,10 +42,9 @@ namespace MirrorOfErised.models.Repos
                     if (token.Name == "expires_at")
                     {
                         selected.ExpireDate = DateTime.Parse(token.Value.ToString());
-
                     }
-
                 }
+                
                 foreach (var claim in claims)
                 {
                     if (claim.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress")
@@ -54,29 +52,20 @@ namespace MirrorOfErised.models.Repos
                         selected.UserName = claim.Value;
                     }
                 }
-                IdentityUser user = await usermanager.FindByNameAsync(selected.UserName);
+                
+                User user = await _userManager.FindByNameAsync(selected.UserName);
                 selected.UserId = user.Id;
-
-                /*                if (SelectedWaardering.WaarderingId is null)
-                                {
-                                    SelectedWaardering.WaarderingId = Guid.NewGuid().ToString();
-                                }*/
 
                 try
                 {
-                    var result = await context.Tokens.AddAsync(selected);
+                    var result = await _context.Tokens.AddAsync(selected);
                 }
                 catch (Exception)
                 {
-                    var result = context.Tokens.Update(selected);
+                    var result = _context.Tokens.Update(selected);
                 }
-                 //cahngeTraking => iets wat in geheugen wordt bijgehouden
-                 //cahngeTraking => iets wat in geheugen wordt bijgehouden
-                await context.SaveChangesAsync();
-
                 
-
-                /*return result != OK*/
+                await _context.SaveChangesAsync();
                 return selected;
             }
             catch (Exception ex)
@@ -91,29 +80,19 @@ namespace MirrorOfErised.models.Repos
             throw new NotImplementedException();
         }
 
-        public async Task<AuthToken> GetTokensForNameAsync(string Username)
+        public async Task<AuthToken> GetTokensForNameAsync(string username)
         {
-
-            var User = context.Tokens.Where(e => e.UserName == Username).OrderByDescending(e => e.ExpireDate).Take(1);
-
-            return User.FirstOrDefault();
+            return await _context.Tokens
+                .Where(e => e.UserName == username)
+                .OrderByDescending(e => e.ExpireDate)
+                .Take(1)
+                .FirstOrDefaultAsync();
         }
-
-
+        
         public async Task UpdateTokenAsync(AuthToken authToken)
         {
-            try
-            {
-                var result = context.Tokens.Update(authToken);
-                await context.SaveChangesAsync();
-
-            }
-            catch (Exception ex)
-            {
-
-                throw ex;
-            }
-            
+            _context.Tokens.Update(authToken);
+            await _context.SaveChangesAsync();
         }
     }
 }

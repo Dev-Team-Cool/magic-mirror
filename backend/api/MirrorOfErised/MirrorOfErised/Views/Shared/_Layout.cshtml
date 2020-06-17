@@ -23,17 +23,10 @@
                         <li class="nav-item">
                             <a class="nav-link " asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link " asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                        @if (User.Identity.IsAuthenticated)
+                        @if (User.IsInRole("Admin"))
                         {
-                            <li class="nav-item">
-                                <a class="nav-link " asp-area="" asp-controller="UserEntry" asp-action="Create">Add User info</a>
-                            </li>
-
-                            <li class="nav-item">
-                                <a class="nav-link " asp-area="" asp-controller="UserEntry" asp-action="Settings">Settings</a>
+                            <li>
+                                <a class="nav-link" asp-controller="Admin" asp-action="Run" >Train</a>
                             </li>
                         }
                     </ul>
@@ -42,7 +35,7 @@
         </nav>
     </header>
     <div class="container">
-        <main role="main" class="pb-3">
+        <main role="main" class="pt-3">
             @RenderBody()
         </main>
     </div>

@@ -16,14 +16,11 @@ namespace MirrorOfErised
     {
         public static void Main(string[] args)
         {
-            /*CreateHostBuilder(args).Build().Run();*/
-
             if (System.Diagnostics.Debugger.IsAttached)
             {
                 System.Threading.Thread.Sleep(2000);
             }
-
-
+            
             var host = CreateHostBuilder(args).Build();
 
             using (var scope = host.Services.CreateScope())
@@ -33,11 +30,8 @@ namespace MirrorOfErised
                 try
                 {
                     var context = services.GetRequiredService<ApplicationDbContext>();
-/*                    context.Database.EnsureDeleted();//verwijder (-> niet doen in productie)
-*/
-                    context.Database.EnsureCreated(); //maakt db aan volgens modellen
-                    context.Database.Migrate();//voert migraties uit
-
+                    context.Database.EnsureCreated();
+                    context.Database.Migrate();
                 }
                 catch (Exception ex)
                 {

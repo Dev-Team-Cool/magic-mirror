@@ -5,29 +5,25 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace MirrorOfErised.models.Repos
 {
     public class UserEntryRepo : IUserEntryRepo
     {
+        private readonly ApplicationDbContext _context;
 
-        private readonly ApplicationDbContext context;
-        private readonly UserManager<IdentityUser> usermanager;
-
-        //wel dependend van SchoolDbContext ( niet DbContext)
-        public UserEntryRepo(ApplicationDbContext Context, UserManager<IdentityUser> Usermanager)
+        public UserEntryRepo(ApplicationDbContext context)
         {
-            this.context = Context;
-            this.usermanager = Usermanager;
+            this._context = context;
         }
         public async Task<UserEntry> AddEntry(UserEntry entry)
         {
             try
-            {
-                var result = context.UserEntry.Add(entry);  //cahngeTraking => iets wat in geheugen wordt bijgehouden
-                await context.SaveChangesAsync();
+            { 
+                await _context.UserEntry.AddAsync(entry);
+                await _context.SaveChangesAsync();
 
-                //return result != OK
                 return entry;
             }
             catch (Exception ex)
@@ -37,12 +33,9 @@ namespace MirrorOfErised.models.Repos
             }
         }
 
-        public UserEntry GetEntryForIdAsync(string Id)
-        {
-            UserEntry entry = context.UserEntry.Where(e => e.UserId == Id).FirstOrDefault();
-
-            return entry;
-            
+        public async Task<UserEntry> GetEntryForIdAsync(string Id)
+        { 
+            return await _context.UserEntry.Where(e => e.User.Id == Id).FirstOrDefaultAsync();
         }
     }
 }

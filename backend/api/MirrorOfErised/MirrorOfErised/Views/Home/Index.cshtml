@@ -2,14 +2,11 @@
     ViewData["Title"] = "Home Page";
 }
 
-
-
 @if (User.Identity.IsAuthenticated)
 {
     <div class="text-center">
         <h1 class="display-4">Welcome</h1>
-        <p>Now that u are logged in go to Add User info and start adding youre info</p>
-        <a class="nav-link text-dark" asp-area="" asp-controller="UserEntry" asp-action="Create">Add User info</a>
+        <p>You're all setup! Once the model has retrained, the mirror will be able to recognize you!</p>
     </div>
 }
 else
@@ -21,7 +18,7 @@ else
     </div>
 }
 
-@if (ViewBag.verified != null)
+@if (ViewBag.verified == false)
 {
     <p class="alert-danger">Your email is not verified </p>
 }

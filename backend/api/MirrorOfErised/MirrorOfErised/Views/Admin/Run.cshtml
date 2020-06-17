@@ -1,0 +1,80 @@
+@model MirrorOfErised.ViewModels.TrainJobsViewModel
+
+@{
+    ViewBag.Title = "Train";
+    Layout = "_Layout";
+}
+
+<div class="row align-items-center">
+    <div class="col">
+        <h2 class="m-0">Start a training job</h2>
+    </div>
+    <div class="col text-right">
+        <form asp-action="Run" method="post" id="job-form">
+            <input type="submit" value="Start job" class="btn btn-primary">
+        </form>
+    </div>
+</div>
+<div class="row my-5">
+    <div class="col">
+        <pre class="code-block m-0 d-none">
+            <p class="js-job-status d-none m-0 text-center">Running...</p>
+            <code class="js-job-output"></code>
+        </pre>
+    </div>
+</div>
+<div class="row">
+    <table class="table table-hover table-striped">
+        <thead>
+        <tr>
+            <th scope="col">Id</th>
+            <th scope="col">Successful</th>
+            <th scope="col">Started at</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var job in Model.Jobs)
+            {
+                <tr>
+                    <th scope="row">
+                        @Html.DisplayFor(j => job.Id)
+                    </th>
+                    <td>
+                        @Html.DisplayFor(j => job.IsSuccessful)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(j => job.StartedAt)
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@section Scripts
+{
+    <script>
+        $('#job-form').on('submit', function(e) {
+            e.preventDefault();
+            $('.code-block').removeClass('d-none');
+            $('.js-job-status').toggleClass('d-none');
+            $('.js-job-output').toggleClass('d-none');
+            const formData = new FormData(this);
+            const options = {
+                method: 'POST',
+                body: formData
+            }
+            
+            fetch('/Admin/Run', options)
+            .then(res => {
+                if (res.ok)
+                    return res.text();
+            })
+            .then(response => {
+                $('.js-job-status').toggleClass('d-none');
+                $('.js-job-output')
+                 .text(response).toggleClass('d-none');
+            })
+        })
+    </script>
+}
