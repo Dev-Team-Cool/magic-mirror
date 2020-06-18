@@ -34,10 +34,9 @@ namespace MirrorOfErised.models.Repos
             return await _context.Users.FindAsync(id);
         }
 
-        public async Task<User> Update(User user)
+        public User Update(User user)
         {
             _context.Users.Update(user);
-            await _context.SaveChangesAsync();
             return user;
         }
     }

@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -78,6 +79,8 @@ namespace MirrorOfErised.Areas.Identity.Pages.Account.Manage
                 return Page();
             }
 
+            user.IsActive = Input.AllowRecognition;
+
             UserEntry entry = await _userEntryRepo.GetEntryForIdAsync(user.Id);
             entry.CommutingWay = Input.CommutingWay;
             entry.Address.Street = Input.Street;
@@ -89,6 +92,7 @@ namespace MirrorOfErised.Areas.Identity.Pages.Account.Manage
             settings.Calendar = Input.Calendar;
             settings.Commuting = Input.Commute;
 
+            _userRepo.Update(user);
             _userEntryRepo.Update(entry);
             _userSettingsRepo.Update(settings);
             await _userSettingsRepo.SaveAsync(); //Flush changes

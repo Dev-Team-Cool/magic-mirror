@@ -27,6 +27,9 @@ namespace MirrorOfErised.ViewModels
 
         public string ActualCity => string.IsNullOrEmpty(TrainCity) ? City : TrainCity;
 
+        [Display(Name="The mirror is allowed to recognize me and process your details.")]
+        public bool AllowRecognition { get; set; } = true;
+
         [Display(Name="Use your Google Assistant")]
         public bool Assistant { get; set; }
         [Display(Name="Show commute info")]

@@ -107,7 +107,7 @@ namespace MirrorOfErised.Controllers
                         await _userEntryRepo.AddEntry(entry);
                         await _userSettingsRepo.AddSetting(settings);
                         identityUser.HasCompletedSignUp = true;
-                        await _userRepo.Update(identityUser);
+                        _userRepo.Update(identityUser);
                         await _userRepo.SaveAsync(); // Save all user related to DB
                     }
                     else
