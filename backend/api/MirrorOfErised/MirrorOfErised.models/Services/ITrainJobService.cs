@@ -6,6 +6,6 @@ namespace MirrorOfErised.models.Services
     public interface ITrainJobService
     {
         public Task<List<TrainJob>> GetAllJobs();
-        public Task<string> StartJob();
+        public Task<RunnerResult> StartJob();
     }
 }
