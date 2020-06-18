@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -9,6 +10,8 @@ using MirrorOfErised.ViewModels;
 
 namespace MirrorOfErised.Areas.Identity.Pages.Account.Manage
 {
+    [Authorize]
+    [ValidateAntiForgeryToken]
     public partial class IndexModel : PageModel
     {
         private readonly UserManager<User> _userManager;
