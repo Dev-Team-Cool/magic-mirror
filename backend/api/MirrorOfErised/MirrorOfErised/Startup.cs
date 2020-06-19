@@ -14,11 +14,9 @@ using Microsoft.AspNetCore.Authentication;
 using MirrorOfErised.models.Repos;
 using MirrorOfErised.models.Data;
 using System.Security.Claims;
-using Microsoft.AspNetCore.Identity.UI.Services;
 using MirrorOfErised.models;
 using MirrorOfErised.models.Middleware;
 using MirrorOfErised.models.Services;
-using MirrorOfErised.Services;
 
 namespace MirrorOfErised
 {
