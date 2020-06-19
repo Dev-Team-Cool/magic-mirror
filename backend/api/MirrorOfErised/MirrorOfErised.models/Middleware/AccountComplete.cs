@@ -1,4 +1,3 @@
-using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -20,10 +19,10 @@ namespace MirrorOfErised.models.Middleware
             var user = await userManager.GetUserAsync(context.User);
             if (user != null)
             {
-                if (context.Request.Path != "/Identity/Account/ConfirmEmail" && context.Request.Path != "/UserEntry/Create")
-                {
-                    if (!user.EmailConfirmed) context.Response.Redirect("/Identity/Account/ConfirmEmail");
-                    if (!user.HasCompletedSignUp) context.Response.Redirect("/UserEntry/Create");
+                if (context.Request.Path != "/UserEntry/Create" && !user.HasCompletedSignUp)
+                { 
+                    context.Response.Redirect("/UserEntry/Create");
+                    return;
                 }
             }
             await _next(context);
