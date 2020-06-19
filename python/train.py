@@ -1,10 +1,13 @@
 import os
 
-from facial_recognition.facial_recognition import FacialRecognition
-from facial_recognition.config import Config
+import requests
+
 import facial_recognition.utils as utils
+from facial_recognition.config import Config
+from facial_recognition.facial_recognition import FacialRecognition
 
 Config.load_config()
+BASE_URL = 'http://localhost:5003/api/image'
 
 train_data_path = Config.get('train_data_path')
 if train_data_path is None:
@@ -17,6 +20,20 @@ save_training_images = Config.get('save_training_data', False)
 if len(train_data.keys()) == 0:
     print('No new data found. Exiting...')
     exit(0)
+
+'''
+Filter images based on the IsValid state from the API
+User can remove train images in the webapp which causes the IsValid state to become false
+'''
+for key, images in train_data.items():
+    tmp = []
+    for idx, image in enumerate(images):
+        r = requests.get(f'{BASE_URL}/{image.split("/")[-1]}')
+        if r.status_code == 200:
+            if r.text == 'true':
+               tmp.append(image)
+    
+    train_data[key] = tmp # Update list with validated images from API
 
 facial_recognition = FacialRecognition().load()
 print('Training model...')
