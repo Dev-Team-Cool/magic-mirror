@@ -114,6 +114,7 @@ namespace MirrorOfErised.api
             });
 
 
+            services.AddHttpClient<GoogleService>();
             services.AddHttpClient<GoogleCalendarService>();
             services.AddScoped<IAuthTokenRepo, AuthTokenRepo>();
             services.AddScoped<IUserEntryRepo, UserEntryRepo>();
