@@ -1,7 +1,10 @@
+using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore.Internal;
 
 namespace MirrorOfErised.models.Middleware
 {
@@ -16,10 +19,11 @@ namespace MirrorOfErised.models.Middleware
 
         public async Task InvokeAsync(HttpContext context, UserManager<User> userManager)
         {
+            string[] acceptedPaths = new string[2] {"/UserEntry/Create", "/UserEntry/Upload"};
             var user = await userManager.GetUserAsync(context.User);
             if (user != null)
             {
-                if (context.Request.Path != "/UserEntry/Create" && !user.HasCompletedSignUp)
+                if (!user.HasCompletedSignUp && Array.IndexOf(acceptedPaths, context.Request.Path) > -1)
                 { 
                     context.Response.Redirect("/UserEntry/Create");
                     return;
