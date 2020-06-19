@@ -122,10 +122,14 @@ namespace MirrorOfErised.Areas.Identity.Pages.Account
 
             if (ModelState.IsValid)
             {
+                Claim firstName = info.Principal.FindFirst("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname");
+                Claim lastName = info.Principal.FindFirst("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname");
                 var user = new User
                 {
-                    UserName = Input.Email, Email = Input.Email,
-                    FirstName = info.Principal.Identity.Name
+                    UserName = Input.Email, 
+                    Email = Input.Email,
+                    FirstName = firstName.Value,
+                    LastName = lastName.Value
                 };
 
                 var result = await _userManager.CreateAsync(user);
@@ -136,38 +140,7 @@ namespace MirrorOfErised.Areas.Identity.Pages.Account
                     {
                         _logger.LogInformation("User created an account using {Name} provider.", info.LoginProvider);
 
-                        var userId = await _userManager.GetUserIdAsync(user);
-                        var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                        code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-                        var callbackUrl = Url.Page(
-                            "/Account/ConfirmEmail",
-                            pageHandler: null,
-                            values: new { area = "Identity", userId = userId, code = code },
-                            protocol: Request.Scheme);
-
-                        await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
-                            $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
-
-                        /*// If account confirmation is required, we need to show the link if we don't have a real email sender
-                        if (_userManager.Options.SignIn.RequireConfirmedAccount)
-                        {
-                            return RedirectToPage("./RegisterConfirmation", new { Email = Input.Email });
-                        }
-
-                        await _signInManager.SignInAsync(user, isPersistent: false, info.LoginProvider);
-
-                        return LocalRedirect(returnUrl);*/
-
-                        // If account confirmation is required, we need to show the link if we don't have a real email sender
-                        if (_userManager.Options.SignIn.RequireConfirmedAccount)
-                        {
-                            return RedirectToPage("./RegisterConfirmation", new { Email = Input.Email });
-                        }
-
-                        //await _signInManager.SignInAsync(user, isPersistent: false, info.LoginProvider);
-
-                        //return LocalRedirect(returnUrl);
-                        return RedirectToPage("./RegisterConfirmation", new { Email = Input.Email });
+                        return RedirectToPage("./Login", new { Register = true });
                     }
                 }
                 foreach (var error in result.Errors)
