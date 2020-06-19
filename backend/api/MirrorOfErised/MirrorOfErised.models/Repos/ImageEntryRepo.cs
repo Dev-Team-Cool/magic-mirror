@@ -36,6 +36,13 @@ namespace MirrorOfErised.models.Repos
                 .FirstOrDefaultAsync();
         }
 
+        public async Task<ImageEntry> GetImageByName(string name)
+        {
+            return await _context.UserImages
+                .Where(i => i.ImagePath == name)
+                .FirstOrDefaultAsync();
+        }
+
         public async Task<List<ImageEntry>> GetImagesForUserId(string userId)
         {
             return await _context.UserImages

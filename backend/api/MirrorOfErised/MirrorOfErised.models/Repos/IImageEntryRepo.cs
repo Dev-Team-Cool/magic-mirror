@@ -9,6 +9,7 @@ namespace MirrorOfErised.models.Repos
         Task<int> CountImagesForUser(string userId);
         Task<bool> NeedsTraining();
         Task<ImageEntry> GetImageById(int id);
+        Task<ImageEntry> GetImageByName(string name);
         Task<List<ImageEntry>> GetImagesForUserId(string userId);
         Task<List<ImageEntry>> GetAllUnprocessedImages(DateTime? before = null);
         Task<ImageEntry> AddImage(ImageEntry image);

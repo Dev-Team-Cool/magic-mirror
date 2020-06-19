@@ -1,6 +1,4 @@
-﻿using System;
-using System.Diagnostics;
-using System.Threading.Tasks;
+﻿using System.Diagnostics;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using MirrorOfErised.models;
@@ -17,21 +15,8 @@ namespace MirrorOfErised.Controllers
             _userManager = userManager;
         }
 
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            try
-            {
-                User identityUser = await _userManager.GetUserAsync(User);
-                if (identityUser.EmailConfirmed == false)
-                {
-                    ViewBag.verified = false;
-                }
-            }
-            catch (Exception)
-            {
-                return View();
-            }
-
             return View();
         }
 
