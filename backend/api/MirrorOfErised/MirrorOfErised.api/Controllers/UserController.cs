@@ -48,6 +48,7 @@ namespace MirrorOfErised.api.Controllers
                    token = await _googleService.RequestNewAccessToken(token);
                
                var user = await _userRepo.GetUserByUsername(userName);
+               if (!user.HasCompletedSignUp) return NotFound("User not yet active.");
                return Ok(Mapper.ConvertToUserDto(ref user, ref token));
            }
            catch (Exception ex)
