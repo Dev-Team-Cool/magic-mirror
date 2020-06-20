@@ -26,7 +26,7 @@ namespace MirrorOfErised.api.Controllers
             if (image == null)
                 return NotFound();
 
-            if (image.IsValid)
+            if (image.IsValid && !image.IsProcessed)
                 return Ok(true); // Image can be used for training
             
             return Ok(false);
