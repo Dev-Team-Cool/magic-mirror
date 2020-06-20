@@ -95,14 +95,17 @@ namespace MirrorOfErised.Controllers
                     return RedirectToAction("Run");
                 
                 RunnerResult result = await _trainJobService.StartJob();
-                List<ImageEntry> images = await _imageEntryRepo.GetAllUnprocessedImages(result.TrainJob.StartedAt);
-                foreach (var image in images)
+                if (!result.Failed)
                 {
-                    image.IsProcessed = true;
-                    _imageEntryRepo.Update(image);
+                    List<ImageEntry> images = await _imageEntryRepo.GetAllUnprocessedImages(result.TrainJob.StartedAt);
+                    foreach (var image in images)
+                    {
+                        image.IsProcessed = true;
+                        _imageEntryRepo.Update(image);
+                    }
+                    await _imageEntryRepo.SaveAsync();
                 }
-
-                await _imageEntryRepo.SaveAsync();
+                
                 return Ok(string.IsNullOrEmpty(result.Errors) ? result.Output : result.Errors);
             }
             catch (Exception e)
