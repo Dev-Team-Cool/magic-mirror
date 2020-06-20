@@ -23,7 +23,7 @@ namespace MirrorOfErised.models.Middleware
             var user = await userManager.GetUserAsync(context.User);
             if (user != null)
             {
-                if (!user.HasCompletedSignUp && Array.IndexOf(acceptedPaths, context.Request.Path) > -1)
+                if (!user.HasCompletedSignUp && Array.IndexOf(acceptedPaths, context.Request.Path) != -1)
                 { 
                     context.Response.Redirect("/UserEntry/Create");
                     return;
