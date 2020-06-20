@@ -91,6 +91,9 @@ Module.register("MMM-facialrec", {
 		this.sendNotification('USER_LEFT');
 		this.updateDom();
 	},
+	recognitionStopped: function() {
+		this.resetUser();
+	},
 	findUser: async function (userIdentiefer) {
 		try {
 			const response = await fetch(`http://localhost:5003/api/user/${userIdentiefer}`)
@@ -128,7 +131,6 @@ Module.register("MMM-facialrec", {
 		// this.hideOtherModules();
 	},
 	userFlow: async function (user) {
-		Log.log('user found');
 		const currentUser = await this.findUser(user);
 		if (!currentUser.isActive) return false; // No recognition wanted by this user
 
@@ -146,6 +148,9 @@ Module.register("MMM-facialrec", {
 				break;
 			case 'USER_LEFT':
 				this.resetUser();
+				break;
+			case 'RECOGNITION_STOPPED':
+				this.recognitionStopped();
 				break;
 			case 'BADGE_FOUND':
 				this.user.hasBadge = true;
