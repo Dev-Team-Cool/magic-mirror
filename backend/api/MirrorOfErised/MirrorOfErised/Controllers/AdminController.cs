@@ -91,6 +91,9 @@ namespace MirrorOfErised.Controllers
         {
             try
             {
+                if (!await _imageEntryRepo.NeedsTraining())
+                    return RedirectToAction("Run");
+                
                 RunnerResult result = await _trainJobService.StartJob();
                 List<ImageEntry> images = await _imageEntryRepo.GetAllUnprocessedImages(result.TrainJob.StartedAt);
                 foreach (var image in images)

@@ -30,6 +30,7 @@ namespace MirrorOfErised.models.Data
                     Id = Guid.NewGuid().ToString(),
                     UserName = "mirror@mirror.ow",
                     Email = "mirror@mirror.ow",
+                    FirstName = "Admin",
                     EmailConfirmed = true,
                     HasCompletedSignUp = true
                 };
