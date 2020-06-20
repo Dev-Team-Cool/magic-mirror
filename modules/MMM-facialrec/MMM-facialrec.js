@@ -128,6 +128,7 @@ Module.register("MMM-facialrec", {
 		// this.hideOtherModules();
 	},
 	userFlow: async function (user) {
+		Log.log('user found');
 		const currentUser = await this.findUser(user);
 		if (!currentUser.isActive) return false; // No recognition wanted by this user
 

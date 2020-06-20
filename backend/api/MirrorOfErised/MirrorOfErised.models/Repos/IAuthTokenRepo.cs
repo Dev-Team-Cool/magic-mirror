@@ -10,7 +10,7 @@ namespace MirrorOfErised.models.Repos
 {
     public interface IAuthTokenRepo: IBaseRepo
     {
-        Task<AuthToken> AddTokens(List<AuthenticationToken> tokens, List<Claim> claims);
+        Task<AuthToken> AddTokens(IEnumerable<AuthenticationToken> tokens, IEnumerable<Claim> claims);
         Task<IEnumerable<AuthToken>> GetTokensAsync();
         Task<AuthToken> GetTokensForNameAsync(string name);
         Task UpdateTokenAsync(AuthToken authToken);

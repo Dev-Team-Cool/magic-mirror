@@ -84,11 +84,6 @@ namespace MirrorOfErised
 
                     return Task.CompletedTask;
                 };
-
-                options.Events.OnTicketReceived = async ctx =>
-                {
-                    await ctx.HttpContext.RequestServices.GetService<IAuthTokenRepo>().AddTokens(tokens, claims);
-                };
             });
 
 

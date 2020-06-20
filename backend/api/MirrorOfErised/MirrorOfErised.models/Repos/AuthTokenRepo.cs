@@ -19,7 +19,7 @@ namespace MirrorOfErised.models.Repos
             _userManager = userManager;
         }
         
-        public async Task<AuthToken> AddTokens(List<AuthenticationToken> tokens, List<Claim> claims)
+        public async Task<AuthToken> AddTokens(IEnumerable<AuthenticationToken> tokens, IEnumerable<Claim> claims)
         {
             try
             {
@@ -39,7 +39,8 @@ namespace MirrorOfErised.models.Repos
                 if (!existingTokenFound)
                 {
                     User user = await _userManager.FindByNameAsync(userName);
-                    newOrExistingToken = new AuthToken {UserId = user.Id};
+                    if (user == null) return null; // No user is found, no token can be made
+                    newOrExistingToken = new AuthToken {UserId = user.Id, UserName = userName};
                 }
                 
                 foreach (var token in tokens)
