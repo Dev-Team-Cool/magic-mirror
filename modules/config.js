@@ -42,8 +42,8 @@ var config = {
 				"defaultPage": "Detection",
 				"displayTitle": false,
 				"selectPageNotif": [],
-				"incrementPageNotif": [],
-				"decrementPageNotif": []
+				"incrementPageNotif": ["PAGE_UP"],
+				"decrementPageNotif": ["PAGE_DOWN"]
 			}
 		},
 		{
