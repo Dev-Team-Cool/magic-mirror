@@ -12,6 +12,9 @@ cp -r ~/magic-mirror/modules/MMM-NMBS-Connection modules
 cp -r ~/magic-mirror/modules/MMM-YouTube-API modules
 cp -r ~/magic-mirror/modules/MMM-smilerec modules
 cp -r ~/magic-mirror/modules/MMM-Page-Selector
+cp -r ~/magic-mirror/python modules/MMM-facialrec
+rm -rf modules/MMM-facialrec/python/smilerec
+cp -r ~/magic-mirror/python/smilerec modules/MMM-smilerec
 npm install ~/MagicMirror/modules/MMM-smilerec
 npm install ~/MagicMirror/modules/MMM-facialrec
 pip3 install gdown
