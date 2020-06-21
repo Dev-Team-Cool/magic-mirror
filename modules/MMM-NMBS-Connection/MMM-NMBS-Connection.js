@@ -38,7 +38,7 @@ Module.register("MMM-NMBS-Connection", {
 			return; // User doesn't commute with train or hasn't opt-in for real-time commute info
 		}
 
-		if (user.commuteInfo && user.commuteInfo.city)
+		if (user.commuteInfo && user.commuteInfo.address)
 			this.config.to = user.commuteInfo.address.city;
 
 		this.scheduleUpdate(this.config.initialLoadDelay);
