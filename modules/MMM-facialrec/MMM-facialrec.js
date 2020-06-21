@@ -63,6 +63,9 @@ Module.register("MMM-facialrec", {
 				module.hide(1000);
 			});
 		}
+		if (notification === "START_RECOGNITION"){
+			this.sendSocketNotification("START_RECOGNITION", true);
+		}
 	},
 
 	// If additional scripts need to be loaded they go here.
@@ -93,6 +96,7 @@ Module.register("MMM-facialrec", {
 	},
 	recognitionStopped: function() {
 		this.resetUser();
+		this.sendNotification("FACIALREC_STOPPED")
 	},
 	findUser: async function (userIdentiefer) {
 		try {
@@ -151,6 +155,8 @@ Module.register("MMM-facialrec", {
 				break;
 			case 'RECOGNITION_STOPPED':
 				this.recognitionStopped();
+				break;
+			case 'RECOGNITION_STARTED':
 				break;
 			case 'BADGE_FOUND':
 				this.user.hasBadge = true;

@@ -52,12 +52,11 @@ Module.register('MMM-smilerec', {
   },
 
   start: function() {
+    this.facialrecRunning = true;
     this.message = "detecting your smile...";
     this.smiling = undefined;
     this.console = {};
     this.url = ""
-    this.sendSocketNotification('STOP_RECOGNITION', 'Stop recognition so smile detection can access the camera')
-    this.sendSocketNotification('start python', this.config);
     Log.info('Starting module: ' + this.name);
     this.updateDom();
   },
@@ -88,9 +87,15 @@ Module.register('MMM-smilerec', {
     return wrapper;
   },
 
+  notificationReveived: function(notification, payload, sender){
+    if(notification === "FACIALREC_STOPPED"){
+      this.sendSocketNotification('start python', this.config);
+    }
+  },
+
   suspend: function(){
     this.sendSocketNotification('stop python', 'stop python to give access to facialrec')
-    this.sendSocketNotification('START_RECOGNITION', 'python stopped @ smile detection')
+    this.sendNotification('START_RECOGNITION', 'python stopped @ smile detection')
   }
 
 });
