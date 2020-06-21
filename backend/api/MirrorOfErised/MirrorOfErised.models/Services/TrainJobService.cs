@@ -20,16 +20,16 @@ namespace MirrorOfErised.models.Services
             return await _trainJobRepo.GetAllJobs();
         }
 
-        public async Task<string> StartJob()
+        public async Task<RunnerResult> StartJob()
         {
             TrainJob startedJob = await _trainJobRepo.AddJob(new TrainJob());
-            RunnerResult result = await _pythonRunner.StartTraining();
+            RunnerResult result = await _pythonRunner.StartTraining(startedJob);
             if (!result.Failed)
             {
                 startedJob.IsSuccessful = true;
             }
             await _trainJobRepo.Update(startedJob);
-            return string.IsNullOrEmpty(result.Errors) ? result.Output : result.Errors;
+            return result;
         }
     }
 }

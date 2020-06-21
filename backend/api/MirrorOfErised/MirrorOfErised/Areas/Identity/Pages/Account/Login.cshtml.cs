@@ -40,6 +40,9 @@ namespace MirrorOfErised.Areas.Identity.Pages.Account
 
         [TempData]
         public string ErrorMessage { get; set; }
+        
+        [TempData]
+        public string StatusMessage { get; set; }
 
         public class InputModel
         {
@@ -55,13 +58,17 @@ namespace MirrorOfErised.Areas.Identity.Pages.Account
             public bool RememberMe { get; set; }
         }
 
-        public async Task OnGetAsync(string returnUrl = null)
+        public async Task OnGetAsync(bool register = false, string returnUrl = null)
         {
             if (!string.IsNullOrEmpty(ErrorMessage))
             {
                 ModelState.AddModelError(string.Empty, ErrorMessage);
             }
-
+            if (register)
+            {
+                StatusMessage = "You can now login with your Google account.";
+            }
+            
             returnUrl = returnUrl ?? Url.Content("~/");
 
             // Clear the existing external cookie to ensure a clean login process

@@ -6,13 +6,10 @@ using MirrorOfErised.models.Data;
 
 namespace MirrorOfErised.models.Repos
 {
-    public class UserRepo: IUserRepo
+    public class UserRepo: BaseRepo, IUserRepo
     {
-        private readonly ApplicationDbContext _context;
-
-        public UserRepo(ApplicationDbContext context)
+        public UserRepo(ApplicationDbContext context): base(context)
         {
-            _context = context;
         }
 
         public async Task<List<User>> GetAllUsers()
@@ -37,10 +34,9 @@ namespace MirrorOfErised.models.Repos
             return await _context.Users.FindAsync(id);
         }
 
-        public async Task<User> Update(User user)
+        public User Update(User user)
         {
             _context.Users.Update(user);
-            await _context.SaveChangesAsync();
             return user;
         }
     }

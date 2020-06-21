@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -93,21 +90,32 @@ namespace MirrorOfErised.Controllers
                     {
                         UserEntry entry = new UserEntry()
                         {
-                            Address = model.Address,
+                            Address = new UserAddress() { Street = model.Street, City = model.ActualCity, ZipCode = model.ZipCode },
                             CommutingWay = model.CommutingWay,
                             User = identityUser
                         };
+
+                        UserSettings settings = new UserSettings()
+                        {
+                            Assistant = model.Assistant,
+                            Calendar = model.Calendar,
+                            Commuting = model.Commute,
+                            User = identityUser,
+                            UserId = identityUser.Id
+                        };
                         
                         await _userEntryRepo.AddEntry(entry);
+                        await _userSettingsRepo.AddSetting(settings);
                         identityUser.HasCompletedSignUp = true;
-                        await _userRepo.Update(identityUser);
+                        _userRepo.Update(identityUser);
+                        await _userRepo.SaveAsync(); // Save all user related to DB
                     }
                     else
                     {
                         int imageShortage = 3 - linkedImagesCount;
                         ViewBag.imageError =
                             $"We need at least 3 images of you. Upload {imageShortage} extra {(imageShortage == 1 ? "image" : "images")}.";
-                        return View(model);
+                        return View();
                     }
                    
                     return Redirect("/Home/index");
@@ -133,6 +141,7 @@ namespace MirrorOfErised.Controllers
             return View(setting);
         }
 
+        /*
         // POST: UserEntry/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -146,7 +155,7 @@ namespace MirrorOfErised.Controllers
                     settings.UserId = user.Id;
                     settings.User = user;
 
-                    await _userSettingsRepo.UpdateSetting(settings);
+                    _userSettingsRepo.Update(settings);
                     return Redirect("/Home/index");
                 }
                 catch (Exception e)
@@ -156,6 +165,6 @@ namespace MirrorOfErised.Controllers
                 }
             } 
             return View();
-        }
+        }*/
     }
 }

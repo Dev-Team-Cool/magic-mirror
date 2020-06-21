@@ -18,13 +18,15 @@ namespace MirrorOfErised.api.Controllers
     {
         private readonly IAuthTokenRepo _authTokenRepo;
         private readonly GoogleCalendarService _googleCalendarApi;
+        private readonly GoogleService _googleService;
         private readonly IUserRepo _userRepo;
         
         public UserController(IAuthTokenRepo authTokenRepo, IUserRepo userRepo,
-            GoogleCalendarService googleCalendarApi)
+            GoogleCalendarService googleCalendarApi, GoogleService googleService)
         {
             _authTokenRepo = authTokenRepo;
             _googleCalendarApi = googleCalendarApi;
+            _googleService = googleService;
             _userRepo = userRepo;
         }
 
@@ -37,11 +39,17 @@ namespace MirrorOfErised.api.Controllers
            {
                if (string.IsNullOrEmpty(userName))
                    return BadRequest("Username is required");
-               var userTokens = await _authTokenRepo.GetTokensForNameAsync(userName);
-               if (userTokens == null)
+               
+               var token = await _authTokenRepo.GetTokensForNameAsync(userName);
+               if (token == null)
                    return NotFound("User not found");
+
+               if (token.ExpireDate < DateTime.Now) // Token is invalid now, request a new one
+                   token = await _googleService.RequestNewAccessToken(token);
+               
                var user = await _userRepo.GetUserByUsername(userName);
-               return Ok(Mapper.ConvertToUserDto(ref user, ref userTokens));
+               if (!user.HasCompletedSignUp) return NotFound("User not yet active.");
+               return Ok(Mapper.ConvertToUserDto(ref user, ref token));
            }
            catch (Exception ex)
            {
@@ -66,19 +74,12 @@ namespace MirrorOfErised.api.Controllers
                 if (authToken == null)
                     return NotFound("User not found");
 
-                // Get Key
-                var filesResponse = await _googleCalendarApi.ListFiles(authToken.Token, authToken.RefreshToken, async token =>
-                {
-                    AuthToken @event = await _authTokenRepo.GetTokensForNameAsync(userName);
-                    dynamic response = JsonConvert.DeserializeObject(token);
-                    @event.Token = response.access_token;
-                    @event.ExpireDate = DateTime.Now.AddSeconds((int)response.expires_in);
-
-                    await _authTokenRepo.UpdateTokenAsync(@event);
-
-                });
+                // Get calender events
+                string calendarEventsJson = await _googleCalendarApi.GetCalendarEvents(authToken);
+                if (string.IsNullOrEmpty(calendarEventsJson))
+                    return StatusCode(500, "Failed to get events.");
                 
-                return Ok(filesResponse);
+                return Ok(calendarEventsJson);
             }
             catch (Exception ex)
             {

@@ -6,67 +6,68 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace MirrorOfErised.models.Repos
 {
-    public class AuthTokenRepo : IAuthTokenRepo
+    public class AuthTokenRepo: BaseRepo, IAuthTokenRepo
     {
-        private readonly ApplicationDbContext _context;
         private readonly UserManager<User> _userManager;
 
-        public AuthTokenRepo(ApplicationDbContext context, UserManager<User> userManager)
+        public AuthTokenRepo(ApplicationDbContext context, UserManager<User> userManager): base(context)
         {
-            _context = context;
             _userManager = userManager;
         }
         
-        public async Task<AuthToken> AddTokens(List<AuthenticationToken> tokens, List<Claim> claims)
+        public async Task<AuthToken> AddTokens(IEnumerable<AuthenticationToken> tokens, IEnumerable<Claim> claims)
         {
             try
             {
-                AuthToken selected = new AuthToken();
-                foreach (var token in tokens)
-                {
-                    if (token.Name == "refresh_token")
-                    {
-                        selected.RefreshToken = token.Value;
-                        
-                    }
-                    if (token.Name == "access_token")
-                    {
-                        selected.Token = token.Value;
+                string userName = "";
 
-                    }
-                    if (token.Name == "expires_at")
-                    {
-                        selected.ExpireDate = DateTime.Parse(token.Value.ToString());
-                    }
-                }
-                
                 foreach (var claim in claims)
                 {
                     if (claim.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress")
                     {
-                        selected.UserName = claim.Value;
+                        userName = claim.Value;
                     }
                 }
-                
-                User user = await _userManager.FindByNameAsync(selected.UserName);
-                selected.UserId = user.Id;
 
-                try
+                var newOrExistingToken = await GetTokensForNameAsync(userName);
+                bool existingTokenFound = newOrExistingToken != null;
+
+                if (!existingTokenFound)
                 {
-                    var result = await _context.Tokens.AddAsync(selected);
+                    User user = await _userManager.FindByNameAsync(userName);
+                    if (user == null) return null; // No user is found, no token can be made
+                    newOrExistingToken = new AuthToken {UserId = user.Id, UserName = userName};
                 }
-                catch (Exception)
+                
+                foreach (var token in tokens)
                 {
-                    var result = _context.Tokens.Update(selected);
+                    if (token.Name == "refresh_token")
+                    {
+                        newOrExistingToken.RefreshToken = token.Value;
+                        
+                    }
+                    if (token.Name == "access_token")
+                    {
+                        newOrExistingToken.Token = token.Value;
+
+                    }
+                    if (token.Name == "expires_at")
+                    {
+                        newOrExistingToken.ExpireDate = DateTime.Parse(token.Value.ToString());
+                    }
                 }
+
+                if (existingTokenFound)
+                    _context.Tokens.Update(newOrExistingToken);
+                else
+                    await _context.Tokens.AddAsync(newOrExistingToken);
                 
                 await _context.SaveChangesAsync();
-                return selected;
+                return newOrExistingToken;
             }
             catch (Exception ex)
             {

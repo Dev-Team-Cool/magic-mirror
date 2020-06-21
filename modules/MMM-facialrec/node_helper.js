@@ -44,9 +44,12 @@ module.exports = NodeHelper.create({
 				return;
 			}
 		})
+
 		this.activeShell.on('close', err => {
+			console.log('[FACEREC]	application stopped', err);
 			// TODO: Handle random crashes. Why do they happen???
-			this.sendSocketNotification('USER_LEFT');
+			//FIXME: Badge detection causes this. Don't know why
+			this.sendSocketNotification('RECOGNITION_STOPPED');
 		})
 
 	},
@@ -54,6 +57,7 @@ module.exports = NodeHelper.create({
 		if (this.pythonAlreadyStarted) return;
 		this.python_start();
 		this.pythonAlreadyStarted = true;
+		this.sendSocketNotification('RECOGNITION_STARTED')
 	},
 	stop: function() {
 		this.activeShell.end(() => {

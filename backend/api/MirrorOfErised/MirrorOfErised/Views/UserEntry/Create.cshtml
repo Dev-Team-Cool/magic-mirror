@@ -18,7 +18,7 @@
             
         </form>
         <span class="text-danger">@ViewBag.imageError</span>
-        <form enctype="multipart/form-data" asp-action="Create">
+        <form asp-action="Create" method="post">
             <div>
                 <span asp-validation-summary="All" class="text-danger"></span>
             </div>
@@ -29,13 +29,17 @@
                         We use this to give you real-time updates of traffic when you're on your way home.
                         You can leave this empty.
                     </small>
-                    <label asp-for="Address.Street" class="control-label"></label>
-                    <input asp-for="Address.Street" class="form-control"/>
-                    <span asp-validation-for="Address.Street" class="text-danger"></span>
+                    <label asp-for="Street" class="control-label"></label>
+                    <input asp-for="Street" class="form-control"/>
+                    <span asp-validation-for="Street" class="text-danger"></span>
 
-                    <label asp-for="Address.City" class="control-label"></label>
-                    <input asp-for="Address.City" class="form-control"/>
-                    <span asp-validation-for="Address.City" class="text-danger"></span>
+                    <label asp-for="City" class="control-label"></label>
+                    <input asp-for="City" input="text" class="form-control"/>
+                    <span asp-validation-for="City" class="text-danger"></span>
+                    
+                    <label asp-for="ZipCode" class="control-label"></label>
+                    <input asp-for="ZipCode" input="text" class="form-control"/>
+                    <span asp-validation-for="ZipCode" class="text-danger"></span>
                 </fieldset>
             </div>
             <div class="form-group d-none" id="js-commute-train">
@@ -45,9 +49,9 @@
                         We use this to give you real-time updates of the current train schedule.
                         You can leave this empty.
                     </small>
-                    <label asp-for="Address.City" class="control-label"></label>
-                    <input asp-for="Address.City" class="form-control"/>
-                    <span asp-validation-for="Address.City" class="text-danger"></span>
+                    <label asp-for="TrainCity" class="control-label"></label>
+                    <input asp-for="TrainCity" class="form-control"/>
+                    <span asp-validation-for="City" class="text-danger"></span>
                 </fieldset>
             </div>
             <div class="form-group">
@@ -57,6 +61,26 @@
                     <option>Select a commute type</option>
                 </select>
                 <span asp-validation-for="CommutingWay" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <fieldset>
+                    <legend>Integration options</legend>
+                    <div class="form-check">
+                        <label class="form-check-label">
+                            <input class="form-check-input" asp-for="Assistant" /> @Html.DisplayNameFor(model => model.Assistant)
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <label class="form-check-label">
+                            <input class="form-check-input" asp-for="Calendar"/> @Html.DisplayNameFor(model => model.Calendar)
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <label class="form-check-label">
+                            <input class="form-check-input" asp-for="Commute"/> @Html.DisplayNameFor(model => model.Commute)
+                        </label>
+                    </div>
+                </fieldset>
             </div>
             <span class="text-danger">@ViewBag.error</span>
             <div class="form-group">

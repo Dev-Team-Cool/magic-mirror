@@ -14,11 +14,9 @@ using Microsoft.AspNetCore.Authentication;
 using MirrorOfErised.models.Repos;
 using MirrorOfErised.models.Data;
 using System.Security.Claims;
-using Microsoft.AspNetCore.Identity.UI.Services;
 using MirrorOfErised.models;
 using MirrorOfErised.models.Middleware;
 using MirrorOfErised.models.Services;
-using MirrorOfErised.Services;
 
 namespace MirrorOfErised
 {
@@ -29,9 +27,9 @@ namespace MirrorOfErised
             Configuration = configuration;
         }
 
-        private List<AuthenticationToken> tokens { get; set; }
-        private List<Claim> claims { get; set; }
-        public IConfiguration Configuration { get; }
+        private List<AuthenticationToken> Tokens { get; set; }
+        private List<Claim> Claims { get; set; }
+        private IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -43,7 +41,7 @@ namespace MirrorOfErised
             
             services.AddDefaultIdentity<User>(options => {
                 options.SignIn.RequireConfirmedAccount = false;
-                options.SignIn.RequireConfirmedEmail = true;
+                options.SignIn.RequireConfirmedEmail = false;
             }).AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
@@ -58,10 +56,8 @@ namespace MirrorOfErised
 
             services.AddAuthentication().AddGoogle(options =>
             {
-                IConfigurationSection googleAuthNSection = Configuration.GetSection("Authentication:Google");
-
-                options.ClientId = Environment.GetEnvironmentVariable("CLIENTID");
-                options.ClientSecret = Environment.GetEnvironmentVariable("CLIENTSECRET");
+                options.ClientId = Configuration["Authentication:Google:ClientId"];
+                options.ClientSecret = Configuration["Authentication:Google:ClientSecret"];
 
                 options.AccessType = "offline";
 
@@ -75,21 +71,16 @@ namespace MirrorOfErised
                 
                 options.Events.OnCreatingTicket = ctx =>
                 {
-                    tokens = ctx.Properties.GetTokens().ToList();
-                    claims = ctx.Identity.Claims.ToList();
-                    tokens.Add(new AuthenticationToken()
+                    Tokens = ctx.Properties.GetTokens().ToList();
+                    Claims = ctx.Identity.Claims.ToList();
+                    Tokens.Add(new AuthenticationToken()
                     {
                         Name = "Email",
                         Value = DateTime.UtcNow.ToString()
                     });
-                    ctx.Properties.StoreTokens(tokens);
+                    ctx.Properties.StoreTokens(Tokens);
 
                     return Task.CompletedTask;
-                };
-
-                options.Events.OnTicketReceived = async ctx =>
-                {
-                    await ctx.HttpContext.RequestServices.GetService<IAuthTokenRepo>().AddTokens(tokens, claims);
                 };
             });
 
@@ -98,9 +89,6 @@ namespace MirrorOfErised
 
             services.AddControllersWithViews();
             services.AddRazorPages();
-
-            services.AddTransient<IEmailSender, EmailSender>();
-            services.Configure<AuthMessageSenderOptions>(Configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

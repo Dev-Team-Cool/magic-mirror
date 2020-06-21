@@ -1,37 +1,23 @@
-﻿using Microsoft.AspNetCore.Identity;
-using MirrorOfErised.models.Data;
+﻿using MirrorOfErised.models.Data;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
 namespace MirrorOfErised.models.Repos
 {
-    public class UserSettingsRepo : IUserSettingsRepo
+    public class UserSettingsRepo: BaseRepo, IUserSettingsRepo
     {
-        private readonly ApplicationDbContext _context;
-
-        public UserSettingsRepo(ApplicationDbContext context)
+        public UserSettingsRepo(ApplicationDbContext context) : base(context)
         {
-            _context = context;
         }
         
         public async Task<UserSettings> AddSetting(UserSettings settings)
         {
-            try
-            {
-                await _context.UserSettings.AddAsync(settings);
-                await _context.SaveChangesAsync();
+            await _context.UserSettings.AddAsync(settings);
+            await _context.SaveChangesAsync();
 
-                return settings;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                return null;
-            }
+            return settings;
         }
 
         public async Task<UserSettings> GetSettingsForUserIdAsync(string id)
@@ -47,20 +33,10 @@ namespace MirrorOfErised.models.Repos
             }
         }
 
-        public async Task<UserSettings> UpdateSetting(UserSettings settings)
+        public UserSettings Update(UserSettings settings)
         {
-            try
-            {
-                _context.UserSettings.Update(settings);
-                await _context.SaveChangesAsync();
-
-                return settings;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                return null;
-            }
+            _context.UserSettings.Update(settings);
+            return settings;
         }
     }
 }

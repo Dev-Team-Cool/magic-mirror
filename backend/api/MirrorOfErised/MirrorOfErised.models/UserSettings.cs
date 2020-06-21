@@ -10,13 +10,13 @@ namespace MirrorOfErised.models
 {
     public class UserSettings
     {
-        [Display(Name = "Calendar")]
+        [Display(Name = "Calendar"), DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public bool Calendar { get; set; }
 
-        [Display(Name = "Google Assistant")]
+        [Display(Name = "Google Assistant"), DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public bool Assistant { get; set; }
 
-        [Display(Name = "Travel Data")]
+        [Display(Name = "Travel Data"), DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public bool Commuting { get; set; }
 
         [ScaffoldColumn(false)]

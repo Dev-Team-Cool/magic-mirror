@@ -1,8 +1,11 @@
-using System.Security.Claims;
+using System;
+using System.Linq;
 using System.Threading.Tasks;
+using IronPython.Modules;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore.Internal;
 
 namespace MirrorOfErised.models.Middleware
 {
@@ -17,13 +20,15 @@ namespace MirrorOfErised.models.Middleware
 
         public async Task InvokeAsync(HttpContext context, UserManager<User> userManager)
         {
+            string[] acceptedPaths = new string[3] {"/UserEntry/Create", "/UserEntry/Upload", "/Identity/Account/Logout"};
             var user = await userManager.GetUserAsync(context.User);
             if (user != null)
             {
-                if (context.Request.Path != "/Identity/Account/ConfirmEmail" && context.Request.Path != "/UserEntry/Create")
-                {
-                    if (!user.EmailConfirmed) context.Response.Redirect("/Identity/Account/ConfirmEmail");
-                    if (!user.HasCompletedSignUp) context.Response.Redirect("/UserEntry/Create");
+                string requestedPath = context.Request.Path;
+                if (!user.HasCompletedSignUp && Array.IndexOf(acceptedPaths, requestedPath) == -1)
+                { 
+                    context.Response.Redirect("/UserEntry/Create");
+                    return;
                 }
             }
             await _next(context);

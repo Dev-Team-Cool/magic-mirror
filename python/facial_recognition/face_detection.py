@@ -15,11 +15,13 @@ class FaceDetection(threading.Thread):
         self.cap = cv2.VideoCapture(0)    # Camera object
         self.__allow_new_thread = True
         self.__debug = True if os.getenv('DEBUG', 'false') == 'true' else False
+        self.__enable_badge_detection = os.getenv('ENABLE_BADGE_DETECTION')
 
     def init(self):
         self.detector = MTCNN(keep_all=False) #detection classifier
         self.recognizer = FacialRecognition().load()
-        self.badgeDetector = Model.load(Config.get('badge_model_path'), ['Badge', 'ML6 logo'])
+        if self.__enable_badge_detection:
+            self.badgeDetector = Model.load(Config.get('badge_model_path'), ['Badge', 'ML6 logo'])
 
         return self
 
@@ -65,7 +67,8 @@ class FaceDetection(threading.Thread):
                 if prediction[0] != "Unknown" and self.__allow_new_thread:
                     self.__allow_new_thread = False
                     # Start a seperate thread for the badge detection
-                    threading.Thread(target=self.detectAndConvertBadge, args=[frame]).start()
+                    if self.__enable_badge_detection:
+                        threading.Thread(target=self.detectAndConvertBadge, args=[frame]).start()
 
                 if self.__debug:
                     frame = cv2.rectangle(frame, (box[0],box[1]), (box[2], box[3]), (255,0,0)) # Draw a rectangle arround the face

@@ -59,13 +59,14 @@ namespace MirrorOfErised.models.Repos
             return true;
         }
 
-        public async Task<RunnerResult> StartTraining()
+        public async Task<RunnerResult> StartTraining(TrainJob job)
         {
             var startInfo = GetDefaultStartInfo();
             string scriptSource = _configuration["TrainConfig:TrainScriptPath"];
             startInfo.Arguments = $"\"{scriptSource}";
 
             RunnerResult result = await StartJob(startInfo);
+            result.TrainJob = job;
             return result;
         }
     }

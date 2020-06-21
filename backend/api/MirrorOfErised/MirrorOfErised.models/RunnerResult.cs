@@ -17,5 +17,6 @@ namespace MirrorOfErised.models
 
         public string Output { get; set; }
         public bool Failed { get; set; }
+        public TrainJob TrainJob { get; set; }
     }
 }
