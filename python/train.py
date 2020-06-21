@@ -7,7 +7,8 @@ from facial_recognition.config import Config
 from facial_recognition.facial_recognition import FacialRecognition
 
 Config.load_config()
-BASE_URL = 'http://localhost:5003/api/image'
+PROD = os.getenv('CONTAINERIZED')
+BASE_URL = 'http://localhost:5003/api/image' if not PROD else 'http://api/api/image'
 
 train_data_path = Config.get('train_data_path')
 if train_data_path is None:
