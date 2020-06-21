@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using MirrorOfErised.models;
 using MirrorOfErised.models.Repos;
 using MirrorOfErised.models.Services;
@@ -18,14 +19,17 @@ namespace MirrorOfErised.Controllers
         private readonly IUserRepo _userRepo;
         private readonly IImageEntryRepo _imageEntryRepo;
         private readonly ITrainJobService _trainJobService;
+        private readonly ILogger<AdminController> _logger;
         
         public AdminController(SignInManager<User> signInManager, IUserRepo userRepo,
-            ITrainJobService trainJobService, IImageEntryRepo imageEntryRepo)
+            ITrainJobService trainJobService, IImageEntryRepo imageEntryRepo,
+            ILogger<AdminController> logger)
         {
             _signInManager = signInManager;
             _userRepo = userRepo;
             _trainJobService = trainJobService;
             _imageEntryRepo = imageEntryRepo;
+            _logger = logger;
         }
         
         // GET admin
@@ -110,6 +114,7 @@ namespace MirrorOfErised.Controllers
             }
             catch (Exception e)
             {
+                _logger.LogError(e.Message);
                 return Ok("Unable to start a job.");
             }
         }
