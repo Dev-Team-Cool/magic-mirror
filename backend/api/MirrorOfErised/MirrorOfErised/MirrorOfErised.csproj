@@ -26,12 +26,7 @@
   <ItemGroup>
     <ProjectReference Include="..\MirrorOfErised.models\MirrorOfErised.models.csproj" />
   </ItemGroup>
-
-
-  <ItemGroup>
-    <Folder Include="wwwroot\images\test\" />
-  </ItemGroup>
-
+  
 
   <ItemGroup>
     <Content Update="Views\Admin\Index.cshtml">
