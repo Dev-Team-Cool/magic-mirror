@@ -22,14 +22,15 @@ Module.register("MMM-googleCalendar",{
         // Loads the calendar events from the url specified in defaults.url, sends the loaded events to processData.
         const dataRequest = new XMLHttpRequest();
         dataRequest.open("GET", `http://localhost:5003/api/user/${user.userName}/calendar`, true);
-		dataRequest.onreadystatechange = () => {
+        const that = this;
+		dataRequest.onreadystatechange = function() {
 			if (this.readyState === 4) {
                 switch(this.status){
                     case 200:
-                        this.processData(JSON.parse(this.response));
+                        that.processData(JSON.parse(this.response));
                         break;
                     default:
-                        this.updateDom();
+                        that.updateDom();
                         Log.error(this.response);
                         break;
                 }
@@ -105,9 +106,9 @@ Module.register("MMM-googleCalendar",{
     },
 
     processData: function(data) {
-		this.dataRequest = data;
+        this.dataRequest = data;
 		if (this.loaded === false)
-             self.updateDom(self.config.animationSpeed);
+             this.updateDom(this.config.animationSpeed);
     },
 
     notificationReceived: function(noti, payload) {
