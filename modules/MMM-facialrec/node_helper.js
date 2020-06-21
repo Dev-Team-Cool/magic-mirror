@@ -57,6 +57,7 @@ module.exports = NodeHelper.create({
 		if (this.pythonAlreadyStarted) return;
 		this.python_start();
 		this.pythonAlreadyStarted = true;
+		this.sendSocketNotification('RECOGNITION_STARTED')
 	},
 	stop: function() {
 		this.activeShell.end(() => {

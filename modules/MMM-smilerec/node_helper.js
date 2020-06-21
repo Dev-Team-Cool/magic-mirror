@@ -51,7 +51,8 @@ module.exports = NodeHelper.create({
   stop: function() {
     if (!this.pyshell) return;
 		this.pyshell.end(() => {
-			console.log('ended');
+      console.log('ended');
+      self.sendSocketNotification('SMILEREC_STOPPED');
 		})
 	},
 
