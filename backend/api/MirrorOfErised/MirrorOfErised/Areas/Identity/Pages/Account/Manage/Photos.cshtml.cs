@@ -52,6 +52,9 @@ namespace MirrorOfErised.Areas.Identity.Pages.Account.Manage
                 return NotFound("No user found.");
             }
             
+            var roles = await _userManager.GetRolesAsync(user);
+            if (roles.Contains("Admin")) return NotFound();
+            
             await LoadImages(user);
             return Page();
         }

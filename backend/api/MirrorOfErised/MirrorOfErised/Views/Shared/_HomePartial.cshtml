@@ -1,0 +1,10 @@
+@if (User.IsInRole("Admin"))
+{
+    <a class="navbar-brand" asp-controller="Admin" asp-action="Index">MirrorOfErised</a>
+}
+else
+{
+    <a class="navbar-brand" asp-controller="Home" asp-action="Index">MirrorOfErised</a>
+}
+
+

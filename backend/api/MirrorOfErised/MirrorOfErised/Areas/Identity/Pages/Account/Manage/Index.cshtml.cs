@@ -64,6 +64,9 @@ namespace MirrorOfErised.Areas.Identity.Pages.Account.Manage
                 return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
 
+            var roles = await _userManager.GetRolesAsync(user);
+            if (roles.Contains("Admin")) return RedirectToRoute("/");
+
             await LoadAsync(user);
             return Page();
         }
