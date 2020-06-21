@@ -4,14 +4,14 @@ Module.register("MMM-NMBS-Connection", {
 		from: "http://irail.be/stations/NMBS/008893120",
 		humanizeDuration: true,
 		initialLoadDelay: 1000, // 1 second delay
-		language: config.language,
+		language: 'nl',
 		results: 3,
 		showStationNames: false,
 		text: "",
 		to: "http://irail.be/stations/NMBS/008821196",
 		updateInterval: 10 * 60 * 1000, // 10 * 60 * 1000 = every 10 minutes
 		url: "https://api.irail.be/connections",
-		all: false,
+		all: false, // True -> all users, False -> authenticated users
 	},
 	getScripts: function () {
 		return ["moment.js"];
@@ -27,17 +27,19 @@ Module.register("MMM-NMBS-Connection", {
 		};
 	},
 	start: function () {
-		Log.info("Starting module: " + this.name);
-
 		this.loaded = false;
 		this.forecast = this.config.text;
 		this.updateTimer = null;
 	},
 	startSchedualing: function(user) {
 		if (user.commuteInfo.commutingWay !== 'Train' || !user.settings.commute) {
+			this.updateDom();
 			this.hide();
 			return; // User doesn't commute with train or hasn't opt-in for real-time commute info
 		}
+
+		if (user.commuteInfo && user.commuteInfo.city)
+			this.config.to = user.commuteInfo.address.city;
 
 		this.scheduleUpdate(this.config.initialLoadDelay);
 	},
