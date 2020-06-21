@@ -49,6 +49,7 @@ module.exports = NodeHelper.create({
   },
 
   stop: function() {
+    if (!this.pyshell) return;
 		this.pyshell.end(() => {
 			console.log('ended');
 		})
