@@ -12,20 +12,14 @@
       "commandName": "IISExpress",
       "launchBrowser": true,
       "environmentVariables": {
-        "CLIENTSECRET": "E6fxpAJnvPuhk0ZFmDExJZ11",
-        "CLIENTID": "791529771236-h4e8h0m994t4skqn5ifgi50ct4cadbcn.apps.googleusercontent.com",
-        "ASPNETCORE_ENVIRONMENT": "Development",
-        "APIKEY_SENDGRID": "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"
+        "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
     "MirrorOfErised": {
       "commandName": "Project",
       "launchBrowser": false,
       "environmentVariables": {
-        "CLIENTSECRET": "E6fxpAJnvPuhk0ZFmDExJZ11",
-        "CLIENTID": "791529771236-h4e8h0m994t4skqn5ifgi50ct4cadbcn.apps.googleusercontent.com",
-        "ASPNETCORE_ENVIRONMENT": "Development",
-        "APIKEY_SENDGRID": "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"
+        "ASPNETCORE_ENVIRONMENT": "Development"
       },
       "applicationUrl": "https://localhost:5001;http://localhost:5000"
     },

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
 using MirrorOfErised.models.Repos;
 using Newtonsoft.Json;
 using Polly;
@@ -12,14 +13,17 @@ namespace MirrorOfErised.models.Services
 {
     public class GoogleService
     {
-        protected readonly HttpClient Client;
+        private readonly HttpClient _client;
+        private readonly IConfiguration _configuration;
         private readonly IAuthTokenRepo _authTokenRepo;
 
-        public GoogleService(HttpClient client, IAuthTokenRepo authTokenRepo)
+        public GoogleService(HttpClient client, IAuthTokenRepo authTokenRepo,
+            IConfiguration configuration)
         {
-            Client = client;
-            Client.BaseAddress = new Uri("https://www.googleapis.com/");
+            _client = client;
+            _client.BaseAddress = new Uri("https://www.googleapis.com/");
             _authTokenRepo = authTokenRepo;
+            _configuration = configuration;
         }
 
         public async Task<string> AuthenticatedGet(string url, AuthToken token)
@@ -32,7 +36,7 @@ namespace MirrorOfErised.models.Services
                     requestMessage.Headers.Add("Authorization",
                         $"Bearer {context["access_token"]}");
                     
-                    return Client.SendAsync(requestMessage);
+                    return _client.SendAsync(requestMessage);
                 },
                 new Dictionary<string, object>
                 {
@@ -80,14 +84,14 @@ namespace MirrorOfErised.models.Services
             {
                 Content = new FormUrlEncodedContent(new KeyValuePair<string, string>[]
                 {
-                    new KeyValuePair<string, string>("client_id", Environment.GetEnvironmentVariable("CLIENTID")),
-                    new KeyValuePair<string, string>("client_secret", Environment.GetEnvironmentVariable("CLIENTSECRET")),
+                    new KeyValuePair<string, string>("client_id", _configuration["Authentication:Google:ClientId"]),
+                    new KeyValuePair<string, string>("client_secret", _configuration["Authentication:Google:ClientSecret"]),
                     new KeyValuePair<string, string>("refresh_token", token.RefreshToken),
                     new KeyValuePair<string, string>("grant_type", "refresh_token")
                 })
             };
 
-            var response = await Client.SendAsync(refreshMessage);
+            var response = await _client.SendAsync(refreshMessage);
 
             if (response.IsSuccessStatusCode)
             {

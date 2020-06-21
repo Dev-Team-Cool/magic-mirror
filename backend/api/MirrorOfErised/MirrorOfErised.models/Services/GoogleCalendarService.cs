@@ -1,14 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
 using MirrorOfErised.models.Repos;
 
 namespace MirrorOfErised.models.Services
 {
     public class GoogleCalendarService: GoogleService
     {
-        public GoogleCalendarService(HttpClient client, IAuthTokenRepo authTokenRepo) : base(client, authTokenRepo)
+        public GoogleCalendarService(HttpClient client, IAuthTokenRepo authTokenRepo, IConfiguration configuration) : base(client, authTokenRepo, configuration)
         {
         }
         

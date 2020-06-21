@@ -14,8 +14,6 @@
       "launchBrowser": true,
       "launchUrl": "swagger",
       "environmentVariables": {
-        "CLIENTSECRET": "E6fxpAJnvPuhk0ZFmDExJZ11",
-        "CLIENTID": "791529771236-h4e8h0m994t4skqn5ifgi50ct4cadbcn.apps.googleusercontent.com",
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
