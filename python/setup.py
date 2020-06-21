@@ -12,5 +12,7 @@ setup(
                       'opencv_python',
                       'facenet_pytorch',
                       'Pillow',
-                      'detecto']
+                      'detecto',
+                      'Flask',
+                      'imutils']
 )

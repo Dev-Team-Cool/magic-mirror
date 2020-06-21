@@ -1,84 +1,80 @@
+---
+title: Mirror of Erised MMM-Button EN
+tags: Project
+description: Documentation module
+---
+
 # MMM-Button
-This is an extension for the [MagicMirror](https://github.com/MichMich/MagicMirror). It can monitor a button click and change for example the visibility of some of your modules (at the moment just works with my [MMM-Podcast](https://github.com/ptrbld/MMM-Podcast) module).
-Special thanks goes to [Paviro](https://github.com/paviro) as this module is heavily based on his [PIR-Sensor](https://github.com/paviro/MMM-PIR-Sensor) module.
+MMM-Button is a rework of the original [MMM-Button](https://github.com/ptrbld/MMM-Button) it is practicly the same with the sole difference that it supports 2 buttons instead of one
+## Connecting buttons
+To connect a button to the PI it is configured in a way that the button is connected to a GPIO pin and the other cable go's to the ground. The ground can be shared between the two buttons. The image below is an example, it may be possible that the pins on you're raspberry are diffrent !
+![](https://i.imgur.com/3HQKF71.png)
+
+
+
 ## Installation
-1. Navigate into your MagicMirror's `modules` folder and execute `git clone https://github.com/ptrbld/MMM-Button.git`. A new folder will appear navigate into it.
-2. Execute `npm install` to install the node dependencies.
 
-## Using the module
-First of all connect a button to your Raspberry PI: [How to connect a button.](http://razzpisampler.oreilly.com/ch07.html)
+```console
+cd ~/MagicMirror/modules
+git clone #link
+```
+After cloning the repository you need to execute npm install to get all dependencies needed
 
-To use this module, add it to the modules array in the `config/config.js` file:
-````javascript
-modules: [
-	{
-		module: 'MMM-Button',
-		config: {
-			// See 'Configuration options' for more information.
-		}
-	}
-]
-````
+```console
+cd /MMM-Button
+npm install
+```
 
-## Configuration options
+## Config
+```javascript
+{
+    "module": "MMM-Button",
+    "config": {
+        "buttonPIN": 17,
+        "button2PIN": 27,
+        "notificationMessage": "PAGE_UP",
+        "notificationMessage2": "PAGE_DOWN",
 
-The following properties can be configured:
+    }
+},
+```
 
+The configuration for ```MMM-Button``` :
 
-<table width="100%">
-	<!-- why, markdown... -->
-	<thead>
-		<tr>
-			<th>Option</th>
-			<th width="100%">Description</th>
-		</tr>
-	<thead>
-	<tbody>
-		<tr>
-			<td><code>buttonPIN</code></td>
-			<td>The pin your button is connected to.<br>
-				<br><b>Possible values:</b> <code>int</code>
-				<br><b>Default value:</b> <code>5</code>
-			</td>
-		</tr>
-		<tr>
-			<td><code>clickDelay</code></td>
-			<td>The time in miliseconds before another button click is recognized<br>
-				<br><b>Possible values:</b> <code>int</code>
-				<br><b>Default value:</b> <code>500</code>
-			</td>
-		</tr>
-		<tr>
-			<td><code>notificationMessage</code></td>
-			<td>The message broadcasted to other modules<br>
-				<br><b>Possible values:</b> <code>string</code>
-				<br><b>Default value:</b> <code>BUTTON_PRESSED</code>
-			</td>
-		</tr>
-	</tbody>
-</table>
+| Option                | Description                                                                                                                               |
+|:--------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| ```buttonPIN```         | The GPIO pin of the first button |
+| ```button2PIN```         | The GPIO pin of the second button |
+| ```notificationMessage```         | The Message send when button 1 is pushed (for interacting with other modules) |
+| ```notificationMessage2```         |The Message send when button 2 is pushed (for interacting with other modules) |
+| ```clickDelay```         | The debounce time of the buttons (standard 500 ms) |
 
-## Developer Notes
-This module broadcasts a `BUTTON_PRESSED` (as default; specified in the module config) notification with the payload beeing `true` you can use it to show/hide your module (e.g. [MMM-Podcast](https://github.com/ptrbld/MMM-Podcast)).
+## Troubleshooting
+It is allways possible that it look slike the button doesn't work or that the mirror gives an error. Here are some errors and how to resolve/find the source of the problem
+### Error message (Not able to acces GPIO)
+It is possible when downloading the buttons module you get errors that GPIO is inaccessable To fix this the user needs to be added to the GPIO group. This can be done by typing this code
+```console
+sudo adduser USER gpio
+```
+After this is done don't forget to relogin with the user so the changes are processed
+### Error message (The folder you try to acces is locked)
+This error may occure if another module/programm is already activly looking at the pinout of the selected pin. To fix this make sure that only MMM-Button is trying to acces the selected pins data.
+### Buttons not working
+If you don't get any error messages in the magic mirror and the buttons still don't work the problem may be with the buttons or cables. To test this you could open python en run the next code
+```python
+import RPi.GPIO as GPIO
+import time
 
-## Dependencies
-- [onoff](https://www.npmjs.com/package/onoff) (installed via `npm install`)
+GPIO.setmode(GPIO.BCM)
 
-The MIT License (MIT)
-=====================
+GPIO.setup(18, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
-Copyright © 2016 PtrBld
+while True:
+    input_state = GPIO.input(18)
+    if input_state == False:
+        print('Button Pressed')
+        time.sleep(0.2)
+```
 
-Permission is hereby granted, free of charge, to any person
-obtaining a copy of this software and associated documentation
-files (the “Software”), to deal in the Software without
-restriction, including without limitation the rights to use,
-copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the
-Software is furnished to do so, subject to the following
-conditions:
-
-The above copyright notice and this permission notice shall be
-included in all copies or substantial portions of the Software.
-
-**The software is provided “as is”, without warranty of any kind, express or implied, including but not limited to the warranties of merchantability, fitness for a particular purpose and noninfringement. In no event shall the authors or copyright holders be liable for any claim, damages or other liability, whether in an action of contract, tort or otherwise, arising from, out of or in connection with the software or the use or other dealings in the software.**
+If there is no output with this check your wiring/cables and or buttons.
+if there is output the problem lays somewhere else, probably in another module or by using two modules that acces the same
