@@ -1,28 +1,53 @@
+---
+title: Mirror of Erised MMM-YouTube-API
+tags: Project
+description: Documentation module
+---
+
 # MMM-YouTube-API
-This a module for the [MagicMirror](https://github.com/MichMich/MagicMirror/tree/develop). It helps you easily implement YouTube videos to be played in your MagicMirror by using YouTube's own iFrame API.
+MMM-YouTube-API is a simple way for displaying a youtube video upon receiving an event. If no video is being played a placeholder image will be shown instead.
+## installation
 
-## Using the module
+```console
+cd ~/MagicMirror/modules
+svn checkout https://github.com/Dev-Team-Cool/magic-mirror/trunk/modules/MMM-YouTube-API
+```
 
-To use this module, add it to the modules array in the `config/config.js` file:
-````javascript
-modules: [
-    {
-		module: 'MMM-YouTube-API',
-		position: 'top_center',
-                config: {
-                    //Config here
-                }
-    }
-]
-````
+There is no need for npm install.
 
-|Option|Description|
-|---|---|
-|`width`|The width of the video.<br><br>**Default value:** `640`<br>|
-|`height`|The height of the video.<br><br>**Default value:** `360`<br>|
-|`videoID`|The YouTube video ID.<br><br>**Example:**<br>&nbsp;&nbsp;Link: https://www.youtube.com/watch?v=Sagg08DrO5U<br>&nbsp;&nbsp;Id: `Sagg08DrO5U`<br><br>**Default value:** `Sagg08DrO5U`<br>|
-|`playbackRate`|The rate at which the video plays.<br><br>**Valid values:** `0.25`, `0.5`, `1`, `1.5`, `2`<br><br>**Default value:** `1`<br>|
-|`volume`|The playback volume of the selected video.<br><br>**Valid values:** `0 - 100`<br><br>**Default value:** `100`<br>|
-|`loop`|Should the video loop?<br><br>**Valid values:** `true` or `false`<br><br>**Default value:** `true`<br>|
+## Config
 
-<br><br>Made in collaboration with my dear friend **Alfred**
+```javascript
+{
+    module: 'MMM-YouTube-API',
+    position: 'middle_center',
+    config: {
+        videoID: 'tkgjOfJaCRQ',
+        width: 960,
+        height: 540,
+        placeholderPath : "modules/MMM-YouTube-API/pics/ML6Logo.png"
+    },
+},
+```
+
+Configuration options for ```MMM-YouTube-API``` :
+
+| Option                | Description                                                                                                                               |
+|:--------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| ```videoID```         | Display of a video as embeded, it is also possible to use an embed link, a regular youtube link won't work. |
+| ```width```           | The width of your media player.                                                                                                                   |
+| ```height```          | The height of your media player                                                                                                                    |
+| ```placeholderPath``` | Path to the static image, you can also add your own images to the folder pics and change the name.                      |
+
+## Integration with other modules
+You can start the video with the following notification:
+```javascript
+this.sendNotification("YT_PLAY_VIDEO");
+```
+There are other options, here the name of the notification shows its functionality.
+```javascript
+this.sendNotification("YT_SHOW_IMAGE");
+this.sendNotification("YT_PAUSE_VIDEO");
+this.sendNotification("YT_UNPAUSE_VIDEO");
+this.sendNotification("YT_NEW_IMAGE");
+```
