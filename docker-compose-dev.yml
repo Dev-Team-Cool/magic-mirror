@@ -13,20 +13,20 @@ services:
       - "dbdata:/var/lib/postgresql/data"
   webapp:
     container_name: webapp
-    image: webapp:x86
+    image: florianvd/mirror-of-erised:webapp-x86
     depends_on:
       - database
     ports:
       - "80:80"
     environment:
       CONTAINERIZED: 'true'
-      Authentication:Google:ClientId: ${GOOGLE_CLIENT_SECRET}
+      Authentication:Google:ClientId: ${GOOGLE_CLIENT_ID}
       Authentication:Google:ClientSecret: ${GOOGLE_CLIENT_SECRET}
     volumes:
-      - "./backend/api/MirrorOfErised/MirrorOfErised/appsettings.json:/app/appsettings.json:ro"
+      - ./backend/api/MirrorOfErised/MirrorOfErised/appsettings.json:/app/appsettings.json:ro
       - ~/Pictures/Data:/app/Data
-      - ./python/data/trainV2:/app/wwwroot/images/processed
-      - ~/Documents/config.json:/root/Documents/config.json
+      - ~/Pictures/Data/train:/app/wwwroot/images/processed
+      - ./python/config.docker.json:/root/Documents/config.json
   api:
     container_name: api
     image: api:x86

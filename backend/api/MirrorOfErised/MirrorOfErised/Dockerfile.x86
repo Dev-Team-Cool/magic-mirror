@@ -14,7 +14,7 @@ RUN dotnet build "MirrorOfErised.csproj" -c Release -o /app/build
 FROM build AS publish
 RUN dotnet publish "MirrorOfErised.csproj" -c Release -o /app/publish
 
-FROM mirror:python as python
+FROM florianvd/mirror-of-erised:python as python
 
 FROM base AS final
 COPY --from=python ./python /python

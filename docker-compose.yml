@@ -17,17 +17,20 @@ services:
     ports:
       - "80:80"
     environment:
-      CLIENTID: ${CLIENT_ID}
-      CLIENTSECRET: ${CLIENT_SECRET}
+      CONTAINERIZED: 'true'
+      Authentication:Google:ClientId: ${GOOGLE_CLIENT_SECRET}
+      Authentication:Google:ClientSecret: ${GOOGLE_CLIENT_SECRET}
   api:
     container_name: api
     image: florianvd/mirror-of-erised:api-arm32
     depends_on:
       - database
+    expose:
+      - "80"
     ports:
-      - "5000:80"
+      - "5003:80"
     environment:
-      CLIENTID: ${CLIENT_ID}
-      CLIENTSECRET: ${CLIENT_SECRET}
+      Authentication:Google:ClientId: ${GOOGLE_CLIENT_SECRET}
+      Authentication:Google:ClientSecret: ${GOOGLE_CLIENT_SECRET}
 volumes:
   dbdata:
