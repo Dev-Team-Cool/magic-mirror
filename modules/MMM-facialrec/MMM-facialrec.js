@@ -21,6 +21,9 @@ Module.register("MMM-facialrec", {
 	start: function() {
 		// Variable that keeps track of the current user.
 		this.setDefaultValues();
+
+		// Variable that keeps track of python carshes.
+		this.pythonCrashed = false
 		
 		// Init node_helper with the config
 		this.sendSocketNotification('INIT', this.config);
@@ -42,18 +45,23 @@ Module.register("MMM-facialrec", {
 	},
 	// Generates the DOM elements to be displayed, currently it only shows the name of the current user.
 	getDom: function() {
-		// create element wrapper that will be displayed in the module.
 		const wrapper = document.createElement("div");
-		const { firstName, hasBadge, validUser } = this.user;
-		if (validUser) {
-			wrapper.innerHTML = `Hello ${firstName}!</br>`
-			if (hasBadge)
-				wrapper.innerHTML += 'Nice badge my dude!'
-			else
-				wrapper.innerHTML += 'Where yo badge at?' 
-		} else
-			wrapper.innerHTML = 'Hey stranger!'
-
+		if(!this.pythonCrashed){
+			// create element wrapper that will be displayed in the module.
+			const { firstName, hasBadge, validUser } = this.user;
+			if (validUser) {
+				wrapper.innerHTML = `Hello ${firstName}!</br>`
+				if (hasBadge)
+					wrapper.innerHTML += 'Nice badge my dude!'
+				else
+					wrapper.innerHTML += 'Where yo badge at?' 
+			} else
+				wrapper.innerHTML = 'Hey stranger!'
+		}
+		else {
+			wrapper.innerHTML = 'An error has occured, please consider restarting your device';
+			this.pythonCrashed = false;
+		}
 		return wrapper;
 	},
 
@@ -96,7 +104,9 @@ Module.register("MMM-facialrec", {
 	},
 	recognitionStopped: function() {
 		this.resetUser();
-		this.sendNotification("FACIALREC_STOPPED")
+		this.sendNotification("FACIALREC_STOPPED");
+		this.pythonCrashed = true;
+		this.updateDom();
 	},
 	findUser: async function (userIdentiefer) {
 		try {
@@ -158,6 +168,8 @@ Module.register("MMM-facialrec", {
 				break;
 			case 'RECOGNITION_STARTED':
 				break;
+			case 'PYTHON_STOPPED':
+				this.sendNotification("FACIALREC_STOPPED")
 			case 'BADGE_FOUND':
 				this.user.hasBadge = true;
 				this.updateDom();

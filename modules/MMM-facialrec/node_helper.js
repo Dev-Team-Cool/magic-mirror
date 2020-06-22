@@ -62,6 +62,7 @@ module.exports = NodeHelper.create({
 	stop: function() {
 		this.activeShell.end(() => {
 			console.log('ended');
+			this.sendSocketNotification('PYTHON_STOPPED')
 			this.pythonAlreadyStarted = false;
 		})
 	},
