@@ -32,7 +32,8 @@ namespace MirrorOfErised.models.Data
                     Email = "mirror@mirror.ow",
                     FirstName = "Admin",
                     EmailConfirmed = true,
-                    HasCompletedSignUp = true
+                    HasCompletedSignUp = true,
+                    ForcedPasswordReset = false
                 };
 
                 var userResult = await userMgr.CreateAsync(user, "D@s1re");

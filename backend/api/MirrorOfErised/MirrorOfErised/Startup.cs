@@ -114,6 +114,7 @@ namespace MirrorOfErised
             app.UseAuthorization();
 
             app.UseAccountComplete();
+            app.UseForceResetPassword();
 
             app.UseEndpoints(endpoints =>
             {
