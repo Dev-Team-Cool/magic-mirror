@@ -1,0 +1,18 @@
+@page
+@model MirrorOfErised.Areas.Identity.Pages.Account.Manage.UploadPhotosModel
+@{
+    ViewData["Title"] = "Upload photos";
+    ViewData["ActivePage"] = ManageNavPages.UploadPhotos;
+}
+
+<h4>@ViewData["Title"]</h4>
+<div class="row">
+    <div class="col">
+        <partial name="_UploadPartial"/>
+    </div>
+</div>
+
+@section Scripts
+{
+    @{Html.RenderPartial("_UploadCodePartial");}
+}

@@ -12,9 +12,13 @@ namespace MirrorOfErised.Areas.Identity.Pages.Account.Manage
 
         public static string Photos => "Photos";
         
+        public static string UploadPhotos => "UploadPhotos";
+        
         public static string IndexNavClass(ViewContext viewContext) => PageNavClass(viewContext, Index);
 
         public static string PhotosNavClass(ViewContext viewContext) => PageNavClass(viewContext, Photos);
+
+        public static string UploadPhotosNavClass(ViewContext viewContext) => PageNavClass(viewContext, UploadPhotos);
 
         private static string PageNavClass(ViewContext viewContext, string page)
         {
