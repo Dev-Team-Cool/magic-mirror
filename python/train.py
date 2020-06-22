@@ -57,7 +57,7 @@ if save_training_images:
         except:
             print('Could not move a file for some reason.')
 
-else:
+if not save_training_images:
     print('Removing training files.')
     # remove dirs
     for key, images in train_data.items():
