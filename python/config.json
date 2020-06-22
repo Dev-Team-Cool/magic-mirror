@@ -1,9 +1,9 @@
 {
-    "train_data_path": "/home/florian/Documents/school/magic-mirror/python/data/trainV2",
+    "train_data_path": "/home/florian/Pictures/Data/train",
     "tmp_train_path": "/home/florian/Pictures/Data",
     "save_training_data": true,
-    "saved_training_data_path": "/home/florian/Documents/school/magic-mirror/python/data/trained",
-    "model_path": "/home/florian/Documents/school/magic-mirror/python/facial_recognition.pth",
-    "badge_model_path": "/home/florian/Documents/school/magic-mirror/python/badgeDetectionV2.1.pth",
+    "saved_training_data_path": "~/Pictures/Data/trained",
+    "model_path": "~/magic-mirror/facial_recognition.pth",
+    "badge_model_path": "~/magic-mirror/badgeDetectionV2.1.pth",
     "score_treshold": 1.1
 }
