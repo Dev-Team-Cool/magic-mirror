@@ -59,7 +59,7 @@ Module.register("MMM-facialrec", {
 				wrapper.innerHTML = 'Hey stranger!'
 		}
 		else {
-			wrapper.innerHTML = 'An error has occured, please consider restarting your device';
+			wrapper.innerHTML = 'An error has occured, please check the logs for more details';
 			this.pythonCrashed = false;
 		}
 		return wrapper;
