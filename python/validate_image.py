@@ -1,4 +1,5 @@
 import argparse
+import shutil
 import os
 
 from PIL import Image
@@ -27,11 +28,14 @@ def main(img_file: str):
         exit(0)
 
     try:
-        os.renames(full_image_path, f'{train_data_path}/{img_file.split("_")[1]}/{img_file}')
+        destination_dir = f'{train_data_path}/{img_file.split("_")[1]}'
+        if not os.path.exists(destination_dir):
+            os.makedirs(destination_dir)
+        shutil.move(full_image_path, f'{destination_dir}/{img_file}')
     except:
-        print('OK - Failed to move file')
-    
-    print('OK')
+        print('Failed to move file')
+    finally:
+        print('OK')
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
