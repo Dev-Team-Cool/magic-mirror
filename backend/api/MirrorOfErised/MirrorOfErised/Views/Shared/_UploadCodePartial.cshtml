@@ -1,0 +1,23 @@
+<script src="/js/dropzone.min.js"></script>
+<script>
+$(document).ready(function() {
+    //Dropzone
+    const dropzone = new Dropzone('#dropzone', {
+        url: '/UserEntry/Upload',
+        paramName: 'image', 
+        maxFilesize: 5,
+        init: function () {
+            $('#dropzone').addClass('dropzone');
+            this.on('complete', function(file) {
+                if (file.status === 'error' && file.xhr.status === 400) {
+                    file.previewElement.style.border = '1px solid red';
+                    file.previewElement.children[3].innerHTML = 'Invalid image.';
+                } else if(file.xhr.status === 500) {
+                    file.previewElement.style.border = '1px solid red';
+                    file.previewElement.children[3].innerHTML = 'Unexpected error';
+                }
+            })
+        }
+    });
+})
+</script>

@@ -4,9 +4,6 @@
     ViewData["Title"] = "Setup user profile";
 }
 
-<link rel="stylesheet" href="/css/dropzone.min.css" />
-<link rel="stylesheet" href="/css/basic.min.css" />
-
 <h1>Setup your user profile</h1>
 <hr />
 
@@ -14,9 +11,7 @@
     <div class="col-md">
         <p>Upload some images of yourself.</p>
         <small class="form-text text-muted">We need at least 3 pictures of you. Your uploaded picture should only contain your face and should not be grayscaled.</small>
-        <form action="/UserEntry/Upload" method="post" id="dropzone">
-            
-        </form>
+        <partial name="_UploadPartial"/>
         <span class="text-danger">@ViewBag.imageError</span>
         <form asp-action="Create" method="post">
             <div>
@@ -92,7 +87,6 @@
 </div>
 
 @section Scripts {
-    <script src="/js/dropzone.min.js"></script>
     <script>
         $(document).ready(function () {
             function showFieldSet(id) {
@@ -109,24 +103,8 @@
             $('#js-commuting').on('change', function(e) {
                 showFieldSet(e.target.value);
             });
-            
-            //Dropzone
-            const dropzone = new Dropzone('#dropzone', {
-                url: '/UserEntry/Upload',
-                paramName: 'image', 
-                maxFilesize: 5,
-                init: function () {
-                    $('#dropzone').addClass('dropzone');
-                    this.on('complete', function(file) {
-                        console.log(file);
-                        if (file.status === 'error' && file.xhr.status === 400) {
-                            file.previewElement.style.border = '1px solid red';
-                            file.previewElement.children[3].innerHTML = 'Invalid image.';
-                        }
-                    })
-                }
-            });
         });
     </script>
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{await Html.RenderPartialAsync("_UploadCodePartial");}
 }
