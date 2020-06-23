@@ -26,6 +26,7 @@ services:
       - ./backend/api/MirrorOfErised/MirrorOfErised/appsettings.json:/app/appsettings.json:ro
       - ~/Pictures/Data:/app/Data
       - ~/Pictures/Data/train:/app/wwwroot/images/processed
+      - ~/Documents/school/magic-mirror/facial_recognition.pth:/python/facial_recognition.pth
       - ./python/config.docker.json:/root/Documents/config.json
   api:
     container_name: api
