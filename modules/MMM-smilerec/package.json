@@ -20,7 +20,7 @@
   },
   "homepage": "https://github.com/paviro/MMM-Facial-Recognition#readme",
   "dependencies": {
-    "electron": "^9.4.0",
+    "electron": "^18.3.7",
     "python-shell": "latest"
   }
 }
